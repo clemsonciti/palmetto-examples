@@ -6,9 +6,9 @@ to accomplish different tasks and run different applications
 on the Palmetto cluster.
 
 1.  [Installing software on the cluster](examples/Installation/)
-1.  [Compiling and running OpenMP-enabled programs](examples/OpenMP-code/)
-1.  [Compiling and running MPI-enabled programs](examples/MPI-code/)
-1.  [Compiling and running CUDA-enabled programs](examples/CUDA-code/)
+1.  [Compiling and running OpenMP-enabled programs](examples/OpenMP/)
+1.  [Compiling and running MPI-enabled programs](examples/MPI/)
+1.  [Compiling and running CUDA-enabled programs](examples/CUDA/)
 1.  [Running arrays of Jobs](examples/Job-arrays/)
 1.  [MATLAB](examples/MATLAB/)
 1.  [Gaussian](examples/Gaussian/)
