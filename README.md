@@ -6,15 +6,16 @@ to accomplish different tasks and run different applications
 on the Palmetto cluster.
 
 1.  [Installing software on the cluster](examples/Installation/)
-2.  [Compiling and running OpenMP-enabled programs](examples/OpenMP-code/)
-3.  [Compiling and running MPI-enabled programs](examples/MPI-code/)
-4.  [Running arrays of Jobs](examples/Job-arrays/)
-5.  [MATLAB](examples/MATLAB/)
-6.  [Gaussian](examples/Gaussian/)
-7.  [Gaussian (parallel)](examples/Gaussian-parallel/)
-8.  [Mathematica](examples/Mathematica/)
-9.  [NAMD](examples/NAMD/)
-10. [Amber](examples/Amber/)
-11. [ScaLAPACK](examples/ScaLAPACK/)
+1.  [Compiling and running OpenMP-enabled programs](examples/OpenMP-code/)
+1.  [Compiling and running MPI-enabled programs](examples/MPI-code/)
+1.  [Compiling and running CUDA-enabled programs](examples/CUDA-code/)
+1.  [Running arrays of Jobs](examples/Job-arrays/)
+1.  [MATLAB](examples/MATLAB/)
+1.  [Gaussian](examples/Gaussian/)
+1.  [Gaussian (parallel)](examples/Gaussian-parallel/)
+1.  [Mathematica](examples/Mathematica/)
+1.  [NAMD](examples/NAMD/)
+1. [Amber](examples/Amber/)
+1. [ScaLAPACK](examples/ScaLAPACK/)
 
 
