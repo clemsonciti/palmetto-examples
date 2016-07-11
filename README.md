@@ -10,7 +10,7 @@ on the Palmetto cluster.
 1.  [Compiling and running MPI-enabled programs](examples/MPI/)
 1.  [Compiling and running CUDA-enabled programs](examples/CUDA/)
 1.  [Running arrays of Jobs](examples/Job-arrays/)
-1.  [MATLAB](examples/MATLAB/)
+1.  [MATLAB (contains example of taskset for setting core affinity)](examples/MATLAB/)
 1.  [Gaussian](examples/Gaussian/)
 1.  [Gaussian (parallel)](examples/Gaussian-parallel/)
 1.  [Mathematica](examples/Mathematica/)
