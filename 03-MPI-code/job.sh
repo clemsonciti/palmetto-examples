@@ -5,7 +5,7 @@
 #PBS -l walltime=00:05:00
 #PBS -j oe
 
-module add gcc/4.8.1 openmpi/1.6.4
+module add gcc/4.8.1 openmpi/1.8.4
 
 cd $PBS_O_WORKDIR
 
