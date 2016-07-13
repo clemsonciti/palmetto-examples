@@ -17,7 +17,7 @@ cd $PBS_O_WORKDIR
 export GAUSS_LFLAGS='-opt "Tsnet.Node.lindarsharg: ssh"'
 
 # prepare a local scratch dirs
-nodes=`cat $PBS_NODEFILE`
+nodes=`cat $PBS_NODEFILE | uniq`
 scratch="/local_scratch/$USER.$PBS_JOBID"
 
 for node in $nodes
@@ -47,7 +47,6 @@ for node in $nodes
 do
     ssh $node "rm -r $scratch"
 done
-
 
 # end
 
