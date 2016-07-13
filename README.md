@@ -17,5 +17,4 @@ on the Palmetto cluster.
 1.  [NAMD](examples/NAMD/)
 1. [Amber](examples/Amber/)
 1. [ScaLAPACK](examples/ScaLAPACK/)
-
-
+1. [Quantum-espresso (includes an MPI+GPU example)](examples/Quantum-Espresso)
