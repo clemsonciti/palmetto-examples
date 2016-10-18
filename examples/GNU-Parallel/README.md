@@ -30,3 +30,7 @@ for different tasks, including distributing tasks
 among multiple machines:
 
 https://www.gnu.org/software/parallel/man.html
+
+Based on the above examples,
+a simple example of distributing tasks among multiple nodes
+using GNU Parallel is also provided in `multi-node-job.sh`.
