@@ -9,6 +9,7 @@ on the Palmetto cluster.
 1.  [Compiling and running OpenMP-enabled programs](examples/OpenMP/)
 1.  [Compiling and running MPI-enabled programs](examples/MPI/)
 1.  [Compiling and running CUDA-enabled programs](examples/CUDA/)
+1.  [Running multiple tasks in parallel using GNU Parallel](examples/GNU-Parallel)
 1.  [Running arrays of Jobs](examples/Job-arrays/)
 1.  [MATLAB (contains example of taskset for setting core affinity)](examples/MATLAB/)
 1.  [Gaussian](examples/Gaussian/)
