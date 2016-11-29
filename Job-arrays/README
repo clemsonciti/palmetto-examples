@@ -1,9 +1,0 @@
-1. Prepare the problem
-
-Examine files quadratic.py and inputs.txt
-
-2. Prepare/Modify the submit script
-
-3. Submit the job
-
-qsub job_array.sh 

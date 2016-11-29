@@ -6,4 +6,4 @@ of the input and output files and the requested hardware
 
 3. Submit the job
 
-qsub job.sh
+    qsub job.sh
