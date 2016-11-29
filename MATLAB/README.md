@@ -18,20 +18,16 @@ terminated.  The `taskset` utility can be used to ensure your
 application only uses the number of CPU cores that your job is
 assigned:
 
-~~~
-taskset -c 0-$(($OMP_NUM_THREADS-1)) matlab -nodisplay
--nodesktop -nosplash -r test > test_results.txt
-~~~
+    taskset -c 0-$(($OMP_NUM_THREADS-1)) matlab -nodisplay
+    -nodesktop -nosplash -r test > test_results.txt
 
 Note that the variable `OMP_NUM_THREADS` will automatically be set
 to the number of CPU cores your job requested (per chunk).  Thus,
 if you want to use the maximum allowable number of CPU cores, you
 can set `taskset` to use cores `0-$(($OMP_NUM_THREADS-1))`.
 
-3. Submit the job
-
-~~~
-qsub job.sh
-~~~
+3. Submit the job  
+ 
+    qsub job.sh
 
 4. Examine the results
