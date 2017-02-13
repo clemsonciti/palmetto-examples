@@ -10,7 +10,7 @@ of these input files contains a small, 3-by-3 matrix.  We have a
 program `transpose.py` which produces the transpose of the matrix,
 and saves it to the `outputs` directory.  For example, the command:
 
-    python transpose.py inputs/001.txt
+        python transpose.py inputs/001.txt
 
 will produce `outputs/001.out`, containing the transpose of the
 matrix in `inputs/001.txt`.  The transpose takes approximately 5
