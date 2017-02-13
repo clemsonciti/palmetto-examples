@@ -1,7 +1,7 @@
 
 # ABAQUS
 
-**ABAQUS 6.14 Documentation**: bobcat.nus.edu.sg:2080/v6.14/index.html
+**ABAQUS 6.14 Documentation**: [bobcat.nus.edu.sg:2080/v6.14/index.html](bobcat.nus.edu.sg:2080/v6.14/index.html)
 
 ABAQUS is a Finite Element Analysis software used
 for engineering simulations.
@@ -33,11 +33,11 @@ $ qsub -I -X -l select=1:ncpus=8:mpiprocs=8:mem=6gb:interconnect=mx,walltime=00:
 
 Once logged-in to an interactive compute node,
 to launch the interactive viewer,
-load the `abaqus` module, and run the `abqXYZ` executable with the `viewer` and `-mesa` options:
+load the `abaqus` module, and run the ABAQUS executable with the `viewer` and `-mesa` options:
 
 ~~~
 $ module add abaqus/6.14
-$ abq6141 viewer -mesa
+$ abaqus viewer -mesa
 ~~~
 
 ## Running ABAQUS in batch mode
@@ -154,7 +154,7 @@ abdemo.com           abdemo.mdl  abdemo.prt  abdemo.sta  boltpipeflange_axi_node
 If everything went well, the job output file (`AbaqusDemo.o9668628`) should look like this:
 
 ~~~
-[atrikut@user001 ABAQUS]$ cat AbaqusDemo.o9668628
+$ cat AbaqusDemo.o9668628
 Abaqus JOB abdemo
 Abaqus 6.14-1
 Abaqus License Manager checked out the following licenses:
