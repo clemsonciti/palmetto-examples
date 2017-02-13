@@ -49,3 +49,18 @@ inputs=( $(sed -n 5p inputs.txt) )
 
 Note that `sed -n 5p inputs.txt` extracts the fifth line from the
 file `inputs.txt`.
+
+To check the status of tasks in Job arrays,
+you can use the index of each task in your `qstat` command like this:
+
+~~~
+qstat 1351352[1].pbs02
+qstat 1351352[2].pbs02
+~~~
+
+Or you can use the following command to see the status of all
+job array tasks you have submitted:
+
+~~~
+qstat -Jt -u <username>
+~~~
