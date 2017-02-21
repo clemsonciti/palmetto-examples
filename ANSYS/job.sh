@@ -16,7 +16,7 @@ SCRATCH=/local_scratch/$USER
 for node in `uniq $PBS_NODEFILE`
 do
     ssh $node "mkdir -p $SCRATCH"
-    ssh $node "cp input.txt $SCRATCH"
+    ssh $node "cp $PBS_O_WORKDIR/input.txt $SCRATCH"
 done
 
 ansys172 -dir $SCRATCH -j EXAMPLE -s read -l en-us -b -i input.txt -o output.txt -dis -machines $machines -usessh
