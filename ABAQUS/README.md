@@ -1,4 +1,3 @@
-
 # ABAQUS
 
 **ABAQUS 6.14 Documentation**: [bobcat.nus.edu.sg:2080/v6.14/index.html](bobcat.nus.edu.sg:2080/v6.14/index.html)
