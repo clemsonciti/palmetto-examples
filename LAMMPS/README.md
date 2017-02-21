@@ -13,7 +13,8 @@ To submit the job:
 $ qsub job.sh
 ~~~
 
-The expected output is provided in `log.lammps`:
+After job completion, the expected output in `log.lammps`
+is provided below:
 
 ~~~
 LAMMPS (17 Nov 2016)
