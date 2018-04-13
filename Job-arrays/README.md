@@ -35,17 +35,21 @@ it assumes the value `2`, and for the last job, it assumes the value
 For example, for job #5, `PBS_ARRAY_INDEX` has the value `5`, so
 the job script becomes:
 
-~~~ #!/bin/bash
+```
+#!/bin/bash
 
-#PBS -N quadratic #PBS -l select=1:ncpus=1:interconnect=1g #PBS -l
-walltime=00:02:00 #PBS -j oe #PBS -J 1-8
+#PBS -N quadratic
+#PBS -l select=1:ncpus=1:interconnect=1g
+#PBS -l walltime=00:02:00
+#PBS -j oe
+#PBS -J 1-8
 
 cd $PBS_O_WORKDIR
 
 inputs=( $(sed -n 5p inputs.txt) )
 
 ./quadratic.py ${inputs[0]} ${inputs[1]} ${inputs[2]}
-~~~
+```
 
 Note that `sed -n 5p inputs.txt` extracts the fifth line from the
 file `inputs.txt`.
@@ -53,14 +57,14 @@ file `inputs.txt`.
 To check the status of tasks in Job arrays,
 you can use the index of each task in your `qstat` command like this:
 
-~~~
+```
 qstat 1351352[1].pbs02
 qstat 1351352[2].pbs02
-~~~
+```
 
 Or you can use the following command to see the status of all
 job array tasks you have submitted:
 
-~~~
+```
 qstat -Jt -u <username>
-~~~
+```
