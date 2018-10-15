@@ -17,7 +17,7 @@ SCRATCH=$TMPDIR
 # copy all input files into the scratch directory
 for node in `uniq $PBS_NODEFILE`
 do
-ssh $node "cp $PBS_O_WORKDIR/*.inp $SCRATCH"
+    ssh $node "cp $PBS_O_WORKDIR/*.inp $SCRATCH"
 done
 
 cd $SCRATCH
@@ -28,5 +28,5 @@ abaqus job=abdemo double input=$SCRATCH/boltpipeflange_axi_solidgask.inp scratch
 # SSH into each node and remove the scratch directory
 for node in `uniq $PBS_NODEFILE`
 do
-ssh $node "rm -rf $SCRATCH"
+    ssh $node "cp -r $SCRATCH/* $PBS_O_WORKDIR"
 done
