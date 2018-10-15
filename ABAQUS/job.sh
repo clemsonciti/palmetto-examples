@@ -6,16 +6,17 @@
 module purge
 module add abaqus/6.14
 
+pbsdsh sleep 20
+
 NCORES=`wc -l $PBS_NODEFILE | gawk '{print $1}'`
 cd $PBS_O_WORKDIR
 
-SCRATCH=/local_scratch/$USER
+SCRATCH=$TMPDIR
 
 # SSH into each node and create the scratch directory
 # copy all input files into the scratch directory
 for node in `uniq $PBS_NODEFILE`
 do
-ssh $node "mkdir $SCRATCH"
 ssh $node "cp $PBS_O_WORKDIR/*.inp $SCRATCH"
 done
 
@@ -27,7 +28,5 @@ abaqus job=abdemo double input=$SCRATCH/boltpipeflange_axi_solidgask.inp scratch
 # SSH into each node and remove the scratch directory
 for node in `uniq $PBS_NODEFILE`
 do
-SCRATCH=/local_scratch/$USER
-ssh $node "cp -r $SCRATCH/* $PBS_O_WORKDIR"
 ssh $node "rm -rf $SCRATCH"
 done
