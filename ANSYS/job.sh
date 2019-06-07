@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N ANSYSdis
-#PBS -l select=2:ncpus=4:mpiprocs=4:mem=11gb:interconnect=mx
+#PBS -l select=2:ncpus=4:mpiprocs=4:mem=11gb:interconnect=1g
 #PBS -l walltime=1:00:00
 #PBS -j oe
 
