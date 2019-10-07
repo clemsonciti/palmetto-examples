@@ -1,9 +1,10 @@
 #!/bin/bash
 #
 #PBS -N g09
-#PBS -l select=2:ncpus=2
+#PBS -l select=2:ncpus=2:mpiprocs=2
 #PBS -l walltime=00:15:00
 #PBS -l place=scatter
+#PBS -j oe
 
 # user prepared input file
 input=ch4.inp
@@ -20,10 +21,7 @@ export GAUSS_LFLAGS='-opt "Tsnet.Node.lindarsharg: ssh"'
 nodes=`cat $PBS_NODEFILE | uniq`
 scratch="/local_scratch/$USER.$PBS_JOBID"
 
-for node in $nodes
-do
-    ssh $node "mkdir $scratch"
-done
+pbsdsh sleep 10
 
 export GAUSS_SCRDIR=$scratch
 
@@ -42,11 +40,4 @@ g09 $tmpinput
 rm $tmpinput
 mv ${filename}_tmp.log ${filename}.log
 
-# clean the local scratch directories
-for node in $nodes
-do
-    ssh $node "rm -r $scratch"
-done
-
-# end
-
+#end
