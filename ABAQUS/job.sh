@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N AbaqusDemo
-#PBS -l select=2:ncpus=8:mpiprocs=8:mem=6gb:interconnect=mx,walltime=00:15:00
+#PBS -l select=2:ncpus=8:mpiprocs=8:mem=6gb:interconnect=1g,walltime=00:15:00
 #PBS -j oe
 
 module purge
