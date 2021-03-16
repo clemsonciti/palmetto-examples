@@ -1,7 +1,7 @@
 #PBS -N gnu-parallel-example
 #PBS -l select=5:ncpus=4:mem=1gb,walltime=00:05:00
 
-module add gnu-parallel
+module add gnu-parallel/20200722
 
 cd $PBS_O_WORKDIR
 cat $PBS_NODEFILE > nodes.txt
