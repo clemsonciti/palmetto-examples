@@ -7,6 +7,7 @@
 #PBS -J 1-8
 
 cd $PBS_O_WORKDIR
+module load anaconda3/2021.05-gcc/8.3.1
 
 inputs=( $(sed -n ${PBS_ARRAY_INDEX}p inputs.txt) )
 
