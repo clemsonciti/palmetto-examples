@@ -19,7 +19,7 @@ To run cp2k on this example, you can use job.sh from this repository. You can mo
 qsub job.sh
 ~~~
 
-NOTE for Skylight users: please use the file job_skylight.sh instead of job.sh. Again, modify it as you see fit (just make sure you keep the "#PBS -q skygpu" line).
+NOTE for Skylight users: please use the file job_skylight.sh instead of job.sh. Again, modify it as you see fit (just make sure you keep the `#PBS -q skygpu` line).
 
 The output will be stored in output.txt file.
 
