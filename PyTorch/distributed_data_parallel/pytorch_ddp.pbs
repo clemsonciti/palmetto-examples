@@ -1,0 +1,15 @@
+#PBS -N pytorch-ddp
+#PBS -l select=4:ncpus=8:mem=15gb
+#PBS -l walltime=00:20:00
+#PBS -j oe
+
+module add gnu-parallel/20200722
+
+
+cd $PBS_O_WORKDIR
+
+master_ip=`hostname -I | awk '{print $1}'`
+data_path="/zfs/citi/datasets/mnist/"
+count=$(sort -u $PBS_NODEFILE | wc -l) 
+
+seq ${count} | parallel --jobs 1 --sshloginfile $PBS_NODEFILE --workdir $PWD "./run_torch.sh $PBS_O_WORKDIR {} $master_ip $data_path $count" 

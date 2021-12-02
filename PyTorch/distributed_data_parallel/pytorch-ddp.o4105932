@@ -1,0 +1,36 @@
++ python main_torch.py --nodes 4 --local_rank 2 --ngpus 2 --ip_address 10.125.1.38 --data_path /zfs/citi/datasets/mnist/ --epochs 10
+Traceback (most recent call last):
+  File "main_torch.py", line 1, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
++ python main_torch.py --nodes 4 --local_rank 0 --ngpus 2 --ip_address 10.125.1.38 --data_path /zfs/citi/datasets/mnist/ --epochs 10
+Traceback (most recent call last):
+  File "main_torch.py", line 1, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
++ python main_torch.py --nodes 4 --local_rank 1 --ngpus 2 --ip_address 10.125.1.38 --data_path /zfs/citi/datasets/mnist/ --epochs 10
+Traceback (most recent call last):
+  File "main_torch.py", line 1, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
++ python main_torch.py --nodes 4 --local_rank 3 --ngpus 2 --ip_address 10.125.1.38 --data_path /zfs/citi/datasets/mnist/ --epochs 10
+Traceback (most recent call last):
+  File "main_torch.py", line 1, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+ 
+ 
++------------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES REQUESTED | 
++------------------------------------------+ 
+ 
+mem=60gb,walltime=00:20:00,ncpus=32
+ 
+ 
++-------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES USED | 
++-------------------------------------+ 
+ 
+cput=00:00:11,mem=27688kb,walltime=00:00:19,ncpus=32,cpupercent=0,vmem=1800368kb
+ 
+ 
