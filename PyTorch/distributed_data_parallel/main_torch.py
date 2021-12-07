@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     # Total number of gpus availabe to us.
-    args.world_size = args.ngpu * args.nodes
+    args.world_size = args.ngpus * args.nodes
     # add the ip address to the environment variable so it can be easily avialbale
     os.environ['MASTER_ADDR'] = args.ip_adress
     print("ip_adress is", args.ip_adress)
