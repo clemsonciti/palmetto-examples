@@ -25,8 +25,8 @@ if __name__ == "__main__":
     # Total number of gpus availabe to us.
     args.world_size = args.ngpus * args.nodes
     # add the ip address to the environment variable so it can be easily avialbale
-    os.environ['MASTER_ADDR'] = args.ip_adress
-    print("ip_adress is", args.ip_adress)
+    os.environ['MASTER_ADDR'] = args.ip_address
+    print("ip_address is", args.ip_address)
     os.environ['MASTER_PORT'] = '8888'
     os.environ['WORLD_SIZE'] = str(args.world_size)
     # nprocs: number of process which is equal to args.ngpu here
