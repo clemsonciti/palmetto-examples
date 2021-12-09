@@ -6,7 +6,7 @@ import torch.distributed as dist
 from argparse import ArgumentParser
 import os
 
-import train from train_ddp
+from train_ddp import train
 
 if __name__ == "__main__":
 
