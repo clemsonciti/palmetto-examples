@@ -6,8 +6,6 @@ import torch.distributed as dist
 from argparse import ArgumentParser
 import os
 
-from train_ddp import train
-
 class AE(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
