@@ -8,8 +8,6 @@ import os
 
 from train_ddp import train
 
-
-
 if __name__ == "__main__":
 
     parser = ArgumentParser()

@@ -1,3 +1,29 @@
+import torch
+import torch.nn as nn
+import torchvision
+import torch.distributed as dist
+
+class AE(nn.Module):
+    def __init__(self, **kwargs):
+        super().__init__()
+
+        self.net = nn.Sequential(
+            nn.Linear(in_features=kwargs["input_shape"], out_features=128),
+            nn.ReLU(inplace=True),
+            # small dimension
+            nn.Linear(in_features=128, out_features=128),
+            nn.ReLU(inplace=True),
+            nn.Linear(in_features=128, out_features=128),
+            nn.ReLU(inplace=True),
+            # Recconstruction of input
+            nn.Linear(in_features=128, out_features=kwargs["input_shape"]),
+            nn.ReLU(inplace=True)
+        )
+
+    def forward(self, features):
+        reconstructed = self.net(features)
+        return reconstructed
+
 def train(gpu, args):
     args.gpu = gpu
     print('gpu:',gpu)
@@ -53,9 +79,9 @@ def train(gpu, args):
 
 
     # load the model to the specified device, gpu-0 in our case
-    model = AE(input_shape=784).cuda(args.gpus)
+    model = AE(input_shape=784).cuda(args.gpu)
     model = torch.nn.parallel.DistributedDataParallel(
-        model_sync, device_ids=[args.gpu], find_unused_parameters=True
+        model, device_ids=[args.gpu], find_unused_parameters=True
     )
     # create an optimizer object
     # Adam optimizer with learning rate 1e-3
