@@ -1,10 +1,11 @@
-#PBS -N pytorch-ddp
-#PBS -l select=4:ncpus=8:mem=15gb
-#PBS -l walltime=00:20:00
+#PBS -N ddp
+#PBS -l select=2:ncpus=20:mem=120gb:ngpus=2:gpu_model=p100
+#PBS -l walltime=00:10:00
 #PBS -j oe
 
 module add gnu-parallel/20200722
 
+set -x
 
 cd $PBS_O_WORKDIR
 

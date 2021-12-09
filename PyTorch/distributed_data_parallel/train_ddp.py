@@ -80,9 +80,7 @@ def train(gpu, args):
 
     # load the model to the specified device, gpu-0 in our case
     model = AE(input_shape=784).cuda(args.gpu)
-    model = torch.nn.parallel.DistributedDataParallel(
-        model, device_ids=[args.gpu], find_unused_parameters=True
-    )
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
     # create an optimizer object
     # Adam optimizer with learning rate 1e-3
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
@@ -94,7 +92,7 @@ def train(gpu, args):
         for batch_features, _ in train_loader:
             # reshape mini-batch data to [N, 784] matrix
             # load it to the active device
-            batch_features = batch_features.view(-1, 784).cuda(args.gpus)
+            batch_features = batch_features.view(-1, 784).cuda(args.gpu)
 
             # reset the gradients back to zero
             # PyTorch accumulates gradients on subsequent backward passes

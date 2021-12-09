@@ -16,4 +16,4 @@ source activate pytorch
 export LD_PRELOAD=/usr/lib64/libcrypto.so.1.1:$LD_PRELOAD
 
 set -x 
-python main_torch.py --nodes $5 --local_rank ${partition} --ngpus 2 --ip_address $3 --data_path $4 --epochs 10 >> torch.${partition}
+python main_torch.py --nodes $5 --local_rank ${partition} --ngpus 2 --ip_address $3 --data_path $4 --epochs 10
