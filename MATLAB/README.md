@@ -1,26 +1,114 @@
-# Running MATLAB
+## MATLAB
 
-MATLAB can be run on the cluster either interactively (i.e., using
-the Graphical User Interface) or in batch mode.  Here, we demonstrate
-an example of running MATLAB in batch mode.
 
-1. Prepare your MATLAB script.  Here we provide a simple script
-`test.m`, which creates a symmetric matrix and performs its singular
-value decomposition.
 
-2. Prepare the submit script and adjust memory and number of CPUs.
-A special consideration in the job script is using the `taskset` program to set the job affinity of the program. By default, MATLAB will attempt to use all available CPU cores in the node it is running on.  If you have only requested a portion of the CPU cores on a node, but your application tries to use more, your job will be terminated.  The `taskset` utility can be used to ensure your application only uses the number of CPU cores that your job is assigned:
-    
-        taskset -c 0-$(($OMP_NUM_THREADS-1)) matlab -nodisplay
-        -nodesktop -nosplash -r test > test_results.txt
+### Checking license usage for MATLAB
 
-Note that the variable `OMP_NUM_THREADS` will automatically be set
-to the number of CPU cores your job requested (per chunk).  Thus,
-if you want to use the maximum allowable number of CPU cores, you
-can set `taskset` to use cores `0-$(($OMP_NUM_THREADS-1))`.
+You can check the availability of MATLAB licenses
+using the `lmstat` command:
 
-3. Submit the job
+~~~
+$ /software/USR_LOCAL/flexlm/lmstat -a -c /software/USR_LOCAL/flexlm/licenses/matlab.dat
+~~~
 
-        qsub job.sh
+### Running the MATLAB graphical interface
 
-4. Examine the results
+To launch the MATLAB graphical interface, you can use [X11 tunneling](https://www.palmetto.clemson.edu/palmetto/basic/x11_tunneling/). Once you get on a compute node, you must load one of the MATLAB modules:
+
+~~~
+$ module add matlab/2020a
+~~~
+
+And then launch the MATLAB program:
+
+~~~
+$ matlab
+~~~
+
+**Warning**: DO NOT attempt to run MATLAB right after
+logging-in (i.e., on the `login001` node).
+Always ask for an interactive job first.
+MATLAB sessions are automatically killed on the login node.
+
+### Running the MATLAB command line without graphics
+
+To use the MATLAB command-line interface without graphics,
+you can request a compute node, load the Matlab module, and then use the `-nodisplay` and `-nosplash` options:
+
+~~~
+$ matlab -nodisplay -nosplash
+~~~
+
+This will work on both Windows and Mac platforms. To quit matlab command-line interface, type:
+
+~~~
+$ exit
+~~~
+
+### MATLAB in batch jobs
+
+To use MATLAB in your batch jobs,
+you can use the `-r` switch provided by MATLAB,
+which lets you **r**un commands specified on the command-line.
+For example:
+
+~~~
+$ matlab -nodisplay -nosplash -r myscript
+~~~
+
+will run the MATLAB script `myscript.m`,
+Or:
+
+~~~
+$ matlab -nodisplay -nosplash < myscript.m > myscript_results.txt
+~~~
+
+will run the MATLAB script `myscript.m` and write the output to *myscript_results.txt* file.
+Thus, an example batch job using MATLAB could have
+a batch script as follows:
+
+~~~
+#!/bin/bash
+#
+#PBS -N test_matlab
+#PBS -l select=1:ncpus=4:mem=10gb:interconnect=1g
+#PBS -l walltime=1:00:00
+
+module add matlab/2020a
+
+cd $PBS_O_WORKDIR
+matlab -nodisplay -nosplash < myscript.m > myscript_results.txt
+~~~
+
+### Compiling MATLAB code to create an executable
+
+Often, you need to run a large number of MATLAB jobs
+concurrently (e.g,m each job operating on different data).
+In such cases, you can avoid over-utilizing MATLAB licenses
+by *compiling* your MATLAB code into an executable.
+This can be done from within the MATLAB command-line as follows:
+
+~~~
+$ matlab -nodisplay -nosplash
+>> mcc -R -nodisplay -R -singleCompThread -R -nojvm -m mycode.m
+~~~
+
+Note: MATLAB will try to use all the available CPU cores
+on the system where it is running, and this presents a problem
+when your compiled executable on the cluster where available
+cores on a single node might be shared amongst multiple users.
+You can disable this "feature" when you compile your code by
+adding the `-R -singleCompThread` option, as shown above.
+
+The above command will produce the executable `mycode`, corresponding
+to the M-file `mycode.m`. If you have multiple M-files in your project
+and want to create a single executable, you can use
+a command like the following:
+
+~~~
+>> mcc -R -nodisplay -R -singleCompThread -R -nojvm -m my_main_code.m myfunction1.m myfunction2.m myfunction3.m
+~~~
+
+Once the executable is produced,
+you can run it like any other executable in your batch jobs.
+Of course, you'll also need the same `matlab` loaded for your job's runtime environment.
