@@ -1,12 +1,24 @@
-1. Prepare Amber input files. In this example we will use "alp" test
-from Abmber's test suite. 
 
-2. Examine `amber.pbs` file and adjust the names of the files i.e. input
-and coordinates files. Also, adjust the number of nodes, processors per 
-node and walltime.
+## Amber
 
-3. Submit the job
+In this example we will use "alp" test from Amber's test suite.
+To get the files relevant to this example:
 
-        qsub amber.pbs 
+~~~
+$ module add examples
+$ example get Amber
+$ cd Amber && ls
 
-4. Results will be saved in the `md.out` file (in our example). 
+amber.pbs  coords  md.in  prmtop  README.md
+~~~
+
+Examine the batch script `amber.pbs`, and adjust
+the names of the files i.e. input and coordinates files.
+Also, adjust the number of nodes, processors per node and walltime.
+To submit the job:
+
+~~~
+qsub amber.pbs 
+~~~
+
+Results will be saved in the `md.out` file (in our example).
