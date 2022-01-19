@@ -175,7 +175,7 @@ you can leverage the same notebook server.
 1) Click the `+` sign near the top left corner of the Jupyter Lab interface to open the Launcher. 
 Select a Terminal. 
 
-<img src="../images/tensorboard_01.png" style="width:1200px">
+<img src="images/tensorboard_01.png" style="width:1200px">
 
 2) Run the following commands (assuming a `tf_gpu` installation.)
 
