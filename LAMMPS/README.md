@@ -84,7 +84,7 @@ Check the contents afterward.
 $ more ../cmake/presets/my.cmake
 ~~~
 
-<img src="../../images/software/packages/lammps_01.png" style="width:600px">
+<img src="images/lammps_01.png" style="width:600px">
 
 - Next, we need to modify `../cmake/presets/kokkos-cuda.cmake` so that `kokkos` is built to the correct
 architectural specification. For Palmetto, the follow
@@ -98,7 +98,7 @@ V100 and V100S      | VOLTA70
 - Since we specified `v100` in the initial `qsub`, `../cmake/presets/kokkos-cuda.cmake` will need to be
 modified to use `VOLTA70`. 
 
-<img src="../../images/software/packages/lammps_02.png" style="width:600px">
+<img src="images/lammps_02.png" style="width:600px">
 
 - We will need to load three supporting modules from Palmetto. We will load
 modules that have been compiled for the specific architecture of v100 nodes. 
@@ -125,7 +125,7 @@ $ wget https://lammps.sandia.gov/inputs/in.lj.txt
 $ mpirun -np 2 ~/software/lammps/20200721/build-kokkos-cuda/lmp -k on g 2 -sf kk -in in.lj.txt
 ~~~
 
-<img src="../../images/software/packages/lammps_03.png" style="width:600px">
+<img src="images/lammps_03.png" style="width:600px">
 
 
 ### Running LAMMPS - an example
