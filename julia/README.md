@@ -8,11 +8,8 @@ Julia: high-level dynamic programming language that was originally designed to a
 
 There are a few different versions of Julia available on the cluster.
 
-```
-$ module avail julia
---------------------------------------------- /software/modulefiles ---------------------------------------------
-julia/0.6.2 julia/0.7.0 julia/1.0.4 julia/1.1.1
-```
+
+![Available Julie version](./fig/01.png)
 
 Let demonstrate how to use julia/1.1.1 in the Palmetto cluster together with Gurobi Optimizer (a commercial optimization solver for linear programming),
 quadratic programming, etc. Clemson University has different version of licenses for Gurobi solver.
@@ -31,9 +28,7 @@ Let prepare a script to solve this problem, named: jump_gurobi.jl.
 You can save this file to: /scratch1/$username/Julia/
 
 ```
-# Request for a compute node:
 $ qsub -I -l select=1:ncpus=8:mem=16gb:interconnect=fdr,walltime=01:00:00
-# Go to working folder:
 $ cd /scratch1/$username/Julia
 $ nano jump_gurobi.jl
 ```
@@ -61,7 +56,7 @@ println(" x = ", JuMP.value(x), " y = ", JuMP.value(y))
 Save the jump_gurobi.jl file then you are ready to run julia:
 
 ```
-$ module add julia/1.1.1 gurobi/7.0.2
+$ module add julia/1.6.1 gurobi/7.0.2
 $ julia
 # the julia prompt appears:
 julia> 
@@ -91,7 +86,7 @@ $ julia jump_gurobi.jl
 #PBS -j oe
 
 module purge
-module add julia/1.1.1 gurobi/7.0.2
+module add julia/1.6.1 gurobi/7.0.2
 
 cd $PBS_O_WORKDIR
 julia jump_gurobi.jl > output_JuMP.txt
@@ -103,30 +98,36 @@ Submit the job:
 
 The output file can be found at the same folder: output_JuMP.txt
 
-### Install your own Julia package using conda environment and running in Jupyterhub 
+### Launching Jupyter notebooks running Julia via Open OnDemand 
 
 In addition to traditional compilation of Julia, it is possible to install your own version of Julia and setup kernel to work using Jupterhub.
 
 ```
-# Request for a compute node:
 $ qsub -I -l select=1:ncpus=8:mem=16gb:interconnect=fdr,walltime=01:00:00
-$ module add anaconda3/5.1.0
-# Create conda environment with the name as "Julia"
-$ conda create -n Julia -c conda-forge julia
+$ module add anaconda3/2019.10-gcc/8.3.1 julia/1.6.1-gcc/8.3.1
+$ conda create -n julia python==3.8 jupyterlab==2.2.0
 $ source activate Julia
-(Julia) [$username@node1234 ~]$
-(Julia) [$username@node1234 ~]$ julia
+(julia) [$username@node1234 ~]$
+(julia) [$username@node1234 ~]$ julia
 julia> 
 julia> using Pkg
 julia> Pkg.add("IJulia")
-julia> exit
+julia> exit()
 ```
 
-Exit Julia and Start Jupyterhub in Palmetto
-After spawning, Click on New kernel in Jupyterhub, you will see **Julia 1.1.1** kernel available for use
+In a web browser, sign into Palmetto Open OnDemand via `https://openod02.palmetto.clemson.edu`. Launch the `Jupyter Notebook Interactive App`
 
-Type in the follwing code to test:
+![Jupyter Notebook App](./fig/02.png)
 
-```
-println("Hello world")
-```
+Make sure that you specify the `julia` conda environment
+
+![Julia conda environment](./fig/03.png)
+
+Launch a new notebook and select the `Julia 1.6.1` kernel
+
+![Julia conda environment](./fig/04.png)
+
+The Julia kernel should be active in the new notebook
+
+![Julia conda environment](./fig/05.png)
+
