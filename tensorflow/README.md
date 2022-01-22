@@ -71,7 +71,7 @@ $ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
 2) Load the required modules
 
 ~~~
-$ module load anaconda3/2021.05-gcc cuda/11.0.3-gcc/8.3.1 
+$ module load anaconda3/2021.05-gcc cuda/11.0.3-gcc/8.3.1 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
 ~~~
 
 3) Create a conda virtual environment:
@@ -134,10 +134,17 @@ $ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1
 ~~~
 
 
-### Test TensorFlow Jupyter Kernels
+### Run TensorFlow Jupyter Notebook in Open OnDemand
 
-1) Log into [JupyterHub](https://www.palmetto.clemson.edu/jupyterhub). Make sure you have GPU in your
-selection if you want to use the GPU TensorFlow kernel
+- Go to [Palmetto's OpenOnDemand](https://openod02.palmetto.clemson.edu/) and sign in. 
+- Under `Interactive Apps` tab, select `Jupyter Notebook`. 
+- Make the following selections:
+  - `Anaconda Version`: `anaconda3/2021.05-gcc/8.3.1`
+  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1`
+  - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
+- Make the remaining selections according to how much resources you would need.
+  - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
+- Click `Launch` when done.  
 
 <img src="images/tensorflow_01.png" style="width:1200px">
 
