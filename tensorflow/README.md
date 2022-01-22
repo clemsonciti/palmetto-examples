@@ -71,38 +71,24 @@ $ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
 2) Load the required modules
 
 ~~~
-$ module load cuda/10.2.89-gcc/8.3.1
+$ module load anaconda3/2021.05-gcc cuda/11.0.3-gcc/8.3.1 
 ~~~
 
-3) Create a directory to store the Python virtual environment packages:
+3) Create a conda virtual environment:
 
 ~~~
-$ mkdir -p ~/software/venv
-$ python3 -m venv --system-site-packages ~/software/venv/tf_cpu
+$ conda create -n tf_cpu_2.5 python=3.8
 ~~~
 
 4) Activate the virtual environment:
 ~~~
-$ source ~/software/venv/tf_cpu/bin/activate
+$ source activate tf_cpu_2.5
 ~~~
 
-5) Install TensorFlow:
+5) Install TensorFlow and supporting libraries
 ~~~
-$ pip install --upgrade pip
-$ pip install tensorflow==2.4
-~~~
-
-This will automatically install some packages that are required for Tensorflow, like SciPy or NumPy. 
-If you need additional packages (for example, Pandas), you can type
-
-~~~
-$ pip install pandas
-~~~
-
-6) Install TensorFlow Jupyter Kernel:
-
-~~~
-$ python3 -m ipykernel install --user --name tf_cpu --display-name TensorflowCPU
+$ export PYTHONNOUSERSITE=1
+$ pip install tensorflow==2.5 pandas jupyterlab
 ~~~
 
 ### Install TensorFlow 1
