@@ -153,16 +153,16 @@ $ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1
 1) Log into [JupyterHub](https://www.palmetto.clemson.edu/jupyterhub). Make sure you have GPU in your
 selection if you want to use the GPU TensorFlow kernel
 
-<img src="../../images/software/packages/tensorflow_01.png" style="width:1200px">
+<img src="images/tensorflow_01.png" style="width:1200px">
 
 2) Once your JupyterHub has started, you should see the TensorFlow kernels in your list of kernels
 in the Launcher.
 
-<img src="../../images/software/packages/tensorflow_02.png" style="width:1200px">
+<img src="images/tensorflow_02.png" style="width:1200px">
 
 3) You are now able to launch a notebook using the one of the TensorFlow with GPU kernel:
 
-<img src="../../images/software/packages/tensorflow_03.png" style="width:1200px">
+<img src="images/tensorflow_03.png" style="width:1200px">
 
 For Tensorflow with GPU support, the notebook cell containing `tf.config.list_physical_devices('GPU')`
 will produce a non-empty list. 
@@ -175,7 +175,7 @@ you can leverage the same notebook server.
 1) Click the `+` sign near the top left corner of the Jupyter Lab interface to open the Launcher. 
 Select a Terminal. 
 
-<img src="../../images/software/packages/tensorboard_01.png" style="width:1200px">
+<img src="images/tensorboard_01.png" style="width:1200px">
 
 2) Run the following commands (assuming a `tf_gpu` installation.)
 
@@ -185,7 +185,7 @@ $ source ~/software/venv/tf_gpu/bin/activate
 $ tensorboard --logdir logs --host 0.0.0.0
 ~~~
 
-<img src="../../images/software/packages/tensorboard_02.png" style="width:1200px">
+<img src="images/tensorboard_02.png" style="width:1200px">
 
 Pay attention to your allocated Palmetto node, as highlight by the red shape in the above
 image. 
@@ -193,7 +193,7 @@ image.
 3) Follow the instructions shown in [Socket Proxy Access](https://www.palmetto.clemson.edu/palmetto/advanced/proxy/) to setup proxy access from your local computer. Open the Firefox browser and go to the node from step
 2 at port 6006
 
-<img src="../../images/software/packages/tensorboard_03.png" style="width:1200px">
+<img src="images/tensorboard_03.png" style="width:1200px">
 
 
 ### Example Deep Learning - Multiple Object Detections
