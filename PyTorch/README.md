@@ -1,7 +1,7 @@
 ## Installing and running PyTorch on Palmetto
 
 [PyTorch installation for P100/V100/A100](#pytorch-installation-for-p100v100a100)<br>
-[PyTorch installation for K20/K40](#pytroch-installation-for-k20k40)<br>
+[PyTorch installation for K20/K40](#pytorch-installation-for-k20k40)<br>
 [PyTorch on OpenOnDemand](#pytorch-on-openondemand)<br>
 
 
