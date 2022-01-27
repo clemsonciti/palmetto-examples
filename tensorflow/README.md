@@ -14,75 +14,36 @@ The current versions available are `1.13.1`, `1.14.0`, and `1.15.0`.
 If you are using codes built using TensorFlow 1, please refer to 
 this [migration documentation](https://www.tensorflow.org/guide/migrate) to help with your code. 
 
-### Installing TensorFlow GPU node
+### Installing TensorFlow 2.x
 
-1) Request an interactive session on a GPU node. For example:
+1) Request an interactive session. Request a GPU or without GPU depending on your need. 
+
 ~~~
 $ qsub -I -l select=1:ncpus=24:mem=125gb:ngpus=2:gpu_model=k40:interconnect=10ge,walltime=72:00:00
 ~~~
 
-2) Load the Anaconda module:
-~~~
-$ module load anaconda3/2019.10-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
-~~~
-
-3) Create a directory to store the Python virtual environment packages:
-
-~~~
-$ mkdir -p ~/software/venv
-$ python3 -m venv --system-site-packages ~/software/venv/tf_gpu
-~~~
-
-4) Activate the virtual environment:
-
-~~~
-$ source ~/software/venv/tf_gpu/bin/activate
-~~~
-
-5) Install TensorFlow:
-
-~~~
-$ pip install --upgrade pip
-$ pip install tensorflow==2.4
-~~~
-
-This will automatically install some packages that are required for Tensorflow, like SciPy or NumPy. 
-If you need additional packages (for example, Pandas), you can type
-
-~~~
-$ pip install pandas
-~~~
-
-6) Install TensorFlow Jupyter Kernel:
-
-~~~
-$ python3 -m ipykernel install --user --name tf_gpu --display-name TensorflowGPU
-$ echo "module load anaconda3/2019.10-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0" >> ~/.jhubrc
-~~~
-
-### Installing TensorFlow for non-GPU node
-
-1) Request an interactive session without GPU specification. For example:
+or 
 
 ~~~
 $ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
 ~~~
 
-2) Load the required modules
 
+2) Load the Anaconda module:
 ~~~
-$ module load anaconda3/2021.05-gcc cuda/11.0.3-gcc/8.3.1 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
+$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
 ~~~
+
 
 3) Create a conda virtual environment:
 
 ~~~
-$ conda create -n tf_cpu_2.5 python=3.8
+$ conda create -n tf_2.5 python=3.8
 ~~~
 
 4) Activate the virtual environment:
 ~~~
-$ source activate tf_cpu_2.5
+$ source activate tf_2.5
 ~~~
 
 5) Install TensorFlow and supporting libraries
@@ -91,7 +52,7 @@ $ export PYTHONNOUSERSITE=1
 $ pip install tensorflow==2.5 pandas jupyterlab
 ~~~
 
-### Install TensorFlow 1
+### Install TensorFlow 1.x
 
 This example is for tensorflow version `1.15.0`. You can change it with `1.14.0` or `1.13.1` files:
 
@@ -112,7 +73,7 @@ total 1641262
 ~~~
 $ qsub -I -l select=1:ncpus=16:mem=62gb:ngpus=2:gpu_model=k20:interconnect=10ge,walltime=72:00:00
 $ module purge
-$ module load cuda/10.0.130-gcc/7.1.0 cudnn/7.4.1.5-10.0-linux-x64-gcc/8.3.1 anaconda3/2019.10-gcc/8.3.1
+$ module load cuda/10.0.130-gcc/7.1.0 cudnn/7.4.1.5-10.0-linux-x64-gcc/8.3.1 anaconda3/2021.05-gcc/8.3.1
 $ mkdir -p ~/software/venv
 $ python3 -m venv --system-site-packages ./software/venv/tf1_gpu
 $ source ~/software/venv/tf1_gpu/bin/activate
@@ -125,7 +86,7 @@ $ python3 -m ipykernel install --user --name tf1_gpu --display-name Tensorflow_1
 ~~~
 $ qsub -I -l select=1:ncpus=16:mem=62gb:interconnect=10ge,walltime=72:00:00
 $ module purge
-$ module load anaconda3/2019.10-gcc/8.3.1
+$ module load anaconda3/2021.05-gcc/8.3.1
 $ mkdir -p ~/software/venv
 $ python3 -m venv --system-site-packages ./software/venv/tf1_cpu
 $ source ~/software/venv/tf1_cpu/bin/activate
@@ -144,95 +105,48 @@ $ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1
   - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
+  - Select the `Tensorflow Notebook` from the `Notebook Workflow`. 
 - Click `Launch` when done.  
 
-<img src="images/tensorflow_01.png" style="width:1200px">
+<img src="fig/01.png" style="width:600px">
 
-2) Once your JupyterHub has started, you should see the TensorFlow kernels in your list of kernels
-in the Launcher.
+2) With the `jupyterlab` library installed, you do not need any kernel, but the default `Python 3` kernel.
 
-<img src="images/tensorflow_02.png" style="width:1200px">
+<img src="fig/02.png" style="width:800px">
 
-3) You are now able to launch a notebook using the one of the TensorFlow with GPU kernel:
-
-<img src="images/tensorflow_03.png" style="width:1200px">
-
-For Tensorflow with GPU support, the notebook cell containing `tf.config.list_physical_devices('GPU')`
-will produce a non-empty list. 
 
 ### Setup Tensorboard
 
-TensorFlow 2+ has `tensorboard` included with the installation package. To run TensorBoard, 
-you can leverage the same notebook server. 
+TensorFlow 2+ has `tensorboard` included with the installation package. When you first launch the app, 
+besides the `Connect to Jupyter` button, you will see a `Connect to TensorBoard` button. This is a 
+placeholder to allow you to access a TensorBoard server later on. 
 
-1) Click the `+` sign near the top left corner of the Jupyter Lab interface to open the Launcher. 
-Select a Terminal. 
+<img src="fig/03.png" style="width:800px">
 
-<img src="images/tensorboard_01.png" style="width:1200px">
+If you click on the button, you will see the error message containing the node address and port. We will 
+need this information later. 
 
-2) Run the following commands (assuming a `tf_gpu` installation.)
-
-~~~
-$ module load anaconda3/2019.10-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
-$ source ~/software/venv/tf_gpu/bin/activate
-$ tensorboard --logdir logs --host 0.0.0.0
-~~~
-
-<img src="images/tensorboard_02.png" style="width:1200px">
-
-Pay attention to your allocated Palmetto node, as highlight by the red shape in the above
-image. 
-
-3) Follow the instructions shown in [Socket Proxy Access](https://www.palmetto.clemson.edu/palmetto/advanced/proxy/) to setup proxy access from your local computer. Open the Firefox browser and go to the node from step
-2 at port 6006
-
-<img src="images/tensorboard_03.png" style="width:1200px">
+<img src="fig/04.png" style="width:800px">
 
 
-### Example Deep Learning - Multiple Object Detections
 
-This is a demonstration for the tensorflow gpu kernel. Steps for
-non-gpu kernel are similar.
-
-1) Request an interactive session on a GPU node. For example:
-~~~
-$ qsub -I -l select=1:ncpus=16:mem=20gb:ngpus=1:gpu_model=p100,walltime=3:00:00
-~~~
-
-2) Load the Anaconda module:
-~~~
-$ module load cuda/10.2.89-gcc/8.3.1 cudnn/8.0.0.180-10.2-linux-x64-gcc/8.3.1 anaconda3/2019.10-gcc/8.3.1
-~~~
-
-3) Activate the conda environment:
-~~~
-$ source activate tf_gpu_env
-~~~
-
-4) Install supporting conda modules:
+1) Open a terminal in your JupyterLab. We will assume that you have run some tensorflow modeling and 
+have some log data. 
 
 ~~~
-$ conda install Cython contextlib2 pillow lxml matplotlib utils pandas
+$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
+$ source activate tf_2.5
+$ # GO TO WHERE YOUR LOG DATA IS
+$ tensorboard --logdir . --host node1158.palmetto.clemson.edu --port 7000 
 ~~~
 
+<img src="fig/05.png" style="width:800px">
 
-5) Setup TensorFlow's Model directory:
 
-~~~
-$ cd
-$ mkdir tensorflow
-$ cd tensorflow
-$ wget https://github.com/tensorflow/models/archive/master.zip
-$ unzip master.zip
-$ mv models-master models
-$ module load protobuf/3.11.2-gcc/8.3.1
-$ cd models/research
-$ protoc object_detection/protos/*.proto --python_out=.
-$ cp object_detection/packages/tf2/setup.py .
-$ python -m pip install --user --use-feature=2020-resolver .
-$ cd ~/tensorflow
-$ cp /zfs/citi/deeplearning/multi_object.ipynb .
-~~~
+2) Refresh the TensorBoard page to view 
 
-Open Jupyter Server, change into the `tensorflow` directory, then open and run
-the `multi_object.ipynb` notebook.
+<img src="fig/06.png" style="width:1000px">
+
+
+
+
