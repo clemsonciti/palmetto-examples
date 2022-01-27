@@ -4,8 +4,9 @@
 #PBS -j oe
 
 module purge
-module add comsol/5.2
+module add comsol/5.5
 
 cd $PBS_O_WORKDIR
+SCRATCH=$TMPDIR
 
-comsol batch -np 8 -tmpdir /local_scratch -inputfile free_convection.mph -outputfile free_convection_output.mph
+comsol batch -np 8 -tmpdir /$SCRATCH -inputfile free_convection.mph -outputfile free_convection_output.mph
