@@ -5,13 +5,15 @@
 #PBS -j oe
 
 module purge
-module add ansys202
+module add ansys/19.5
+
+pbsdsh sleep 20
 
 cd $PBS_O_WORKDIR
 
 machines=$(uniq -c $PBS_NODEFILE | awk '{print $2":"$1}' | tr '\n' :)
 
-SCRATCH=/local_scratch/$USER
+SCRATCH=$TMPDIR
 
 for node in `uniq $PBS_NODEFILE`
 do
@@ -19,7 +21,9 @@ do
     ssh $node "cp $PBS_O_WORKDIR/input.txt $SCRATCH"
 done
 
-ansys202 -dir $SCRATCH -j EXAMPLE -s read -l en-us -b -i input.txt -o output.txt -dis -machines $machines -usessh
+cd $SCRATCH
+
+ansys195 -dir $SCRATCH -j EXAMPLE -s read -l en-us -b -i input.txt -o output.txt -dis -machines $machines -usessh
 
 sleep 60
 
