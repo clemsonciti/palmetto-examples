@@ -75,11 +75,13 @@ with the description (login required).
 #PBS -j oe
 
 module purge
-module add comsol/5.2
+module add comsol/5.5
 
 cd $PBS_O_WORKDIR
+mkdir -p /scratch1/$USER/tmp
+SCRATCH=/scratch1/$USER/tmp
 
-comsol batch -np 8 -tmpdir $TMPDIR -inputfile free_convection.mph -outputfile free_convection_output.mph
+comsol batch -np 8 -tmpdir $SCRATCH -inputfile free_convection.mph -outputfile free_convection_output.mph
 ~~~
 
 #### COMSOL batch job across several nodes.
