@@ -105,6 +105,7 @@ $ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1
   - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
+  - Make sure to use a node in phase 12 or above if using tensorflow 2.
   - Select the `Tensorflow Notebook` from the `Notebook Workflow`. 
 - Click `Launch` when done.  
 
