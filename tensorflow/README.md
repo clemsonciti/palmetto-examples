@@ -124,12 +124,8 @@ placeholder to allow you to access a TensorBoard server later on.
 
 <img src="fig/03.png" style="width:800px">
 
-If you click on the button, you will see the error message containing the node address and port. We will 
-need this information later. 
-
-<img src="fig/04.png" style="width:800px">
-
-
+If you click on the button, you will see a `502 Bad Gateway` error message. This is because we 
+do not have a TensorBoard server running yet.  
 
 1) Open a terminal in your JupyterLab. We will assume that you have run some tensorflow modeling and 
 have some log data. 
@@ -138,11 +134,8 @@ have some log data.
 $ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
 $ source activate tf_2.5
 $ # GO TO WHERE YOUR LOG DATA IS
-$ tensorboard --logdir . --host node1158.palmetto.clemson.edu --port 7000 
+$ tensorboard --logdir .  
 ~~~
-
-<img src="fig/05.png" style="width:800px">
-
 
 2) Refresh the TensorBoard page to view 
 
