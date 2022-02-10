@@ -31,7 +31,7 @@ $ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
 
 2) Load the Anaconda module:
 ~~~
-$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
+$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.1.0-gcc/8.4.1 cudnn/8.1.0.77-11.2-linux-x64-gcc/8.4.1
 ~~~
 
 
@@ -101,7 +101,7 @@ $ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1
 - Under `Interactive Apps` tab, select `Jupyter Notebook`. 
 - Make the following selections:
   - `Anaconda Version`: `anaconda3/2021.05-gcc/8.3.1`
-  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1`
+  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.1.0.77-11.2-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1`
   - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
@@ -131,7 +131,7 @@ do not have a TensorBoard server running yet.
 have some log data. 
 
 ~~~
-$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.0.3-gcc/7.5.0 cudnn/8.0.0.180-11.0-linux-x64-gcc/7.5.0
+$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.1.0-gcc/8.4.1 cudnn/8.1.0.77-11.2-linux-x64-gcc/8.4.1
 $ source activate tf_2.5
 $ # GO TO WHERE YOUR LOG DATA IS
 $ tensorboard --logdir .  
