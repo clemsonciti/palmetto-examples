@@ -282,4 +282,4 @@ tmux attach-session -t data_transfer
 
 To see the names of all running sessions, type `tmux ls`. To kill a session, attach to it, and then type `Crtl+b x`. 
 
-`tmux` is a very powerful tool which can be used for many other purposes; you can find a quick guide to `tmux` (here)[https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/].
+`tmux` is a very powerful tool which can be used for many other purposes; you can find a quick guide to `tmux` [here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
