@@ -145,6 +145,9 @@ $ tensorboard --logdir .
 When an attempting to use a GPU with an incorrect configuration tensorflow will fallback onto CPU computation. We can monitor the usage of our requested GPUs with the `nvidia-smi` command on Palmetto.
 
 1. Create a new tab in JupyterLab and on that tab open a new terminal.
+
 2. In this terminal run `nvidia-smi -l 1` this will poll GPU information including GPU usage as a percentage every second.
+
    <img src="fig/07.png" style="width:800px">
+
 3. Return to your notebook and run your program. While your program is running check on your gpu usage by returing to the terminal tab.
