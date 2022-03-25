@@ -2,7 +2,7 @@
 #PBS -N GROMACS
 #PBS -l select=4:ncpus=8:mpiprocs=2:ngpus=2:gpu_model=v100:interconnect=hdr:mem=22gb
 #PBS -j oe
-#PBS -l walltime=72:00:00
+#PBS -l walltime=0:30:00
 
 module purge
 module load gromacs/2020.2-gcc/8.3.1-mpi-openmp-dp-cuda10_2
