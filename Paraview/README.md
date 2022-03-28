@@ -11,25 +11,22 @@ and the "server" is the Palmetto cluster on which the computations/rendering is 
 1. The version of Paraview on the client needs to match
 exactly the version of Paraview on the server.
 The client must be running Linux.
-You can obtain the source code used for installation of Paraview 5.0.1
-on Palmetto from `/software/paraview/ParaView-v5.0.1-source.tar.gz`.
-Copy this file to the client, extract it and compile Paraview.
-Compilation instructions can be found in the Paraview
-[documentation](http://www.paraview.org/Wiki/ParaView:Build_And_Install).
+You can obtain the source code used for installation of Paraview 5.8.0
+on Palmetto from [https://www.paraview.org/download/](https://www.paraview.org/download/).
 
 2. You will need to run the Paraview server on Palmetto cluster.
 First, [log in with X11 tunneling enabled](https://www.palmetto.clemson.edu/palmetto/basic/x11_tunneling/), and request an interactive session:
 
 ~~~
-$ qsub -I -X -l select=4:ncpus=2:mpiprocs=2:ngpus=2:mem=32gb:interconnect=10ge,walltime=1:00:00
+$ qsub -I -X -l select=1:ncpus=24:mpiprocs=24:ngpus=2:gpu_model=k40:mem=124gb:interconnect=fdr,walltime=1:00:00
 ~~~
-
-In the above example, we request 4 nodes with 2 GPUs each.
 
 3. Next, launch the Paraview server:
 
 ~~~
-$ module add paraview/5.0
+$ module add paraview/5.8.0-gcc/8.3.1-mpi-cuda10_2
+$ module remove openmpi/3.1.6-gcc/8.3.1-cuda10_2-ucx
+$ module add openmpi/4.0.5-gcc/8.4.1-ucx
 $ export DISPLAY=:0
 $ mpiexec -n 8 pvserver -display :0
 ~~~
@@ -47,4 +44,4 @@ $ ssh -L 11111:nodeXYZ:11111 username@login.palmetto.clemson.edu
 ~~~
 
 3. Once port-forwarding is set up,
-you can launch Paraview on your local machine,
+you can launch Paraview on your local machine.
