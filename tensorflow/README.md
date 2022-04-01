@@ -18,15 +18,14 @@ this [migration documentation](https://www.tensorflow.org/guide/migrate) to help
 
 1. Request an interactive session. Request a GPU or without GPU depending on your need.
 
-```
-$ qsub -I -l select=1:ncpus=24:mem=125gb:ngpus=2:gpu_model=k40:interconnect=10ge,walltime=72:00:00
-```
+Depending on cluster availability, you can set `chip_type` to be `e5-2680v3`, `e5-2680v4`, `6148g`, and `6248g`.
+You can use `whatsfree` and `freeres` to identify an appropriate `chip_type` setting.
 
-or
 
 ```
-$ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
+$ qsub -I -l select=1:ncpus=8:mem=15gb:chip_type=e5-2680v4,walltime=2:00:00
 ```
+
 
 2. Load the Anaconda module:
 
