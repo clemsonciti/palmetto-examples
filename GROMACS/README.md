@@ -29,7 +29,7 @@ $ module load gromacs/2020.4-gcc/8.4.1-mpi-openmp-cuda11_4
 
 If you have your own input settings you should compile them into an input file.
 
-If you don't have an input file you can create one from the GROMACS benchmarks.
+If you don't have an input file you can create one from the GROMACS benchmarks. In this following example we create the input binary with the name `em.tpr`.
 
 ```
 $ wget ftp://ftp.gromacs.org/pub/benchmarks/ADH_bench_systems.tar.gz
