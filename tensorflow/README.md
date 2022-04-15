@@ -18,15 +18,14 @@ this [migration documentation](https://www.tensorflow.org/guide/migrate) to help
 
 1. Request an interactive session. Request a GPU or without GPU depending on your need.
 
-```
-$ qsub -I -l select=1:ncpus=24:mem=125gb:ngpus=2:gpu_model=k40:interconnect=10ge,walltime=72:00:00
-```
+Depending on cluster availability, you can set `chip_type` to be `e5-2680v3`, `e5-2680v4`, `6148g`, and `6248g`.
+You can use `whatsfree` and `freeres` to identify an appropriate `chip_type` setting.
 
-or
 
 ```
-$ qsub -I -l select=1:ncpus=24:mem=125gb:interconnect=10ge,walltime=72:00:00
+$ qsub -I -l select=1:ncpus=8:mem=15gb:chip_type=e5-2680v4,walltime=2:00:00
 ```
+
 
 2. Load the Anaconda module:
 
@@ -75,11 +74,10 @@ total 1641262
 $ qsub -I -l select=1:ncpus=16:mem=62gb:ngpus=2:gpu_model=k20:interconnect=10ge,walltime=72:00:00
 $ module purge
 $ module load cuda/10.0.130-gcc/7.1.0 cudnn/7.4.1.5-10.0-linux-x64-gcc/8.3.1 anaconda3/2021.05-gcc/8.3.1
-$ mkdir -p ~/software/venv
-$ python3 -m venv --system-site-packages ./software/venv/tf1_gpu
-$ source ~/software/venv/tf1_gpu/bin/activate
-$ pip install --ignore-install /zfs/citi/tf_downloads/tensorflow_gpu-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
-$ python3 -m ipykernel install --user --name tf1_gpu --display-name Tensorflow_1_GPU
+$ conda create -n tf1_gpu python==3.7
+$ source activate tf1_gpu
+$ pip install /zfs/citi/tf_downloads/tensorflow_gpu-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
+$ pip install jupyterlab
 ```
 
 2. CPU
@@ -88,11 +86,10 @@ $ python3 -m ipykernel install --user --name tf1_gpu --display-name Tensorflow_1
 $ qsub -I -l select=1:ncpus=16:mem=62gb:interconnect=10ge,walltime=72:00:00
 $ module purge
 $ module load anaconda3/2021.05-gcc/8.3.1
-$ mkdir -p ~/software/venv
-$ python3 -m venv --system-site-packages ./software/venv/tf1_cpu
-$ source ~/software/venv/tf1_cpu/bin/activate
-$ pip install --ignore-install /zfs/citi/tf_downloads/tensorflow-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
-$ python3 -m ipykernel install --user --name tf1_cpu --display-name Tensorflow_1_CPU
+$ conda create -n tf1_cpu python==3.7
+$ source activate tf1_cpu
+$ pip install /zfs/citi/tf_downloads/tensorflow-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
+$ pip install jupyterlab
 ```
 
 ### Run TensorFlow Jupyter Notebook in Open OnDemand

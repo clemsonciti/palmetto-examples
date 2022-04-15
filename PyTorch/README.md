@@ -41,13 +41,9 @@ $ source activate pytorch
 
 ~~~
 $ conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge
+$ conda install jupyterlab requests
 ~~~
 
-6) Install additional packages (for example, Pandas and JupyterLab)
-
-~~~
-$ conda install pandas jupyterlab=2.2.0 requests
-~~~
 
 *JupyterLab version needs to be fixed as the new version has 
 conflicting configuration parameters*
