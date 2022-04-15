@@ -1,11 +1,11 @@
 # GROMACS
 
-- Gromacs is an architecture-specific software. It performs best when installed and configured on the
+- Gromacs is an architecture-specific software. It performs best when installed and configured for the
   specific hardware.
 
 ## Using pre-built versions of GROMACS
 
-Palmetto comes with GROMACS pre installed as a module, these can be found with the module command
+Palmetto comes with different versions of GROMACS installed as modules, these can be found with the module command
 
 ```
 $ module avail gromacs
@@ -38,7 +38,7 @@ $ cd ADH/adh_cubic
 $ gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
 ```
 
-You can then run your input `em.tpr` file with `gmx_mpi`
+You can then run your input (for example, `em.tpr`) file with `gmx_mpi`
 
 ```
 $ gmx_mpi mdrun -s em.tpr -deffnm job_output
@@ -46,9 +46,7 @@ $ gmx_mpi mdrun -s em.tpr -deffnm job_output
 
 ## Running in batch mode
 
-In an ideal scenario you will be running GROMACS in a batch script which will let you utilize openMPI and GPUs for faster performance.
-
-An example of a batch script where em.tpr is in the same directory as the script.
+The most optimal way to run GROMACS on Palmetto is from a batch script which uses multiple notes, multiple threads, and multiple GPUs (two per node) for faster performance. Here's an example (which uses em.tpr as the input, which needs to be in the same folder as the script):
 
 ```
 #PBS -N GROMACS
@@ -61,7 +59,7 @@ module load gromacs/2020.4-gcc/8.4.1-mpi-openmp-cuda11_4
 module load openmpi/3.1.6-gcc/8.3.1-cuda10_2-ucx
 
 
-# Gromacs recommends having between 2 and 6 threads;
+# Gromacs recommends having between 2 and 6 threads:
 export OMP_NUM_THREADS=6
 
 cd $PBS_O_WORKDIR
@@ -74,8 +72,8 @@ mpirun -np $N_MPI_PROCESSES -npernode 2 gmx_mpi mdrun -s em.tpr -deffnm job-outp
 
 ```
 
-Note that `ncpus` should be the product of `OMP_NUM_THREADS` and `npernode`.
-You can also select more or less nodes with the `select` option when requesting resources.
+Note that `ncpus` should be the product of `OMP_NUM_THREADS` and `ngpus`.
+You can also select more or less nodes with the `select` option when requesting resources; there is no need to change other parameters because they will be automatically adjusted to the number of nodes.
 
 More information on GROMACS performance optimisation can be found [here.](https://manual.gromacs.org/documentation/current/user-guide/mdrun-performance.html)
 
