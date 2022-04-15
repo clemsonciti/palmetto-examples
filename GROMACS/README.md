@@ -38,7 +38,7 @@ $ cd ADH/adh_cubic
 $ gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
 ```
 
-You can then run your input file with `gmx_mpi`
+You can then run your input `em.tpr` file with `gmx_mpi`
 
 ```
 $ gmx_mpi mdrun -s em.tpr -deffnm job_output
@@ -46,7 +46,7 @@ $ gmx_mpi mdrun -s em.tpr -deffnm job_output
 
 ## Running in batch mode
 
-In an ideal scenario you will be running GROMACS in a batch script which will let you utilize openMPI for faster performance.
+In an ideal scenario you will be running GROMACS in a batch script which will let you utilize openMPI and GPUs for faster performance.
 
 An example of a batch script where em.tpr is in the same directory as the script.
 
