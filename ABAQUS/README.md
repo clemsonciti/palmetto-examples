@@ -57,7 +57,7 @@ You can obtain the files required to run this example
 using the following commands:
 
 ~~~
-$ cd /scratch2/username
+$ cd /scratch1/username
 $ module add examples
 $ example get ABAQUS
 $ cd ABAQUS && ls
@@ -118,7 +118,7 @@ In the batch script `job.sh`:
    such as the path to the `.inp` file, the scratch directory to use, etc.,
 
    ~~~
-   abaqus job=abdemo double input=/scratch2/$USER/ABAQUS/boltpipeflange_axi_solidgask.inp scratch=$SCRATCH cpus=$NCORES mp_mode=mpi interactive
+   abaqus job=abdemo double input=/scratch1/$USER/ABAQUS/boltpipeflange_axi_solidgask.inp scratch=$SCRATCH cpus=$NCORES mp_mode=mpi interactive
    ~~~  
 
 To submit the job:
@@ -128,7 +128,7 @@ $ qsub job.sh
 9668628
 ~~~
 
-After job completion, you will see the job submission directory (`/scratch2/username/ABAQUS`)
+After job completion, you will see the job submission directory (`/scratch1/username/ABAQUS`)
 populated with various files:
 
 ~~~
