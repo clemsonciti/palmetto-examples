@@ -1,16 +1,50 @@
-### Setting up rclone for use with Box on Palmetto
+## Setting up rclone for use with Box on Palmetto
 
-To use `rclone` with any of the above cloud storage services,
-you must perform a one-time configuration.
-You can configure `rclone` to work with as many services as you like.
+Prior to connection `rclone` to `Box` on Palmetto, you will need to 
+setup a Box app for authentication purposes. 
 
-After you get on a compute node, load the `rclone` module:
+### Setting up a new Box app
+
+- Visit `https://clemson.app.box.com/developers/console` and sign in using
+Clemson's login name and password
+- Click `Create New App`
+
+<img src="fig/01.png" style="width:800px">
+
+- Select `Custom App`
+
+<img src="fig/02.png" style="width:800px">
+
+- Select `User Authentication (OAuth 2.0)`
+  - Enter App Name, you can call the app `palmetto`.
+  - Click `Create App`
+
+<img src="fig/03.png" style="width:1000px">
+
+- In the next Configuration windows, there are three items in the app the you need to use to enter
+in the `rclone` configuration section later on:
+  - Developer Token
+  - Client ID
+  - Client Secret
+
+<img src="fig/04.png" style="width:800px">
+
+- Scroll down the Configuration windows and check the box on `Write all files and folders 
+stored in Box`. 
+  - Click `Save Changes`. 
+
+- At this point, use your favorite terminal (or OpenOD02 browser terminal), 
+log onto Palmetto, and get a compute node. 
+
+### Setting up rclone for Box
+
+- After you get on a compute node, load the `rclone` module:
 
 ~~~
-module add rclone/1.51.0-gcc/8.3.1
+module add rclone/1.58.1-gcc/8.3.1
 ~~~
 
-After `rclone` is loaded, you must set up a "remote". In this case,
+- After `rclone` is loaded, you must set up a "remote". In this case,
 we will configure a remote for Google Drive. You can create and manage a separate
 remote for each cloud storage service you want to use.
 Start by entering the following command:
@@ -31,242 +65,156 @@ q) Quit config
 e/n/d/r/c/s/q> 
 ~~~
 
-Hit **n** then Enter to create a new remote host.
+- Press `n` then `Enter` to create a new remote host.
 
 ```
 name>
 ```
 
-Provide any name for this remote host. For example: **gmaildrive**
+- Provide any name for this remote host. Let's call this one **box**, then press `Enter`. 
+- Next, `rclone` is going to give you a lengthy list of different possible storage connector. 
+We are going to choose `8` for `Box`, then press `Enter`. 
 
 ```
 Choose a number from below, or type in your own value
- 1 / 1Fichier
-   \ "fichier"
- 2 / Alias for an existing remote
-   \ "alias"
- 3 / Amazon Drive
-   \ "amazon cloud drive"
- 4 / Amazon S3 Compliant Storage Provider (AWS, Alibaba, Ceph, Digital Ocean, Dreamhost, IBM COS, Minio, etc)
-   \ "s3"
- 5 / Backblaze B2
-   \ "b2"
- 6 / Box
-   \ "box"
- 7 / Cache a remote
-   \ "cache"
- 8 / Citrix Sharefile
-   \ "sharefile"
- 9 / Dropbox
-   \ "dropbox"
-10 / Encrypt/Decrypt a remote
-   \ "crypt"
-11 / FTP Connection
-   \ "ftp"
-12 / Google Cloud Storage (this is not Google Drive)
-   \ "google cloud storage"
-13 / Google Drive
-   \ "drive"
-14 / Google Photos
-   \ "google photos"
-15 / Hubic
-   \ "hubic"
-16 / In memory object storage system.
-   \ "memory"
-17 / JottaCloud
-   \ "jottacloud"
-18 / Koofr
-   \ "koofr"
-19 / Local Disk
-   \ "local"
-20 / Mail.ru Cloud
-   \ "mailru"
-21 / Mega
-   \ "mega"
-22 / Microsoft Azure Blob Storage
-   \ "azureblob"
-23 / Microsoft OneDrive
-   \ "onedrive"
-24 / OpenDrive
-   \ "opendrive"
-25 / Openstack Swift (Rackspace Cloud Files, Memset Memstore, OVH)
-   \ "swift"
-26 / Pcloud
-   \ "pcloud"
-27 / Put.io
-   \ "putio"
-28 / QingCloud Object Storage
-   \ "qingstor"
-29 / SSH/SFTP Connection
-   \ "sftp"
-30 / Sugarsync
-   \ "sugarsync"
-31 / Transparently chunk/split large files
-   \ "chunker"
-32 / Union merges the contents of several remotes
-   \ "union"
-33 / Webdav
-   \ "webdav"
-34 / Yandex Disk
-   \ "yandex"
-35 / http Connection
-   \ "http"
-36 / premiumize.me
-   \ "premiumizeme"
+  1 / 1Fichier
+   \ (fichier)
+ 2 / Akamai NetStorage
+   \ (netstorage)
+ 3 / Alias for an existing remote
+   \ (alias)
+ 4 / Amazon Drive
+   \ (amazon cloud drive)
+ 5 / Amazon S3 Compliant Storage Providers including AWS, Alibaba, Ceph, China Mobile, Digital Ocean, Dreamhost, IBM COS, Lyve Cloud, Minio, Netease, RackCorp, Scaleway, SeaweedFS, StackPath, Storj, Tencent COS and Wasabi
+   \ (s3)
+ 6 / Backblaze B2
+   \ (b2)
+ 7 / Better checksums for other remotes
+   \ (hasher)
+ 8 / Box
+   \ (box)
+ 9 / Cache a remote
+   \ (cache)
+10 / Citrix Sharefile
+   \ (sharefile)
+11 / Compress a remote
+   \ (compress)
+12 / Dropbox
+   \ (dropbox)
+13 / Encrypt/Decrypt a remote
+   \ (crypt)
+14 / Enterprise File Fabric
+   \ (filefabric)
+15 / FTP Connection
+   \ (ftp)
+16 / Google Cloud Storage (this is not Google Drive)
+   \ (google cloud storage)
+17 / Google Drive
+   \ (drive)
+18 / Google Photos
+   \ (google photos)
+19 / Hadoop distributed file system
+   \ (hdfs)
+20 / Hubic
+   \ (hubic)
+21 / In memory object storage system.
+   \ (memory)
+22 / Jottacloud
+   \ (jottacloud)
+23 / Koofr, Digi Storage and other Koofr-compatible storage providers
+   \ (koofr)
+24 / Local Disk
+   \ (local)
+25 / Mail.ru Cloud
+   \ (mailru)
+26 / Mega
+   \ (mega)
+27 / Microsoft Azure Blob Storage
+   \ (azureblob)
+28 / Microsoft OneDrive
+   \ (onedrive)
+29 / OpenDrive
+   \ (opendrive)
+30 / OpenStack Swift (Rackspace Cloud Files, Memset Memstore, OVH)
+   \ (swift)
+31 / Pcloud
+   \ (pcloud)
+32 / Put.io
+   \ (putio)
+33 / QingCloud Object Storage
+   \ (qingstor)
+34 / SSH/SFTP Connection
+   \ (sftp)
+35 / Sia Decentralized Cloud
+   \ (sia)
+36 / Storj Decentralized Cloud Storage
+   \ (storj)
+37 / Sugarsync
+   \ (sugarsync)
+38 / Transparently chunk/split large files
+   \ (chunker)
+39 / Union merges the contents of several upstream fs
+   \ (union)
+40 / Uptobox
+   \ (uptobox)
+41 / Webdav
+   \ (webdav)
+42 / Yandex Disk
+   \ (yandex)
+43 / Zoho
+   \ (zoho)
+44 / http Connection
+   \ (http)
+45 / premiumize.me
+   \ (premiumizeme)
+46 / seafile
+   \ (seafile)
 Storage>
 ```
 
-Provide any number for the remote source. For example choose number **13** for Google drive. In the following questions, always accept the default value:
+- The next question for configuraiton asks for `client_id`. 
+This is where you copy the string from the `Client ID` box in your Box App
+configuration section earlier and paste it to the terminal.
+- Similarly, `rclone` will continue to ask for `client_secret`, which is 
+the string from the `Client Secret` box in your Box App configuration section. 
+- Press `Enter` to leave empty when asked about `box_config_file`. 
+- Provide the string from the `Developer Token` box in your Box App configuration
+section when asked for `access_token`. 
+  - **This access token is only valid for 60 minutes. This is for security purpose**.
+  - After 60 minutes, you will need to visit your Box App config and generate a new 
+  token. To switch out this token, first run `rclone config file` to get the location 
+  of the `rclone.conf` file. Open and edit the `access_token` string of `[box]` in this 
+  file.
+
+<img src="fig/05.png" style="width:800px">
+
+To test, run the following command to display the content of your Box drive:
 
 ```
-Google Application Client Id - leave blank normally.
-client_id> # Enter to leave blank
-Google Application Client Secret - leave blank normally.
-client_secret> # Enter to leave blank
-Scope that rclone should use when requesting access from drive.
-Enter a string value. Press Enter for the default ("").
+$ rclone lsd box:
 ```
 
-Then, it will ask you for access type. You will most likely want full access, so type **drive**:
+<img src="fig/06.png" style="width:800px">
+
+
+To view `rclone` commands to access your files and directories on box, run
 
 ```
-Choose a number from below, or type in your own value
- 1 / Full access all files, excluding Application Data Folder.
-   \ "drive"
- 2 / Read-only access to file metadata and file contents.
-   \ "drive.readonly"
-   / Access to files created by rclone only.
- 3 | These are visible in the drive website.
-   | File authorization is revoked when the user deauthorizes the app.
-   \ "drive.file"
-   / Allows read and write access to the Application Data folder.
- 4 | This is not visible in the drive website.
-   \ "drive.appfolder"
-   / Allows read-only access to file metadata but
- 5 | does not allow any access to read or download file content.
-   \ "drive.metadata.readonly"
-scope> 
+$ rclone --help
 ```
 
-For the next few questions, accept defaults. At some point, it will ask you for "remote config":
+<img src="fig/07.png" style="width:800px">
+
+Run the following sequence of commands to validate box operations:
+
 
 ```
-Remote config
-Use auto config?
- * Say Y if not sure
- * Say N if you are working on a remote or headless machine or Y didn't work
-y) Yes
-n) No
-y/n>
+$ rclone lsf box:
+$ touch test_box.txt
+$ rclone copy test_box.txt box:
+$ rclone lsf box:
+$ rclone copy box:test_box.txt text_box_2.txt
+$ ls *.txt
 ```
 
-Type **y** for "Yes". This should open up a web browser -- you might have to wait several minutes. In the browser, log into your storage account. Then, accept to let **rclone** access your Goolge drive. Once this is done, the browser will ask you to go back to rclone to continue.
-
-```
-Got code
---------------------
-[gmaildrive]
-client_id =
-client_secret =
-token = {"access_token":"xyz","token_type":"Bearer","refresh_token":"xyz","expiry":"yyyy-mm-ddThh:mm:ss"}
---------------------
-y) Yes this is OK
-e) Edit this remote
-d) Delete this remote
-y/e/d>
-```
-
-Select **y** to finish configure this remote host.
-The **gmaildrive** host will then be created.
-
-```
-Current remotes:
-
-Name                 Type
-====                 ====
-gmaildrive           drive
-
-e) Edit existing remote
-n) New remote
-d) Delete remote
-q) Quit config
-e/n/d/q>
-```
-
-After this, you can quit the config using **q**, and exit the compute node:
-
-~~~
-exit
-~~~
-
-### Using rclone
-
-Data transfer (including `rclone`) should be done on the data transfer node (`xfer01` or `xfer02`). Log into Palmetto as usual, and then connect to the data transfer node:
-
-~~~
-ssh xfer01
-~~~
-
-Log with your Palmetto password and DUO; once logged-in, load the `rclone` module:
-
-~~~
-module add rclone/1.51.0-gcc/8.3.1
-~~~
-
-You can check the content of the remote host **gmaildrive**:
-
-```
-rclone ls gmaildrive:
-rclone lsd gmaildrive:
-```
-
-You can use `rclone` to (for example) copy a file from Palmetto to any folder in your Google Drive:
-
-~~~
-rclone copy /path/to/file/on/palmetto gmaildrive:/path/to/folder/on/drive
-~~~
-
-Or if you want to copy to a specific destination on Google Drive back to Palmetto:
-
-~~~
-rclone copy gmaildrive:/path/to/folder/on/drive /path/to/file/on/palmetto
-~~~
-
-Additional `rclone` commands can be found [here](http://rclone.org/docs/).
-
-
-### Using tmux
-
-If you need to transfer a lot of data between Palmetto and cloud storage, it might take hours or days. The transfer will stop if you quit your `ssh` session (and if you log into the data ransfer node again and resume `rclone copy`, it will pick up from where it stopped). If you want the data transfer to run on the background, you can use the tool called `tmux` which is installed on Palmetto. 
-
-First, connect to `xfer01` (or `xfer02`):
-
-~~~
-ssh xfer01
-~~~
-
-Then, load the `tmux` module:
-
-~~~
-module load tmux/3.3
-~~~
-
-Then, you can start a new tmux session. Let's give it a name, for example, "data_transfer":
-
-~~~
-tmux new -s data_transfer
-~~~
-
-Your screen will slightly change: you will see the usual prompt, and name of your tmux session on the bottom of the screen. This session will run on the background even if you disconnect from Palmetto.
-
-Inside the session, you can load the rclone module, and do `rclone copy` as described in the previous step.
-
-If you want to leave the session (but keep it running), type `Ctrl+b d`. If you want to re-attach to the session, you can type
-
-~~~
-tmux attach-session -t data_transfer
-~~~
-
-To see the names of all running sessions, type `tmux ls`. To kill a session, attach to it, and then type `Crtl+b x`. 
-
-`tmux` is a very powerful tool which can be used for many other purposes; you can find a quick guide to `tmux` [here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
+<img src="fig/08.png" style="width:800px">
