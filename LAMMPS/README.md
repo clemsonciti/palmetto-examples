@@ -45,7 +45,7 @@ then runs `spack info lammps` to see the latest recommended version of lammps.**
 $ mkdir lammps
 $ cd lammps
 $ wget https://github.com/lammps/lammps/archive/patch_21Jul2020.tar.gz
-$ tar zfs path_21Jul2020.tar.gz
+$ tar -xvzf patch_21Jul2020.tar.gz
 $ mv lammps-path_21Jul2020 20200721
 ~~~
 
