@@ -44,9 +44,8 @@ then runs `spack info lammps` to see the latest recommended version of lammps.**
 ~~~
 $ mkdir lammps
 $ cd lammps
-$ wget https://github.com/lammps/lammps/archive/patch_21Jul2020.tar.gz
-$ tar -xvzf patch_21Jul2020.tar.gz
-$ mv lammps-path_21Jul2020 20200721
+$ wget https://download.lammps.org/tars/lammps-stable.tar.gz
+$ tar -xvzf lammps-29Sep2021 
 ~~~
 
 In the recent versions, lammps use cmake as their build system. As a result, we will be able to 
@@ -66,15 +65,15 @@ $ cd build-kokkos-cuda
 In building lammps, you will need to modify two `cmake` files, both inside `../cmake/presets/` directory (this is a
 relative path assuming you are inside the previously created `build-kokkos-cuda`). A set of already prepared cmake 
 templates are available inside `../cmake/presets`, but you will have to modify them. It is recommended that you use
-`../cmake/presets/minimal.cmake` and `../cmake/presets/kokkos-cuda.cmake` as starting points. 
+`../cmake/presets/basic.cmake` and `../cmake/presets/kokkos-cuda.cmake` as starting points. 
 
-For add-on simulation packages, make a copy of `../cmake/presets/minimal.cmake`, and use `../cmake/presets/all_on.cmake` 
-as a reference point to see what is needed. Let's say we want `user-meamc` and `user-fep` in addition to what's in `minimal.cmake` for simulation techniques. We also need to inlcude kokkos. 
+For add-on simulation packages, make a copy of `../cmake/presets/basic.cmake`, and use `../cmake/presets/all_on.cmake` 
+as a reference point to see what is needed. Let's say we want `user-meamc` and `user-fep` in addition to what's in `basic.cmake` for simulation techniques. We also need to inlcude kokkos. 
 
 ~~~
-$ more ../cmake/presets/minimal.cmake
+$ more ../cmake/presets/basic.cmake
 $ more ../cmake/presets/all_on.cmake
-$ cp ../cmake/presets/minimal.cmake ../cmake/presets/my.cmake
+$ cp ../cmake/presets/basic.cmake ../cmake/presets/my.cmake
 ~~~
 
 Use your favorite editor to add the necessary package names (in capitalized form) to `my.cmake`. 
@@ -113,7 +112,7 @@ $ module load cmake/3.17.3-gcc/8.3.1 fftw/3.3.8-gcc/8.3.1-mpi-openmp cuda/10.2.8
 
 ~~~
 cmake -C ../cmake/presets/my.cmake -C ../cmake/presets/kokkos-cuda.cmake ../cmake
-cmake --build .
+cmake --build . --parallel 24
 ~~~
 
 - Test on LAMMPS's LJ data
@@ -122,7 +121,7 @@ cmake --build .
 $ mkdir /scratch1/$USER/lammps
 $ cd /scratch1/$USER/lammps
 $ wget https://lammps.sandia.gov/inputs/in.lj.txt
-$ mpirun -np 2 ~/software/lammps/20200721/build-kokkos-cuda/lmp -k on g 2 -sf kk -in in.lj.txt
+$ mpirun -np 2 ~/software/lammps/lammps-29Sep2021/build-kokkos-cuda/lmp -k on g 2 -sf kk -in in.lj.txt
 ~~~
 
 <img src="images/lammps_03.png" style="width:600px">
