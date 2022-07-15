@@ -184,5 +184,19 @@ lmp -sf opt -in in.lj > output_opt_serial.txt
 mpirun -np 8 lmp -sf opt -in in.lj > output_opt_parallel.txt
 ~~~
 
+### LAAMPS with multiple GPUs
+
+When using LAAMPS with multiple GPUs it may be more efficient to divide your computing resources equally across nodes based on the amount of GPUs used.
+
+Requesting a node with `ngpus > 1` would be faster if split into multiple nodes with  `ngpus = 1```. <br>
+For instance the following request uses 4 GPUs with 1 GPU per node.
+~~~
+qsub -I -l select=4:ncpus=8:mem=20gb:ngpus=1:gpu_model=k20:interconnect=any,walltime=10:00:00
+~~~
+Once we have 4 nodes we can use open MPI to create 4 tasks for our LAAMP command.
+~~~
+mpirun -np 4 lmp -sf gpu -pk gpu 4 -in in.lj >output4_gpu.txt
+~~~
+
 For more information on comparison between various accelerator packages please visit:
 https://lammps.sandia.gov/doc/Speed_compare.html
