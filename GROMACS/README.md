@@ -104,6 +104,8 @@ Select the crrect architecture based on the CPU model:
 - 6148G: skylake
 - 6252G: cascadelake
 - 6238R: cascadelake
+- 6248: cascadelake
+
 
 In this example, given the previous `qsub` command, we most likely will get a broadwell node:
 
