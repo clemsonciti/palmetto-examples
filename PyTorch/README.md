@@ -21,7 +21,7 @@ $ qsub -I -l select=1:ncpus=16:mem=20gb:ngpus=1:gpu_model=p100:interconnect=10ge
 2) Load the Anaconda module:
 
 ~~~
-$ module load anaconda3/2019.10-gcc/8.3.1 cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1
+$ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
 ~~~
 
 
@@ -62,7 +62,7 @@ True
 Each time you login, you will first need to load the required modules and also activate the pytorch_env conda environment before running Python:
 
 ~~~
-$ module load anaconda3/2019.10-gcc/8.3.1 cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1
+$ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
 $ source activate pytorch
 ~~~
 
@@ -78,7 +78,7 @@ $ qsub -I -l select=1:ncpus=15:mem=62gb:ngpus=2:gpu_model=k20,walltime=24:00:00
 2) Load the Anaconda module:
 
 ~~~
-$ module load anaconda3/2019.10-gcc/8.3.1 cuda/11.1.0-gcc/8.3.1 cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 openmpi/4.0.3-gcc/8.3.1-ucx gcc/9.3.0 mpfr/4.0.2-gcc/8.4.1
+$ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1 openmpi/4.1.3-gcc/9.5.0-ucx gcc/9.5.0 mpfr/4.1.0-gcc/9.5.0
 ~~~
 
 
