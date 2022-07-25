@@ -76,6 +76,8 @@ $ module purge
 $ module load cuda/10.0.130-gcc/7.1.0 cudnn/7.4.1.5-10.0-linux-x64-gcc/8.3.1 anaconda3/2021.05-gcc/8.3.1
 $ conda create -n tf1_gpu python==3.7
 $ source activate tf1_gpu
+$ export PYTHONNOUSERSITE=1
+$ pip install protobuf==3.20.0
 $ pip install /zfs/citi/tf_downloads/tensorflow_gpu-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
 $ pip install jupyterlab
 ```
@@ -88,6 +90,8 @@ $ module purge
 $ module load anaconda3/2021.05-gcc/8.3.1
 $ conda create -n tf1_cpu python==3.7
 $ source activate tf1_cpu
+$ export PYTHONNOUSERSITE=1
+$ pip install protobuf==3.20.0
 $ pip install /zfs/citi/tf_downloads/tensorflow-1.15.0-cp37-cp37m-manylinux2010_x86_64.whl
 $ pip install jupyterlab
 ```
@@ -105,8 +109,6 @@ $ pip install jupyterlab
   - Make sure to use a node in phase 12 or above if using tensorflow 2.
   - Select the `Tensorflow Notebook` from the `Notebook Workflow`.
 - Click `Launch` when done.
-
-<img src="fig/01.png" style="width:600px">
 
 2. With the `jupyterlab` library installed, you do not need any kernel, but the default `Python 3` kernel.
 
