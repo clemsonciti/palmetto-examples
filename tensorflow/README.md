@@ -97,8 +97,8 @@ $ pip install jupyterlab
 - Go to [Palmetto's OpenOnDemand](https://openod02.palmetto.clemson.edu/) and sign in.
 - Under `Interactive Apps` tab, select `Jupyter Notebook`.
 - Make the following selections:
-  - `Anaconda Version`: `anaconda3/2021.05-gcc/8.3.1`
-  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.1.0.77-11.2-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1`
+  - `Anaconda Version`: `anaconda3/2022.05-gcc/9.5.0`
+  - `List of modules to be loaded, separate by an empty space`: `cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1`
   - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
@@ -127,7 +127,7 @@ do not have a TensorBoard server running yet.
    have some log data.
 
 ```
-$ module load anaconda3/2021.05-gcc/8.3.1 cuda/11.1.0-gcc/8.4.1 cudnn/8.1.0.77-11.2-linux-x64-gcc/8.4.1
+$ module load cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
 $ source activate tf_2.5
 $ # GO TO WHERE YOUR LOG DATA IS
 $ tensorboard --logdir .
