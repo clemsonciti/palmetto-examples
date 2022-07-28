@@ -87,7 +87,20 @@ V100 and V100S      | VOLTA70
 - Since we specified `v100` in the initial `qsub`, `../cmake/presets/kokkos-cuda.cmake` will need to be
 modified to use `VOLTA70`. 
 
-<img src="images/lammps_02.png" style="width:600px">
+~~~
+[lngo@node1315 build-kokkos-cuda]$ cat ../cmake/presets/kokkos-cuda.cmake
+# preset that enables KOKKOS and selects CUDA compilation with OpenMP
+# enabled as well. This preselects CC 5.0 as default GPU arch, since
+# that is compatible with all higher CC, but not the default CC 3.5
+set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_CUDA   ON CACHE BOOL "" FORCE)
+set(Kokkos_ARCH_VOLTA70 ON CACHE BOOL "" FORCE)
+set(BUILD_OMP ON CACHE BOOL "" FORCE)
+
+# hide deprecation warnings temporarily for stable release
+set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
+~~~
 
 - We will need to load three supporting modules from Palmetto. We will load
 modules that have been compiled for the specific architecture of v100 nodes. 
