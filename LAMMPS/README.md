@@ -1,7 +1,6 @@
 ## LAMMPS
 
-There are a few different versions of LAMMPS available on the cluster.
-
+As LAMMPS comes with many custom options, we do not maintain a baseline LAMMPS module, but encourage users to build their own lammps
 
 ### Installing custom LAMMPS on Palmetto
 
@@ -12,7 +11,7 @@ using `kokkos` with GPU, one using `kokkos` without GPU support.
 Reserve a node, and pay attention to its GPU model.
 
 ~~~
-$ qsub -I -l select=1:ncpus=24:mem=100gb:ngpus=2:gpu_model=v100:interconnect=25ge,walltime=10:00:00
+$ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=100gb:ngpus=2:gpu_model=v100:interconnect=25ge,walltime=10:00:00
 ~~~
 
 Create a directory named `software` (if you don't already have it) in your 
@@ -26,11 +25,7 @@ $ cd ~/software
 - Create a subdirectory called `lammps` inside `software`. 
 - Download the latest version of lammps and untar. 
   - https://www.lammps.org/download.html
-- **In this example, we use the 20200721, the latest dated version of lammps. 
-You can set up spack (see [User Software Installation](https://www.palmetto.clemson.edu/palmetto/software/spack/)), 
-then runs `spack info lammps` to see the latest recommended version of lammps.** 
-- You can change the name of the untarred directory to something easier to manage. 
-
+- **In this example, we use the latest stable version of lammps.** 
 
 ~~~
 $ mkdir lammps
@@ -108,7 +103,7 @@ modules that have been compiled for the specific architecture of v100 nodes.
 ~~~
 $ module purge
 $ export MODULEPATH=/software/ModuleFiles/modules/linux-centos8-skylake:$MODULEPATH
-$ module load cmake/3.17.3-gcc/8.3.1 fftw/3.3.8-gcc/8.3.1-mpi-openmp cuda/10.2.89-gcc/8.3.1 openmpi/3.1.6-gcc/8.3.1
+$ module load cmake/3.17.3-gcc/8.3.1 fftw/3.3.8-gcc/8.3.1-mpi-openmp cuda/10.2.89-gcc/8.3.1 openmpi/3.1.6-gcc/8.3.1 gcc/9.5.0
 ~~~
 
 - Build and install
@@ -152,7 +147,7 @@ mpirun -np 8 lmp -in in.lj > output.txt        # 8 MPI, 8 MPI/GPU
 ~~~
 
 
-#### Lammps build with kokkos and gpu
+#### Lammps build without kokkos and gpu
 
 This is a bit similar to the build with kokkos and gpu. In a non-gpu build, `kokkos` will
 help manage the OpenMP threads, and the corresponding make file is `../cmake/presets/kokkos-openmp.make`
