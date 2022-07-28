@@ -2,16 +2,6 @@
 
 There are a few different versions of LAMMPS available on the cluster.
 
-~~~
-$ module avail lammps
-
-------------------------- /software/ModuleFiles/modules/linux-centos8-x86_64 -------------------------
-lammps/20190807-gcc/8.3.1-cuda10_2-mpi-openmp-user-omp
-lammps/20200505-gcc/8.3.1-cuda10_2-kokkos-mpi-nvidia_P-openmp-user-omp
-lammps/20200505-gcc/8.3.1-cuda10_2-kokkos-mpi-nvidia_K-openmp-user-omp
-lammps/20200505-gcc/8.3.1-cuda10_2-kokkos-mpi-nvidia_V-openmp-user-omp (D)
-~~~
-Note: letter P, K, V stand for GPU pascal (p100), kepler (k20, k40) and volta (v100)
 
 ### Installing custom LAMMPS on Palmetto
 
@@ -46,12 +36,11 @@ then runs `spack info lammps` to see the latest recommended version of lammps.**
 $ mkdir lammps
 $ cd lammps
 $ wget https://download.lammps.org/tars/lammps-stable.tar.gz
-$ tar -xvzf lammps-29Sep2021 
+$ tar -xzf lammps-stable.tar.gz 
 ~~~
 
 In the recent versions, lammps use cmake as their build system. As a result, we will be able to 
 build multiple lammps executables within a single source download. 
-
 
 #### Lammps build with kokkos and gpu
 
