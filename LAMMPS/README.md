@@ -35,6 +35,7 @@ $ cd ~/software
 
 - Create a subdirectory called `lammps` inside `software`. 
 - Download the latest version of lammps and untar. 
+  - https://www.lammps.org/download.html
 - **In this example, we use the 20200721, the latest dated version of lammps. 
 You can set up spack (see [User Software Installation](https://www.palmetto.clemson.edu/palmetto/software/spack/)), 
 then runs `spack info lammps` to see the latest recommended version of lammps.** 
