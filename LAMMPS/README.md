@@ -63,9 +63,18 @@ $ cp ../cmake/presets/basic.cmake ../cmake/presets/my.cmake
 
 Use your favorite editor to add the necessary package names (in capitalized form) to `my.cmake`. 
 Check the contents afterward. 
+**Make sure that you include the GPU package**
 
 ~~~
 $ more ../cmake/presets/my.cmake
+# preset that turns on just a few, frequently used packages
+# this will be compiled quickly and handle a lot of common inputs.
+
+set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU)
+
+foreach(PKG ${ALL_PACKAGES})
+  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
+endforeach()
 ~~~
 
 <img src="images/lammps_01.png" style="width:600px">
@@ -124,6 +133,19 @@ $ mpirun -np 2 ~/software/lammps/lammps-29Sep2021/build-kokkos-cuda/lmp -k on g 
 
 <img src="images/lammps_03.png" style="width:600px">
 
+#### Lammps build without kokkos and gpu
+
+This is a bit similar to the build with kokkos and gpu. In a non-gpu build, `kokkos` will
+help manage the OpenMP threads, and the corresponding make file is `../cmake/presets/kokkos-openmp.make`
+
+~~~
+ mkdir build-kokkos-omp
+ cd build-kokkos-omp/
+ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
+ cmake -C ../cmake/presets/my.cmake -C ../cmake/presets/kokkos-openmp.cmake ../cmake
+ cmake --build . --parallel 24
+~~~
+
 
 ### Running LAMMPS - an example
 
@@ -145,12 +167,6 @@ module load lammps/20200505-gcc/8.3.1-cuda10_2-kokkos-mpi-nvidia_V-openmp-user-o
 mpirun -np 8 lmp -in in.lj > output.txt        # 8 MPI, 8 MPI/GPU
 # to write the output to a file
 ~~~
-
-
-#### Lammps build without kokkos and gpu
-
-This is a bit similar to the build with kokkos and gpu. In a non-gpu build, `kokkos` will
-help manage the OpenMP threads, and the corresponding make file is `../cmake/presets/kokkos-openmp.make`
 
 
 ### Several way to run LAAMPS
