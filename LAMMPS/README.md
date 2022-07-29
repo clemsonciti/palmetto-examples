@@ -34,8 +34,6 @@ $ wget https://download.lammps.org/tars/lammps-stable.tar.gz
 $ tar -xzf lammps-stable.tar.gz 
 ~~~
 
-Change into the newly untar directory.
-
 In the recent versions, lammps use cmake as their build system. As a result, we will be able to 
 build multiple lammps executables within a single source download. 
 
@@ -65,22 +63,12 @@ $ cp ../cmake/presets/basic.cmake ../cmake/presets/my.cmake
 
 Use your favorite editor to add the necessary package names (in capitalized form) to `my.cmake`. 
 Check the contents afterward. 
-- **Make sure that you add the GPU package**
 
 ~~~
-$ cat ../cmake/presets/my.cmake
-# preset that turns on just a few, frequently used packages
-# this will be compiled quickly and handle a lot of common inputs.
-
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU)
-
-foreach(PKG ${ALL_PACKAGES})
-  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
-endforeach()
-
+$ more ../cmake/presets/my.cmake
 ~~~
 
-
+<img src="images/lammps_01.png" style="width:600px">
 
 - Next, we need to modify `../cmake/presets/kokkos-cuda.cmake` so that `kokkos` is built to the correct
 architectural specification. For Palmetto, the follow
@@ -114,7 +102,8 @@ modules that have been compiled for the specific architecture of v100 nodes.
 
 ~~~
 $ module purge
-$ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
+$ export MODULEPATH=/software/ModuleFiles/modules/linux-centos8-skylake:$MODULEPATH
+$ module load cmake/3.17.3-gcc/8.3.1 fftw/3.3.8-gcc/8.3.1-mpi-openmp cuda/10.2.89-gcc/8.3.1 openmpi/3.1.6-gcc/8.3.1 gcc/9.5.0
 ~~~
 
 - Build and install
