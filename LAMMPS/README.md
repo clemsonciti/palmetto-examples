@@ -110,9 +110,7 @@ set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
 modules that have been compiled for the specific architecture of v100 nodes. 
 
 ~~~
-$ module purge
-$ export MODULEPATH=/software/ModuleFiles/modules/linux-centos8-skylake:$MODULEPATH
-$ module load cmake/3.17.3-gcc/8.3.1 fftw/3.3.8-gcc/8.3.1-mpi-openmp cuda/10.2.89-gcc/8.3.1 openmpi/3.1.6-gcc/8.3.1 gcc/9.5.0
+$ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
 ~~~
 
 - Build and install
