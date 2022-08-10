@@ -131,7 +131,7 @@ $ mpirun -np 2 ~/software/lammps/lammps-29Sep2021/build-kokkos-cuda/lmp -k on g 
 
 <img src="images/lammps_03.png" style="width:600px">
 
-#### Lammps build without kokkos and gpu
+#### Lammps build with kokkos and openmp
 
 This is a bit similar to the build with kokkos and gpu. In a non-gpu build, `kokkos` will
 help manage the OpenMP threads, and the corresponding make file is `../cmake/presets/kokkos-openmp.make`
