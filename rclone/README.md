@@ -214,10 +214,10 @@ exit
 
 ### Using rclone
 
-Data transfer (including `rclone`) should be done on the data transfer node (`xfer01` or `xfer02`). Log into Palmetto as usual, and then connect to the data transfer node:
+Data transfer (including `rclone`) should be done on the data transfer node (currently, it is `xfer02`). Log into Palmetto as usual, and then connect to the data transfer node:
 
 ~~~
-ssh xfer01
+ssh xfer02
 ~~~
 
 Log with your Palmetto password and DUO; once logged-in, load the `rclone` module:
@@ -252,10 +252,10 @@ Additional `rclone` commands can be found [here](http://rclone.org/docs/).
 
 If you need to transfer a lot of data between Palmetto and cloud storage, it might take hours or days. The transfer will stop if you quit your `ssh` session (and if you log into the data ransfer node again and resume `rclone copy`, it will pick up from where it stopped). If you want the data transfer to run on the background, you can use the tool called `tmux` which is installed on Palmetto. 
 
-First, connect to `xfer01` (or `xfer02`):
+First, connect to `xfer02`:
 
 ~~~
-ssh xfer01
+ssh xfer02
 ~~~
 
 Then, load the `tmux` module:
