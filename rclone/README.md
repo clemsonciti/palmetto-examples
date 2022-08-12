@@ -1,39 +1,42 @@
 ## rclone
 
+`rclone` is a command-line program that can be used to sync files and folders to
+and from cloud services such as Google Drive, Amazon S3, Dropbox, and
+[many others](http://rclone.org/).
 
-`rclone` is a command-line program that can be used
-to sync files and folders to and from cloud services
-such as Google Drive, Amazon S3, Dropbox, and [many others](http://rclone.org/).
-
-In this example,
-we will show how to use `rclone` to sync files to a Google Drive account,
-but the official documentation has specific instructions for other services.
+In this example, we will show how to use `rclone` to sync files to a Google
+Drive account, but the official documentation has specific instructions for
+other services.
 
 ### Setting up rclone for use with Google Drive on Palmetto
 
-To use `rclone` with any of the above cloud storage services,
-you must perform a one-time configuration.
-You can configure `rclone` to work with as many services as you like.
+To use `rclone` with any of the above cloud storage services, you must perform a
+one-time configuration. You can configure `rclone` to work with as many services
+as you like.
 
-For the one-time configuration, you will need to
-[log-in with X11 tunneling enabled](https://www.palmetto.clemson.edu/palmetto/basic/x11_tunneling/).
+Please make sure you do not run these instructions on the login node.
+[Start a new interactive session](https://www.palmetto.clemson.edu/palmetto/basic/#start-an-interactive-job)
+before continuing.
+
 After you get on a compute node, load the `rclone` module:
 
-~~~
-module add rclone/1.51.0-gcc/8.3.1
-~~~
+```
+module load rclone/1.51.0-gcc/9.5.0
+```
 
-After `rclone` is loaded, you must set up a "remote". In this case,
-we will configure a remote for Google Drive. You can create and manage a separate
-remote for each cloud storage service you want to use.
+After `rclone` is loaded, you must set up a "remote". In this case, we will
+configure a remote for Google Drive. You can create and manage a separate remote
+for each cloud storage service you want to use.
+
 Start by entering the following command:
 
-~~~
+```
 rclone config
-~~~
+```
 
-This will bring the lost of options:
-~~~
+This will display a list of options:
+
+```
 e) Edit existing remote
 n) New remote
 d) Delete remote
@@ -41,8 +44,8 @@ r) Rename remote
 c) Copy remote
 s) Set configuration password
 q) Quit config
-e/n/d/r/c/s/q> 
-~~~
+e/n/d/r/c/s/q>
+```
 
 Hit **n** then Enter to create a new remote host.
 
@@ -50,7 +53,8 @@ Hit **n** then Enter to create a new remote host.
 name>
 ```
 
-Provide any name for this remote host. For example: **gmaildrive**
+Type any name for this remote host, then press return. For example:
+**gmaildrive**
 
 ```
 Choose a number from below, or type in your own value
@@ -129,7 +133,8 @@ Choose a number from below, or type in your own value
 Storage>
 ```
 
-Provide any number for the remote source. For example choose number **13** for Google drive. In the following questions, always accept the default value:
+Provide any number for the remote source. For example choose number **13** for
+Google drive. In the following questions, always accept the default value:
 
 ```
 Google Application Client Id - leave blank normally.
@@ -140,7 +145,8 @@ Scope that rclone should use when requesting access from drive.
 Enter a string value. Press Enter for the default ("").
 ```
 
-Then, it will ask you for access type. You will most likely want full access, so type **drive**:
+Then, it will ask you for access type. You will most likely want full access, so
+type **drive**:
 
 ```
 Choose a number from below, or type in your own value
@@ -158,10 +164,11 @@ Choose a number from below, or type in your own value
    / Allows read-only access to file metadata but
  5 | does not allow any access to read or download file content.
    \ "drive.metadata.readonly"
-scope> 
+scope>
 ```
 
-For the next few questions, accept defaults. At some point, it will ask you for "remote config":
+For the next few questions, accept defaults. At some point, it will ask you for
+"remote config":
 
 ```
 Remote config
@@ -173,24 +180,44 @@ n) No
 y/n>
 ```
 
-Type **y** for "Yes". This should open up a web browser -- you might have to wait several minutes. In the browser, log into your storage account. Then, accept to let **rclone** access your Goolge drive. Once this is done, the browser will ask you to go back to rclone to continue.
+Type **n** for no. This will generate a link that will allow you to generate an
+authorization code from Google.
 
 ```
-Got code
+Please go to the following link: https://accounts.google.com/o/oauth2/auth?some_secret_information_here
+Log in and authorize rclone for access
+Enter verification code>
+```
+
+Copy the link from **your terminal** and open it in a web browser on your computer.
+Follow the Google sign-in prompts, carefully selecting the account you wish to
+use. At the end of this process, you should see a screen like this:
+
+![Google Drive Auth Code Screen](./fig/gdrive-auth.png)
+
+Press the button to copy the authorization code on that screen. Then, return to
+your Palmetto terminal session, paste the authorization code, and press the
+return key.
+
+There is one last question about Team Drives. Accept the default.
+
+Now the configuration will display to you for review.
+
+```
 --------------------
 [gmaildrive]
-client_id =
-client_secret =
-token = {"access_token":"xyz","token_type":"Bearer","refresh_token":"xyz","expiry":"yyyy-mm-ddThh:mm:ss"}
+type = drive
+scope = drive
+token = {"access_token":" ... "}
 --------------------
-y) Yes this is OK
+y) Yes this is OK (default)
 e) Edit this remote
 d) Delete this remote
-y/e/d>
+y/e/d> y
 ```
 
-Select **y** to finish configure this remote host.
-The **gmaildrive** host will then be created.
+Select **y** to finish configure this remote host. The **gmaildrive** host will
+then be created.
 
 ```
 Current remotes:
@@ -208,78 +235,97 @@ e/n/d/q>
 
 After this, you can quit the config using **q**, and exit the compute node:
 
-~~~
+```
 exit
-~~~
+```
 
 ### Using rclone
 
-Data transfer (including `rclone`) should be done on the data transfer node (currently, it is `xfer02`). Log into Palmetto as usual, and then connect to the data transfer node:
+Data transfer (including `rclone`) should be done on the data transfer node
+(currently, it is `xfer02`). Log into Palmetto as usual, and then connect to the
+data transfer node:
 
-~~~
+```
 ssh xfer02
-~~~
+```
 
-Log with your Palmetto password and DUO; once logged-in, load the `rclone` module:
+Log with your Palmetto password and DUO; once logged-in, load the `rclone`
+module:
 
-~~~
-module add rclone/1.51.0-gcc/8.3.1
-~~~
+```
+module load rclone/1.51.0-gcc/9.5.0
+```
 
 You can check the content of the remote host **gmaildrive**:
 
 ```
-rclone ls gmaildrive:
-rclone lsd gmaildrive:
+rclone ls gmaildrive:/
+rclone lsd gmaildrive:/
 ```
 
-You can use `rclone` to (for example) copy a file from Palmetto to any folder in your Google Drive:
+As a note, `rclone ls` will show files and `rclone lsd` will show directories,
+which differs from the usual `ls` workflow.
 
-~~~
+You can use `rclone` to (for example) copy a file from Palmetto to any folder in
+your Google Drive:
+
+```
 rclone copy /path/to/file/on/palmetto gmaildrive:/path/to/folder/on/drive
-~~~
+```
 
-Or if you want to copy to a specific destination on Google Drive back to Palmetto:
+Or if you want to copy to a specific destination on Google Drive back to
+Palmetto:
 
-~~~
+```
 rclone copy gmaildrive:/path/to/folder/on/drive /path/to/file/on/palmetto
-~~~
+```
 
 Additional `rclone` commands can be found [here](http://rclone.org/docs/).
 
-
 ### Using tmux
 
-If you need to transfer a lot of data between Palmetto and cloud storage, it might take hours or days. The transfer will stop if you quit your `ssh` session (and if you log into the data ransfer node again and resume `rclone copy`, it will pick up from where it stopped). If you want the data transfer to run on the background, you can use the tool called `tmux` which is installed on Palmetto. 
+If you need to transfer a lot of data between Palmetto and cloud storage, it
+might take hours or days. The transfer will stop if you quit your `ssh` session
+(and if you log into the data ransfer node again and resume `rclone copy`, it
+will pick up from where it stopped). If you want the data transfer to run on the
+background, you can use the tool called `tmux` which is installed on Palmetto.
 
 First, connect to `xfer02`:
 
-~~~
+```
 ssh xfer02
-~~~
+```
 
 Then, load the `tmux` module:
 
-~~~
+```
 module load tmux/3.3
-~~~
+```
 
-Then, you can start a new tmux session. Let's give it a name, for example, "data_transfer":
+Then, you can start a new tmux session. Let's give it a name, for example,
+"data_transfer":
 
-~~~
+```
 tmux new -s data_transfer
-~~~
+```
 
-Your screen will slightly change: you will see the usual prompt, and name of your tmux session on the bottom of the screen. This session will run on the background even if you disconnect from Palmetto.
+Your screen will slightly change: you will see the usual prompt, and name of
+your tmux session on the bottom of the screen. This session will run on the
+background even if you disconnect from Palmetto.
 
-Inside the session, you can load the rclone module, and do `rclone copy` as described in the previous step.
+Inside the session, you can load the rclone module, and do `rclone copy` as
+described in the previous step.
 
-If you want to leave the session (but keep it running), type `Ctrl+b d`. If you want to re-attach to the session, you can type
+If you want to leave the session (but keep it running), type `Ctrl+b d`. If you
+want to re-attach to the session, you can type
 
-~~~
+```
 tmux attach-session -t data_transfer
-~~~
+```
 
-To see the names of all running sessions, type `tmux ls`. To kill a session, attach to it, and then type `Crtl+b x`. 
+To see the names of all running sessions, type `tmux ls`. To kill a session,
+attach to it, and then type `Crtl+b x`.
 
-`tmux` is a very powerful tool which can be used for many other purposes; you can find a quick guide to `tmux` [here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
+`tmux` is a very powerful tool which can be used for many other purposes; you
+can find a quick guide to `tmux`
+[here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
