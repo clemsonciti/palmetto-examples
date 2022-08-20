@@ -1,17 +1,16 @@
 ## LAMMPS
 
-As LAMMPS comes with many custom options, we do not maintain a baseline LAMMPS module, but encourage users to build their own lammps
+Performance of LAMMPS is sensitive to how the installation is configured relative to the running hardware 
+and how `lmp` is called with different process/thread/gpu options. Given the heterogeneous nature of 
+Palmetto, we do not maintain a baseline LAMMPS module, but encourage users to build their own LAMMPS. 
+Please read the installation and benchmarking instructions below carefully. 
 
 ### Installing custom LAMMPS on Palmetto
-
-LAMMPS comes with a wide variety of supported packages catering to different simulation techniques. 
-It is possible to build your own LAMMPS installation on Palmetto. We discuss two examples below, one
-using `kokkos` with GPU, one using `kokkos` without GPU support. 
 
 Reserve a node, and pay attention to its GPU model.
 
 ~~~
-$ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=100gb:ngpus=2:gpu_model=v100:interconnect=25ge,walltime=10:00:00
+$ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=100gb:ngpus=2:gpu_model=p100:interconnect=fdr,walltime=10:00:00
 ~~~
 
 Create a directory named `software` (if you don't already have it) in your 
@@ -23,9 +22,10 @@ $ cd ~/software
 ~~~
 
 - Create a subdirectory called `lammps` inside `software`. 
-- Download the latest version of lammps and untar. 
+- Download the **preferred**/**required** version of lammps and untar. 
   - https://www.lammps.org/download.html
-- **In this example, we use the latest stable version of lammps.** 
+  - LAMMPS simulations/checkpoints require LAMMPS version to be consistent throughout. 
+- In this example, we use the latest stable version of lammps.
 
 ~~~
 $ mkdir lammps
@@ -34,65 +34,60 @@ $ wget https://download.lammps.org/tars/lammps-stable.tar.gz
 $ tar -xzf lammps-stable.tar.gz 
 ~~~
 
-In the recent versions, lammps use cmake as their build system. As a result, we will be able to 
-build multiple lammps executables within a single source download. 
+- This current `stable` version of lammps after untar will create version 
+`23Jun2022`. If you follow this guide in the future, the version might/will 
+differ. 
 
-#### Lammps build with kokkos and gpu
+In the recent versions, lammps use `cmake` as their build system. As a result, we will be 
+able to build multiple lammps executables within a single source download. 
 
-- Create a directory called `build-kokkos-cuda`
+#### Overview of LAMMPS acceleration packages
+
+LAMMPS currently offers five accelerator packages: `OPT`, `USER-INTEL`, `USER-OMP`, 
+`GPU`, `KOKKOS`. 
+- `KOKKOS` is an accelerator package that provides a template to allow LAMMPS code to be 
+written and interpreted to be accelerated with both GPU (`GPU`) and CPU. 
+- In the next section, we will be looking at examples on installing LAMMPS on various 
+combination of hardware.
+
+
+#### KOKKOS/GPU/USER-OMP/
+
+- Change into the previously untar LAMMPS directory (`lammps-23Jun2022`).
+- Create a directory called `build-kokkos-gpu-omp`
 - Change into this directory. 
 
 ~~~
-$ mkdir build-kokkos-cuda
-$ cd build-kokkos-cuda
+$ cd lammps-23Jun2022
+$ mkdir build-kokkos-gpu-omp
+$ cd build-kokkos-gpu-omp
 ~~~
 
-In building lammps, you will need to modify two `cmake` files, both inside `../cmake/presets/` directory (this is a
-relative path assuming you are inside the previously created `build-kokkos-cuda`). A set of already prepared cmake 
-templates are available inside `../cmake/presets`, but you will have to modify them. It is recommended that you use
-`../cmake/presets/basic.cmake` and `../cmake/presets/kokkos-cuda.cmake` as starting points. 
-
-For add-on simulation packages, make a copy of `../cmake/presets/basic.cmake`, and use `../cmake/presets/all_on.cmake` 
-as a reference point to see what is needed. Let's say we want `user-meamc` and `user-fep` in addition to what's in `basic.cmake` for simulation techniques. We also need to inlcude kokkos. 
+- In this build, you will need to create two `cmake` files, both are based on 
+two already prepared cmake templates available inside `../cmake/presets` directory 
+(this is a relative path assuming you are inside the previously created 
+`build-kokkos-gpu-omp`). 
+- We will use `../cmake/presets/basic.cmake` and `../cmake/presets/kokkos-cuda.cmake` 
+our templates. 
+  - `basic.cmake` contains four basic simulation packages: KSPACE, MANYBODY, MOLECULE, 
+  and RIGID
+  - `kokkos-cuda.cmake` contains the architectural configuration for the type of 
+  GPU card. The default value is `VOLTA70`. 
+  - The example default contents of `basic.cmake` and `kokkos-cuda.cmake` are shown
+  below. 
 
 ~~~
 $ more ../cmake/presets/basic.cmake
-$ more ../cmake/presets/all_on.cmake
-$ cp ../cmake/presets/basic.cmake ../cmake/presets/my.cmake
-~~~
-
-Use your favorite editor to add the necessary package names (in capitalized form) to `my.cmake`. 
-Check the contents afterward. 
-**Make sure that you include the GPU package**
-
-~~~
-$ more ../cmake/presets/my.cmake
 # preset that turns on just a few, frequently used packages
 # this will be compiled quickly and handle a lot of common inputs.
 
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU)
+set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)
 
 foreach(PKG ${ALL_PACKAGES})
   set(PKG_${PKG} ON CACHE BOOL "" FORCE)
 endforeach()
-~~~
 
-<img src="images/lammps_01.png" style="width:600px">
-
-- Next, we need to modify `../cmake/presets/kokkos-cuda.cmake` so that `kokkos` is built to the correct
-architectural specification. For Palmetto, the follow
-
-Palmetto GPU architectures       |   Architecture name for Kokkos
---------------------|-------------------------------------
-K20 and K40         | KEPLER35
-P100                | PASCAL60
-V100 and V100S      | VOLTA70
-
-- Since we specified `v100` in the initial `qsub`, `../cmake/presets/kokkos-cuda.cmake` will need to be
-modified to use `VOLTA70`. 
-
-~~~
-[lngo@node1315 build-kokkos-cuda]$ cat ../cmake/presets/kokkos-cuda.cmake
+$ more ../cmake/presets/kokkos-cuda.cmake
 # preset that enables KOKKOS and selects CUDA compilation with OpenMP
 # enabled as well. This preselects CC 5.0 as default GPU arch, since
 # that is compatible with all higher CC, but not the default CC 3.5
@@ -106,8 +101,59 @@ set(BUILD_OMP ON CACHE BOOL "" FORCE)
 set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
 ~~~
 
-- We will need to load three supporting modules from Palmetto. We will load
-modules that have been compiled for the specific architecture of v100 nodes. 
+- We will need to make copies of `basic.cmake` and `kokko-cuda.cmake`. 
+- The names of the newly created files should reflect the nature of this 
+current build: a GPU/OMP build for nodes with P100 NVidia cards. 
+
+~~~
+$ cp ../cmake/presets/basic.cmake ../cmake/presets/basic-gpu-omp.cmake
+$ cp ../cmake/presets/kokkos-cuda.cmake ../cmake/presets/kokkos-p100.cmake
+~~~
+
+- The newly created `basic_gpu_omp.cmake` needs to be edited to include 
+the three packages, `GPU`, `OPENMP`, and `USER-OMP` to the list of packages in the 
+`set(ALL_PACKAGES ...)` line.
+- The newly created `kokkos-p100.cmake` needs to be edited to 
+change `VOLTA70` to `PASCAL60`. 
+
+~~~
+$ nano ../cmake/presets/basic-gpu-omp.cmake
+$ nano ../cmake/presets/kokkos-p100.cmake
+$ cat ../cmake/presets/basic-gpu-omp.cmake
+# preset that turns on just a few, frequently used packages
+# this will be compiled quickly and handle a lot of common inputs.
+
+set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU OPENMP USER-OMP)
+
+foreach(PKG ${ALL_PACKAGES})
+  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
+endforeach()
+$ cat ../cmake/presets/kokkos-p100.cmake
+# preset that enables KOKKOS and selects CUDA compilation with OpenMP
+# enabled as well. This preselects CC 5.0 as default GPU arch, since
+# that is compatible with all higher CC, but not the default CC 3.5
+set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_CUDA   ON CACHE BOOL "" FORCE)
+set(Kokkos_ARCH_PASCAL60 ON CACHE BOOL "" FORCE)
+set(BUILD_OMP ON CACHE BOOL "" FORCE)
+
+# hide deprecation warnings temporarily for stable release
+set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
+~~~
+
+- For a template with all simulation packages, take a look 
+at `../cmake/presets/all_on.cmake`. 
+- For all available GPU models on Palmetto, refer to the following table
+
+Palmetto GPU        |   Architecture name for Kokkos
+--------------------|-------------------------------------
+K20 and K40         | KEPLER35
+P100                | PASCAL60
+V100 and V100S      | VOLTA70
+A100                | AMPERE80
+
+- We will need to load the following supporting modules from Palmetto.  
 
 ~~~
 $ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
@@ -121,94 +167,159 @@ cmake --build . --parallel 24
 ~~~
 
 - Test on LAMMPS's LJ data
+  - **This is only to test installation correctness and not for optimization.**
+  - **Do not user the numbers here for your production environment.**
 
 ~~~
 $ mkdir /scratch1/$USER/lammps
 $ cd /scratch1/$USER/lammps
 $ wget https://lammps.sandia.gov/inputs/in.lj.txt
-$ mpirun -np 2 ~/software/lammps/lammps-29Sep2021/build-kokkos-cuda/lmp -k on g 2 -sf kk -in in.lj.txt
+$ export PATH="$HOME/software/lammps/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
+$ mpirun -np 2 lmp -k on g 2 -sf kk -in in.lj.txt > out.1
+$ cat out.1
 ~~~
 
-<img src="images/lammps_03.png" style="width:600px">
+### LAMMPS optimization
 
-#### Lammps build with kokkos and openmp
+In this section, we will look at several approaches in optimizing and scaling 
+LAMMPS execution. 
 
-This is a bit similar to the build with kokkos and gpu. In a non-gpu build, `kokkos` will
-help manage the OpenMP threads, and the corresponding make file is `../cmake/presets/kokkos-openmp.make`
+- **It is important to understand that optimization meaning be able to fully 
+utilize all CPUs/GPUs/memory resources requested from Palmetto.**
+- **Scaling means that as you increase the amount of resource requested, your 
+performance will become better.**
+- Optimizing LAMMPS involves understanding the amount of CPU cores/GPU devices 
+and distributing these values among parameters to `lmp` call. 
 
-~~~
- mkdir build-kokkos-omp
- cd build-kokkos-omp/
- module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
- cmake -C ../cmake/presets/my.cmake -C ../cmake/presets/kokkos-openmp.cmake ../cmake
- cmake --build . --parallel 24
-~~~
-
-
-### Running LAMMPS - an example
-
-Several existing examples are in the installed folder: *lammps-7Aug19/examples/*
-Detailes description of all examples are [here](https://lammps.sandia.gov/doc/Examples.html#).
-
-We run an example *accelerate* using different package
-Here is a sample batch script `job.sh` for this example:
+- Let's start a different resource allocation request on Palmetto:
 
 ~~~
-#PBS -N accelerate 
-#PBS -l select=1:ncpus=8:mpiprocs=8:ngpus=2:gpu_model=v100:mem=64gb:interconnect=25ge,walltime=4:00:00
-#PBS -j oe
-
-cd $PBS_O_WORKDIR
-module purge
-module load lammps/20200505-gcc/8.3.1-cuda10_2-kokkos-mpi-nvidia_V-openmp-user-omp
-
-mpirun -np 8 lmp -in in.lj > output.txt        # 8 MPI, 8 MPI/GPU
-# to write the output to a file
+$ qsub -I -l select=2:ncpus=24:mpiprocs=24:mem=100gb:ngpus=2:gpu_model=p100:interconnect=fdr,walltime=10:00:00
 ~~~
 
+- This command means that we have asked for two allocations (~ two compute nodes), each 
+has 24 CPUs, 100gb of memory, and 2 P100 GPUs. 
+- Therefore, **in total**, we have: 48 CPUs, 200gb of memory, and 4 P100 GPUs. 
+- Let set up our LAMMPS environment:
 
-### Several way to run LAAMPS
 ~~~
-# Running LAMMPS with KOKKOS packages using 8 MPI tasks/nodes, no multi-threading
-mpirun -np 8 lmp -k on -sf kk -in in.lj > output_kokkos1.txt 
-
-# Running LAMMPS with KOKKOS packages using 2 MPI tasks/nodes, 8 threads/tasks
-mpirun -np 2 lmp -k on t 8 -sf kk -in in.lj > output_kokkos2.txt 
-
-# Running LAMMPS with 1 GPU 
-lmp -sf gpu -pk gpu 1 -in in.lj > output_1gpu.txt
-
-# Running LAMMPS with 4 mpi task share 2 gpus on single 8 cores node
-mpirun -np 4 lmp -sf gpu -pk gpu 2 -in in.lj > output_2gpu.txt
-
-# Running LAMMPS with 1 MPI task, 8 threads
-export OMP_NUM_THREADS=8
-lmp -sf omp -in in.lj > output_1mpi_8omp.txt         
-
-# Running LAMMPS with 4 MPI task, 4 OMP threads
-export OMP_NUM_THREADS=4
-mpirun -np 4 lmp -sf omp -pk omp 4 -in in.lj > output_4mpi_4omp.txt
-
-# Running LAMMPS with OPT in serial mode
-lmp -sf opt -in in.lj > output_opt_serial.txt
-
-# Running LAMMPS with OPT in parallel mode
-mpirun -np 8 lmp -sf opt -in in.lj > output_opt_parallel.txt
+$ cd /scratch1/$USER/lammps
+$ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
+$  export PATH="$HOME/software/lammps/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
 ~~~
 
-### LAAMPS with multiple GPUs
+- We will use LAMMPS' provided benchmark data for our optimization/scaling observation
 
-When using LAAMPS with multiple GPUs it may be more efficient to divide your computing resources equally across nodes based on the amount of GPUs used.
-
-Requesting a node with `ngpus > 1` would be faster if split into multiple nodes with  `ngpus = 1```. <br>
-For instance the following request uses 4 GPUs with 1 GPU per node.
 ~~~
-qsub -I -l select=4:ncpus=8:mem=20gb:ngpus=1:gpu_model=k20:interconnect=any,walltime=10:00:00
-~~~
-Once we have 4 nodes we can use open MPI to create 4 tasks for our LAAMP command.
-~~~
-mpirun -np 4 lmp -sf gpu -pk gpu 4 -in in.lj >output4_gpu.txt
+$ cp ~/software/lammps/lammps-23Jun2022/bench/*.rhodo .
+$ ls -l *.rhodo
+-rw-r--r-- 1 lngo cuuser 6289909 Aug 19 23:08 data.rhodo
+-rw-r--r-- 1 lngo cuuser     579 Aug 19 23:08 in.rhodo
 ~~~
 
-For more information on comparison between various accelerator packages please visit:
-https://lammps.sandia.gov/doc/Speed_compare.html
+- We will run the following commands to observe different scenarios and 
+resulting performance. 
+  - Not all contents of output data are displayed. 
+
+- Scenario 1: no GPUs. 
+  
+~~~
+# First run
+$ mpirun -np 48 lmp -sf omp -pk omp 1 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 15.353 ns/day, 1.563 hours/ns, 88.846 timesteps/s
+Total wall time: 0:00:45
+# Second run
+$ mpirun -np 24 lmp -sf omp -pk omp 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 1.308 ns/day, 18.347 hours/ns, 7.570 timesteps/s
+Total wall time: 0:00:13
+# Third run
+$ mpirun -np 24 -npernode 12 lmp -sf omp -pk omp 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 15.703 ns/day, 1.528 hours/ns, 90.873 timesteps/s
+Total wall time: 0:00:01
+# Fourth run
+$ mpirun -np 12 -npernode 6 lmp -sf omp -pk omp 4 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 15.710 ns/day, 1.528 hours/ns, 90.914 timesteps/s
+Total wall time: 0:00:01
+# Fifth run
+$ mpirun -np 8 -npernode 4 lmp -sf omp -pk omp 6 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 15.353 ns/day, 1.563 hours/ns, 88.849 timesteps/s
+Total wall time: 0:00:02
+~~~
+
+The above example demonstrates the different in distribution of 
+processes and threads in the `lmp` call. 
+  - The multiplication of `-np X` and `omp Y`: `X * Y` must be 
+  equal to the total number of cores requested. In this case, 
+  it is 48 cores. 
+  - The first run will distribute work among all MPI processes 
+  (no shared memory). This results in the most inefficient parallel 
+  scenario due to added communication cost. 
+  - The second run uses two threads per process, improving communication. 
+  However, the way `mpirun` is called, all 24 MPI processes will be 
+  launched on a single node, and the subsequent threads per process 
+  will be on the same node. The performance is improved due to shared-memory
+  usage between threads, but it is not as efficient as the remaining runs. 
+  - In the remaining runs, the MPI processes are evenly distributed 
+  across the two requested node via the `-npernode` flag. Notice that the 
+  multiplcation of `-npernode` and `omp` will be equivalent to the 
+  number of cores on a single node (`ncpus` value from `qsub`). 
+  - Launching more threads/processes than available total cores will lead to 
+  performance degradation: 
+
+~~~
+$ mpirun -np 48 lmp -sf omp -pk omp 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 1.304 ns/day, 18.398 hours/ns, 7.549 timesteps/s
+Total wall time: 0:03:31
+~~~
+
+- Scenario 2: with GPUs
+
+~~~
+# First run
+$ mpirun -np 48 lmp -sf gpu -pk gpu 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 1.031 ns/day, 23.281 hours/ns, 5.966 timesteps/s
+Total wall time: 0:07:06
+# Second run
+$ mpirun -np 24 -npernode 12 lmp -sf gpu -pk gpu 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 2.254 ns/day, 10.650 hours/ns, 13.042 timesteps/s
+Total wall time: 0:00:13
+# Third Run
+$ mpirun -np 8 -npernode 4 lmp -sf gpu -pk gpu 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 16.032 ns/day, 1.497 hours/ns, 92.777 timesteps/s
+Total wall time: 0:00:03
+# Fourth Run
+$ mpirun -np 4 -npernode 2 lmp -sf gpu -pk gpu 2 -in in.rhodo | grep 'Total wall\|Performance'
+Performance: 15.358 ns/day, 1.563 hours/ns, 88.879 timesteps/s
+Total wall time: 0:00:02
+~~~
+
+- Running with GPUs require paying more attention to the distribution of work. 
+  - GPUs require data to be loaded from CPU into GPU's memory, and then GPU cores will 
+  carry out the computation inside. Once computation is done, results are returned 
+  to the CPUs. 
+  - With too many CPUs and too few GPUs (First run), there will be bottleneck
+  at the data loading stage, causing performance to degrade. 
+  - We need to pay attention to the number of GPUs card per node: we have two 
+  GPUs per node. 
+  - The sweet spot of performance is on the Third Run, with 4 processes per node, 
+  meaning each GPU will process data for two processes. 
+
+- The optimization and benchmarking process differs from simulation system to systems. 
+What we have here is a procedural approach to benchmarking. You need to study your 
+own system carefully to figure out what is the best performance configuration. For 
+example, with a different system, a one-CPU-per-GPU gives best performance:
+
+~~~
+$ mpirun -np 48 lmp -sf gpu -pk gpu 2 -in in.lj.txt | grep 'Total wall\|Performance'
+Performance: 21024.804 tau/day, 48.669 timesteps/s
+Total wall time: 0:00:12
+$ mpirun -np 24 -npernode 12 lmp -sf gpu -pk gpu 2 -in in.lj.txt | grep 'Total wall\|Performance'
+Performance: 51390.335 tau/day, 118.959 timesteps/s
+Total wall time: 0:00:05
+$ mpirun -np 8 -npernode 4 lmp -sf gpu -pk gpu 2 -in in.lj.txt | grep 'Total wall\|Performance'
+Performance: 376119.495 tau/day, 870.647 timesteps/s
+Total wall time: 0:00:01
+$ mpirun -np 4 -npernode 2 lmp -sf gpu -pk gpu 2 -in in.lj.txt | grep 'Total wall\|Performance'
+Performance: 420877.671 tau/day, 974.254 timesteps/s
+Total wall time: 0:00:00
+~~~
