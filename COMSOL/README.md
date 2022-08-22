@@ -6,7 +6,7 @@ To see the available COMSOL modules on Palmetto:
 ~~~
 $ module avail comsol
 
-comsol/5.4    comsol/5.5    comsol/5.6 (D)
+comsol/5.4    comsol/5.5    comsol/5.6    comsol/5.6.2 (D)
 ~~~
 
 To see license usage of COMSOL-related packages,
@@ -31,7 +31,7 @@ to launch the interactive viewer,
 you can use the `comsol` command to run COMSOL:
 
 ~~~
-$ module add comsol/5.2
+$ module add comsol/5.6.2
 $ comsol -np 8 -tmpdir $TMPDIR
 ~~~
 
