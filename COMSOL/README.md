@@ -13,7 +13,7 @@ To see license usage of COMSOL-related packages,
 you can use the `lmstat` command:
 
 ~~~
-/software/USR_LOCAL/flexlm/lmstat -a -c /software/USR_LOCAL/flexlm/licenses/comsol.dat
+/hpc/flexlm/lmstat -a -c /hpc/flexlm/licenses/comsol.dat
 ~~~
 
 ### Graphical Interface
