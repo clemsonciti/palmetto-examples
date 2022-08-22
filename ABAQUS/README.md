@@ -8,14 +8,14 @@ as modules.
 ~~~
 $ module avail abaqus
 
-abaqus/6.14 abaqus/2018 abaqus/2020 abaqus/2021
+abaqus/6.14    abaqus/2021    abaqus/2022 (D)
 ~~~
 
 To see license usage of ABAQUS-related packages,
 you can use the `lmstat` command:
 
 ~~~
-/software/USR_LOCAL/flexlm/lmstat -a -c /software/USR_LOCAL/flexlm/licenses/abaqus.dat
+/hpc/flexlm/lmstat -a -c /hpc/flexlm/licenses/abaqus.dat
 ~~~
 
 
