@@ -8,7 +8,7 @@ You can check the availability of MATLAB licenses
 using the `lmstat` command:
 
 ~~~
-$ /software/USR_LOCAL/flexlm/lmstat -a -c /software/USR_LOCAL/flexlm/licenses/matlab.dat
+$ /hpc/flexlm/lmstat -a -c /hpc/flexlm/licenses/matlab.dat
 ~~~
 
 ### Running the MATLAB graphical interface
@@ -16,7 +16,7 @@ $ /software/USR_LOCAL/flexlm/lmstat -a -c /software/USR_LOCAL/flexlm/licenses/ma
 To launch the MATLAB graphical interface, you can use [X11 tunneling](https://www.palmetto.clemson.edu/palmetto/basic/x11_tunneling/). Once you get on a compute node, you must load one of the MATLAB modules:
 
 ~~~
-$ module add matlab/2020a
+$ module add matlab/2022a
 ~~~
 
 And then launch the MATLAB program:
@@ -74,7 +74,7 @@ a batch script as follows:
 #PBS -l select=1:ncpus=4:mem=10gb:interconnect=1g
 #PBS -l walltime=1:00:00
 
-module add matlab/2020a
+module add matlab/2022a
 
 cd $PBS_O_WORKDIR
 matlab -nodisplay -nosplash < myscript.m > myscript_results.txt
