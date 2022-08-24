@@ -162,7 +162,7 @@ $ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cud
 - Build and install
 
 ~~~
-cmake -C ../cmake/presets/basic-gpu-omp.cmake -C ../cmake/presets/kokkos-p100.cmake.cmake ../cmake
+cmake -C ../cmake/presets/basic-gpu-omp.cmake -C ../cmake/presets/kokkos-p100.cmake ../cmake
 cmake --build . --parallel 24
 ~~~
 
