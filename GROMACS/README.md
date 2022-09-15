@@ -180,3 +180,24 @@ export MODULEPATH=$MODULEPATH:~/software/ModuleFiles/modules/linux-centos8-broad
 module load fftw-3.3.8-gcc-8.3.1-openmp cuda-10.2.89-gcc-8.3.1 gromacs-2018.3-gcc-8.3.1-cuda10_2-openmp
 gmx mdrun -g adh_cubic.log -pin on -resethway -v -noconfout -nsteps 10000 -s topol.tpr -ntmpi 2 -ntomp 10
 ```
+
+## Optimization
+
+First we need to identify node/core affinity
+
+~~~bash
+$ qsub -I -l select=1:ncpus=16:mpiprocs=4:ngpus=2:gpu_model=p100:interconnect=fdr:mem=60gb
+$ numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0 2 4 6 8 10 12 14 16 18 20 22 24 26
+node 0 size: 64052 MB
+node 0 free: 59791 MB
+node 1 cpus: 1 3 5 7 9 11 13 15 17 19 21 23 25 27
+node 1 size: 64507 MB
+node 1 free: 60922 MB
+node distances:
+node   0   1
+  0:  10  21
+  1:  21  10
+$
+~~~
