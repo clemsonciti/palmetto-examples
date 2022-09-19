@@ -141,9 +141,9 @@ $ source activate pytorch-k20
 - Go to [Palmetto's OpenOnDemand](https://openod02.palmetto.clemson.edu/) and sign in. 
 - Under `Interactive Apps` tab, select `Jupyter Notebook`. 
 - Make the following selections:
-  - `Anaconda Version`: `anaconda3/2019.10-gcc/8.3.1`
-  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1`
-  - If it is the K20/K40 installation, you need to load: `cudnn/8.0.4.30-11.1-linux-x64-gcc/8.4.1 cuda/11.1.0-gcc/8.3.1 openmpi/4.0.3-gcc/8.3.1-ucx gcc/9.3.0 mpfr/4.0.2-gcc/8.4.1`
+  - `Anaconda Version`: `anaconda3/2022.05-gcc/9.5.0`
+  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1 cuda/11.1.1-gcc/9.5.0`
+  - If it is the K20/K40 installation, you need to load: `cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-ucx gcc/9.3.0 mpfr/4.1.0-gcc/9.5.0`
   - `Path to Python virtual/conda environment`: `source activate pytorch`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the initial installation of pytorch.
