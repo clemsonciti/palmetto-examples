@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#PBS -N third
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=00:05:00
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+rm -Rf third_time.txt
+sleep 1m
+
+cat second_time.txt > third_time.txt
+date >> third_time.txt
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#PBS -N first
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=00:05:00
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+rm -Rf first_time.txt
+sleep 1m
+
+date > first_time.txt
+
+
+
+
+
