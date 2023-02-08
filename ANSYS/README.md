@@ -46,10 +46,10 @@ $ runwb2
 $ fluent
 ~~~
 
-**For ANSYS Electromagnetics** (only available for ansys/20.2)
+**For ANSYS Electromagnetics** (only available for ansys/20.2+). Note you have to ignore the OS check or it complains.
 
 ~~~
-$ ansysedt
+$ ANS_IGNOREOS=1 ansysedt
 ~~~
 
 ### Batch Mode
