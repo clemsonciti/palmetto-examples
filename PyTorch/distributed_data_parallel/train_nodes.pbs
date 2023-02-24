@@ -1,0 +1,7 @@
+#!/bin/bash
+#PBS -l select=2:ncpus=8:ngpus=2:gpu_model=v100:mem=16gb,walltime=03:00:00
+
+my_directory="/home/ilin/home/projects/ddpDemo"
+
+cd "$my_directory" || exit
+pbsdsh -- bash "$(pwd)"/helper.sh "$HOSTNAME" "$my_directory" main.py
