@@ -28,7 +28,7 @@ $ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-1
 3) Create a conda environment called pytorch_env (or any name you like):
 
 ~~~
-$ conda create -n pytorch python=3.8.3
+$ conda create -n pytorch python=3.9
 ~~~
 
 4) Activate the conda environment:
@@ -40,7 +40,7 @@ $ source activate pytorch
 5) Install Pytorch with GPU support from the pytorch channel:
 
 ~~~
-$ conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge
+$ conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
 $ conda install jupyterlab requests
 ~~~
 
@@ -57,9 +57,9 @@ $ python
 True
 ~~~~
 
-![check cuda availability in Torch](./fig/01.png)
+![check cuda availability in Torch](./fig/cuda_is_available.png)
 
-Each time you login, you will first need to load the required modules and also activate the pytorch_env conda environment before running Python:
+Each time you login, you will first need to load the required modules and also activate the `pytorch` conda environment before running Python:
 
 ~~~
 $ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
