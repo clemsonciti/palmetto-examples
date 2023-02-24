@@ -59,7 +59,7 @@ True
 
 ![check cuda availability in Torch](./fig/cuda_is_available.png)
 
-Each time you login, you will first need to load the required modules and also activate the pytorch_env conda environment before running Python:
+Each time you login, you will first need to load the required modules and also activate the `pytorch` conda environment before running Python:
 
 ~~~
 $ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
