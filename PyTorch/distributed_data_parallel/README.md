@@ -6,238 +6,103 @@ The code provided shows the process of training a model given a dataset using DD
 This file includes step-by-step instructions on how to set up the environment and Palmetto cluster for running the code. 
 This file explains each step in detail and provides code snippets with explanations.
 
-## Palmetto Clusters Setup
-Select some hardware requirements and submit an interactive job.
-```shell
-qsub -I -l select=2:mem=16gb:ncpus=4:ngpus=2:gpu_model=v100,walltime=1:00:00
-```
-Load some modules.
-```shell
-module load anaconda3/2022.05-gcc/9.5.0 cuda/11.6.2-gcc/9.5.0 cudnn/8.1.0.77-11.2-gcc/9.5.0
-```
-Create a virtual environment.
-```shell
-conda create -n torchenv python=3.9
-```
-Activate environment.
-```shell
-source activate torchenv
-```
-Install packages.
-```shell
-conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
-conda install -c conda-forge torchmetrics
+## Palmetto Cluster Setup
+Copy the contents of this project folder into a new directory on Palmetto. We will refer to the location of this directory as `<project_dir>` for the remainder of the tutorial. Wherever you see `<project_dir>`, replace it with the actual path to your project directory.
+
+Follow [these instructions](https://github.com/clemsonciti/palmetto-examples/tree/master/PyTorch#pytorch-installation-for-p100v100a100) from the Palmetto Examples github repository to create a conda environment named `pytorch` with the pytorch library installed. If you already have a suitable environment, you can use that instead. For this demo, you will also need the additional libraries in the `requirements.txt` file included with this example project.
+
+Request an interactive job then perform the installation
+```bash
+qsub -I -l select=1:ncpus=8:mem=16gb
+# wait for interactive job shell...
+
+cd <project_dir>
+module load anaconda3/2022.05-gcc/9.5.0
+source activate pytorch
+pip install -r requirements.txt
+
+# terminate the job
+exit
 ```
 
-## Setup
-First, we need to initialize the process group. There are three built-in backends to choose from.
-It is recommended to use `gloo` for cpu and `nccl` for cuda.
+## Running in non-distributed mode
+You can run the training script in non-distributed mode. This can be useful to test your setup and establish a timing baseline.
+```bash
+# Resource request. Tweak as needed for your custom script.
+qsub -I -l select=1:ncpus=16:mem=32gb:ngpus=1:gpu_model=v100,walltime=1:00:00
+# wait for interactive job shell...
 
-```python
-import torch.distributed as dist
+cd <project_dir>
+module load anaconda3/2022.05-gcc/9.5.0
+source activate pytorch
+time python train.py --epochs 5
 
-dist.init_process_group("nccl")
+# terminate the job
+exit
 ```
+The `time` command outputs three numbers. The number labeled `real` records the total walltime from start to finish. In our tests, execution took 2m31s.  
 
-## Dataset
-Next, let's get a dataset. The CIFAR-10 dataset we'll be using includes 10 classes 
-organized into various animals and vehicles. We'll also be need to convert the images to Tensors.
+## Single-node, multi-gpu
+We can use Pytorch's `torchrun` command-line tool to distribute training over multiple GPUs on a single node. 
+```bash
+# Resource request. Tweak as needed for your custom script.
+qsub -I -l select=1:ncpus=16:mem=32gb:ngpus=2:gpu_model=v100,walltime=1:00:00
+# wait for interactive job shell...
 
+cd <project_dir>
+module load anaconda3/2022.05-gcc/9.5.0
+source activate pytorch
+time torchrun \
+    --nnodes=1 \
+    --nproc_per_node=2 \
+    --rdzv_id=12345 \
+    --rdzv_backend=c10d \
+    --rdzv_endpoint=$HOSTNAME:3000 \
+    train.py --ddp --epochs 5
 
-```python
-from torchvision import datasets
-from torchvision import transforms
-
-transform = transforms.Compose([
-    transforms.ToTensor()
-])
-
-train_data = datasets.CIFAR10(
-    root='data',
-    train=True,
-    transform=transform,
-    download=True,
-)
+# terminate the job
+exit
 ```
+In our tests, execution on 2 GPUs took 1m51s.
 
-## DataLoader
-To load the data, we'll need `DataLoader` class. In addition to passing in the 
-usual arguments, dataset and batch_size, we'll also want a sampler to distribute
-our data over different processes.
+## Multi-node, multi-gpu
+In order to execute on multiple nodes, the `torchrun` command needs to be run on each node with identical arguments. This can easily be accomplished in PBS using the `pbsdsh` command which distributes tasks to all requested nodes. Since we also need to load anaconda and activate the environment, we need to define a small helper script (`helper.sh` in this example project).
 
+This helper script takes the following arguments: 
 
-```python
-from torch.utils.data import DataLoader
-from torch.utils.data.distributed import DistributedSampler
+1. Hostname of the primary node
+2. Project working directory
+3. Number of nodes
+4. Number of GPUs per node
+5. Number of training epochs
 
-train_loader = DataLoader(
-    dataset=train_data,
-    batch_size=32,
-    sampler=DistributedSampler(train_data)
-)
+For example, you can train for 5 epochs using 2-nodes and 2 GPUs per node job as follows:
+```bash
+# Resource request. Tweak as needed for your custom script.
+qsub -I -l select=2:ncpus=16:mem=32gb:ngpus=2:gpu_model=v100,walltime=1:00:00
+# wait for interactive job shell...
+
+cd <project_dir>
+time pbsdsh -- bash "$(pwd)"/helper.sh $HOSTNAME $(pwd) 2 2 5
+
+# terminate the job
+exit
 ```
+In our tests, execution on 2 nodes with 2 GPUs each took 1m36s.
 
-## Model
-Now we need a model. For simplicity, we'll be using the ResNet-18 convolutional neural network
-consisting of 18 layers. The output layer will be modified to give us the correct amount of classes.
-
-
-```python
-from torch import nn
-from torchvision import models
-
-model = models.resnet18()
-model.fc = nn.Linear(model.fc.in_features, len(train_data.classes))
-```
-
-## Loss Function and Optimizer
-<p>
-For classification problems, cross-entropy loss is commonly used to measure
-the difference between the predicted probability distribution and the true distribution.
-For simplicity, the Stochastic Gradient Descent will be used to update the parameters.
-It simply subtracts the gradient of the loss with respect to the parameters and
-multiplies it by the learning rate.
-</p>
-
-```python
-from torch import nn
-from torch import optim
-
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=1e-3)
-```
-
-## Training
-
-Next is the training step. This class will train the model. Notice that we
-are grabbing the `local_rank` and `global_rank` from the environment variables.
-The local rank determines what gpu the model will train on. The global
-rank will help us distinguish which node the model is training on.
-The model is also wrapped by the `DistributedDataParallel` class to implement
-data parallelism to run the module across multiple machines.
-
-
-```python
-import os
-import torch
-from torch import nn
-from torch import optim
-from torch.utils.data import DataLoader
-from torch.nn.parallel import DistributedDataParallel as DDP
-
-class Trainer:
-    """
-    Class that trains the model
-    """
-    def __init__(self, model: nn.Module, train_loader: DataLoader, optimizer: optim.Optimizer, criterion: nn.Module):
-        self.local_rank = int(os.environ['LOCAL_RANK'])
-        self.global_rank = int(os.environ['RANK'])
-        self.model = DDP(model.to(self.local_rank), device_ids=[self.local_rank])
-        self.train_loader = train_loader
-        self.optimizer = optimizer
-        self.criterion = criterion
-
-    def _run_epoch(self):
-        """
-        This method runs a single epoch.
-        """
-        for features, labels in self.train_loader:
-            # Move tensors to corresponding gpu
-            features: torch.Tensor = features.to(self.local_rank)
-            labels: torch.Tensor = labels.to(self.local_rank)
-
-            # Set accumulated gradients in optimizer to zero
-            self.optimizer.zero_grad()
-
-            # Forward pass
-            outputs: torch.Tensor = self.model(features)
-            
-            # Squash the numbers into probabilities
-            outputs = torch.softmax(outputs, -1)
-            
-            # Calculate the loss
-            loss: torch.Tensor = self.criterion(outputs, labels)
-            
-            # Backward pass
-            loss.backward()
-
-            # update weights and biases
-            self.optimizer.step()
-
-    def fit(self, epochs: int):
-        self.model.train()
-        for epoch in range(epochs):
-            print(f'GPU {self.global_rank} | Epoch {epoch}')
-            self._run_epoch()
-```
-Make an instance of the trainer.
-```python
-trainer = Trainer(
-    model=model,
-    train_loader=train_loader,
-    optimizer=optimizer,
-    criterion=criterion,
-)
-```
-Train the model.
-```python
-epochs = 1
-trainer.fit(epochs)
-```
-
-## Cleanup
-Finally, we clean up by destroying the process group.
-```python
-import torch.distributed as dist
-dist.destroy_process_group()
-```
-
-## Execution
-To actually run the code, we'll use `torchrun`. This command will set up the
-environment variables for us by passing in some arguments.
-
-### One node execution
-```shell
-torchrun \
-  --nnodes=1 \
-  --nproc_per_node=gpu \
-  --rdzv_id=12345 \
-  --rdzv_backend=c10d \
-  --rdzv_endpoint=$HOSTNAME:3000 \
-  main.py
-```
-
-### Multi node execution
-Both nodes must run the `torchrun` command with the same arguments.
-You can get to the other nodes with `ssh`.
-
-```shell
-torchrun \
-  --nnodes=2 \
-  --nproc_per_node=2 \
-  --rdzv_id=12345 \
-  --rdzv_backend=c10d \
-  --rdzv_endpoint=<Parent Hostname>:3000 \
-  main.py
-```
-
-You can find out the hostname with by printing it out.
-```shell
-echo $HOSTNAME
-```
-
-### Bash execution
-To make it simpler, we can write a bash script that will run the same command on both nodes.
-```shell
+## Running as a batch job
+Once you have your code working, it is usually more convenient to run long Pytorch training jobs as batch jobs instead of interactive jobs. To execute the 2-node, 2-gpu-per-node training job that we ran above as a batch job, create a new file (called `train.pbs`, for example) with the following contents:
+```bash
 #!/bin/bash
-source /etc/profile.d/modules.sh
-module load anaconda3/2022.05-gcc/9.5.0 cuda/11.6.2-gcc/9.5.0 cudnn/8.1.0.77-11.2-gcc/9.5.0
-source activate parallel
-cd <your directory> || exit
-torchrun --nnodes=2 --nproc_per_node=2 --rdzv_id=12345 --rdzv_backend=c10d --rdzv_endpoint="$1":3000  "$2"
-echo "$HOSTNAME" finished tasks
+#PBS -l select=2:ncpus=16:mem=32gb:ngpus=2:gpu_model=v100,walltime=1:00:00
+
+cd <project_dir>
+
+time pbsdsh -- bash "$(pwd)"/helper.sh $HOSTNAME $(pwd) 2 2 5
 ```
-To run we do:
-```shell
-pbsdsh -- bash script.sh $HOSTNAME main.py
+Execute the job from the login node using
 ```
+qsub train.pbs
+```
+ Read more about batch jobs including information about how to monitor job status in [the palmetto documentation](https://docs.rcd.clemson.edu/palmetto/jobs/types#batch-jobs). 
+ 

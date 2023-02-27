@@ -29,25 +29,32 @@ class Trainer:
                  train_loader: DataLoader,
                  optimizer: optim.Optimizer,
                  criterion: nn.Module,
-                 *,
+                 ddp:bool=False,
+                 local_rank:int=0,
+                 global_rank:int=0,
                  test_loader: DataLoader = None,
                  metric: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] = None,
-                 snapshot_path: str = None):
-        self.local_rank = int(os.environ['LOCAL_RANK'])
-        self.global_rank = int(os.environ['RANK'])
+                 snapshot_path: str = None,
+                 from_pretrained: bool = False):
+        self.local_rank = local_rank
+        self.ddp = ddp
+        self.global_rank = global_rank
         self.train_loader = train_loader
         self.optimizer = optimizer
         self.criterion = criterion
         self.test_loader = test_loader
         self.metric = metric
         self.model = model.to(self.local_rank)
-
         self.current_epoch = 0
+
+        # optionally load pretrained snapshot
         self.snapshot_path = snapshot_path if snapshot_path else 'snapshot.pth'
-        if os.path.exists(self.snapshot_path):
+        self.from_pretrained = from_pretrained
+        if os.path.exists(self.snapshot_path) and self.from_pretrained:
             print(f'GPU {self.global_rank} | loading snapshot')
             self._load(self.snapshot_path)
-        self.model = DDP(model, device_ids=[self.local_rank])
+        if self.ddp:
+            self.model = DDP(model, device_ids=[self.local_rank])
 
     class Snapshot(TypedDict):
         model: dict
@@ -105,7 +112,7 @@ class Trainer:
 
     def _save(self):
         snapshot: Trainer.Snapshot = {
-            'model': self.model.module.state_dict(),
+            'model': self.model.state_dict(),
             'epoch': self.current_epoch
         }
 
@@ -140,16 +147,21 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--epochs', type=int)
     parser.add_argument('-p', '--pth', type=str)
+    parser.add_argument('--ddp', action='store_true', default=False)
     args = parser.parse_args()
 
     # initialize the process group
-    dist.init_process_group("nccl")
-    local_rank = int(os.environ['LOCAL_RANK'])
-
+    if args.ddp:
+        dist.init_process_group("nccl")
+        
+    local_rank = int(os.getenv('LOCAL_RANK', 0))
+    global_rank = int(os.getenv('RANK', 0))
+    
     # Hyper parameters
     batch_size = 32
     lr = 1e-3
 
+    # Image transforms
     train_transform = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
@@ -162,6 +174,7 @@ def main():
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
+    # Datasets
     train_data = datasets.CIFAR10(
         root='data',
         train=True,
@@ -178,17 +191,18 @@ def main():
     train_loader = DataLoader(
         dataset=train_data,
         batch_size=batch_size,
-        sampler=DistributedSampler(train_data),
+        sampler=DistributedSampler(train_data) if args.ddp else None,
         num_workers=ncpus
     )
 
     test_loader = DataLoader(
         dataset=test_data,
         batch_size=batch_size,
-        sampler=DistributedSampler(test_data),
+        sampler=DistributedSampler(test_data) if args.ddp else None,
         num_workers=ncpus
     )
 
+    # Model
     model = models.resnet18()
     model.fc = nn.Linear(model.fc.in_features, len(train_data.classes))
 
@@ -197,19 +211,28 @@ def main():
 
     # Criterion
     criterion = nn.CrossEntropyLoss()
-
+    metric = Accuracy(task='multiclass', num_classes=len(train_data.classes))
+    if args.ddp:
+        metric = metric.to(local_rank)
+        
+    
     trainer = Trainer(
         model=model,
         train_loader=train_loader,
         optimizer=optimizer,
         criterion=criterion,
+        ddp=args.ddp,
+        local_rank=local_rank,
+        global_rank=global_rank,
         test_loader=test_loader,
         metric=Accuracy(task='multiclass', num_classes=len(train_data.classes)).to(local_rank),
         snapshot_path=args.pth
     )
 
     trainer.fit(args.epochs if args.epochs else 1)
-    dist.destroy_process_group()
+    
+    if args.ddp:
+        dist.destroy_process_group()
 
 
 if __name__ == '__main__':
