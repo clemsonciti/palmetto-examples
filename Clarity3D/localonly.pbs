@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#PBS -N clarity
+#PBS -l select=1:ncpus=4:mem=32gb:interconnect=fdr
+#PBS -l walltime=1:00:00
+#PBS -l place=scatter
+#PBS -j oe
+#PBS -o ./logs
+
+set -e
+
+module load cadence/Sigrity22
+
+cd $PBS_O_WORKDIR
+
+cat << EOF > commands.tcl
+#tcl Clarity 3D Workbench version: 6
+sigrity::configure version -version {6}
+sigrity::open file -file {input.3dem}
+sigrity::update DynamicClarity3dResource -smt 0 -local -cn localhost -cpus 4
+sigrity::begin simulation -fileName {input.3dem}
+sigrity::end simulation -fileName {input.3dem}
+EOF
+
+clarity3dworkbench --NoUI tcl commands.tcl
+
+
