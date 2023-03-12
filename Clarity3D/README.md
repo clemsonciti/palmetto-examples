@@ -27,7 +27,7 @@ can do the following:
     ```
     mkdir /scratch/$USER/clarity-workbench-test
     cd /scratch/$USER/clarity-workbench-test
-    TODO: curl url
+    curl -LOf https://github.com/clemsonciti/palmetto-examples/raw/master/Clarity3D/input.3dem 
     ```
 
 3. Load the Sigrity module (which includes Clarity 3D), and start the workbench:
@@ -55,25 +55,38 @@ node since they are not computationally intensive.
     ```
     mkdir /scratch/$USER/clarity-workbench-test
     cd /scratch/$USER/clarity-workbench-test
-    TODO: curl url
+    curl -LOf https://github.com/clemsonciti/palmetto-examples/raw/master/Clarity3D/input.3dem 
+    curl -LOf https://github.com/clemsonciti/palmetto-examples/raw/master/Clarity3D/localonly.pbs 
+    curl -LOf https://github.com/clemsonciti/palmetto-examples/raw/master/Clarity3D/remote4.pbs 
     ```
 
-2. (optional) Run the local script. This will run Clarity on a single node with
-   4 processes.
+2. Run the local script. This will run Clarity on a single node with 4 processes.
 
     ```
+    cd /scratch/$USER/clarity-workbench-test
+    mkdir local
+    cp input.3dem localonly.pbs local
+    cd local
     qsub localonly.pbs
     ```
 
    This should take about 5 minutes for meshing, and 45 minutes for analysis.
 
-3. If you ran the local script, wait for it to complete. Don't run two instances
-   of Clarity from the same working directory. Once the local script is
-   complete, run the 4 node script. This will run Clarity on four nodes with 4
-   processes per node.
+3. Run the 4 node script. This will run Clarity on four nodes with 4 processes
+   per node.
 
     ```
+    cd /scratch/$USER/clarity-workbench-test
+    mkdir remote4
+    cp input.3dem remote4.pbs remote4
+    cd remote4
     qsub remote4.pbs
     ```
 
    This should take about 5 minutes for meshing, and 15 minutes for analysis.
+   Note that meshing does not seem to be improved with multiple nodes, but
+   analysis is.
+
+4. Once the jobs have completed, you can check the results in the GUI version of
+   Clarity.  Follow the steps above to open Clarity 3D workbench, then go to
+   Solver->Simulation->Results
