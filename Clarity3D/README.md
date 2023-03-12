@@ -8,6 +8,9 @@ form](https://clemson.ca1.qualtrics.com/jfe/form/SV_3DyqMQTW1giG83Y). This also
 grants you an account on Clarity which allows you to view the product
 documentation and tutorials.
 
+As a reminder, academic and academic research use is permitted - ***no
+commercial/commercially funded work is permitted.***
+
 
 
 ## Clarity 3D Workbench Interactive
@@ -30,10 +33,12 @@ can do the following:
     curl -LOf https://github.com/clemsonciti/palmetto-examples/raw/master/Clarity3D/input.3dem 
     ```
 
-3. Load the Sigrity module (which includes Clarity 3D), and start the workbench:
+3. Load the Sigrity module (which includes Clarity 3D) and mesa, then start the
+   workbench. The mesa library is needed for some of the 3D functionality.  If
+   mesa is not loaded, it may crash with `Aborted (core dump)`.
 
     ```
-    module load cadence/Sigrity22
+    module load cadence/Sigrity22 mesa/22.0.2-gcc
     clarity3dworkbench
     ```
 
@@ -47,8 +52,7 @@ can do the following:
 With a batch job, you can submit a model for processing in the background on
 Palmetto.  This also makes it easier to user Clarity to spawn workers on several
 nodes, speeding up analysis.  We'll provide an example of how to run a batch job
-on to analyze that same input.3dem.  We can run all these steps on the login
-node since they are not computationally intensive.
+on to analyze that same input.3dem.  
 
 1. Create a test directory and download the input.3dem, and submit scripts:
     
@@ -89,4 +93,5 @@ node since they are not computationally intensive.
 
 4. Once the jobs have completed, you can check the results in the GUI version of
    Clarity.  Follow the steps above to open Clarity 3D workbench, then go to
-   Solver->Simulation->Results
+   Solver->Simulation->Results.  Make sure you have `mesa` loaded as a module or
+   the field plot viewer will crash. 
