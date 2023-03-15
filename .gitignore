@@ -1,0 +1,5 @@
+*.vscode
+
+# Pytorch
+PyTorch/distributed_data_parallel/data/*
+PyTorch/distributed_data_parallel/snapshot.pth
