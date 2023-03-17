@@ -81,5 +81,3 @@ exit
 
 ```
 In our test on 20 nodes, 40 a100 GPUs, execution took about 1.5 minutes with much of that time spend in setup rather than training. At peak, training proceeded at a rate of 47,000 images/second -- roughly 40 times faster than than the single-gpu rate. At this rate, a 200-epoch training run would take 1.2 hours.
-
-We provide a number of examples on GitHub demonstrating how to setup and use PyTorch on Palmetto: 
