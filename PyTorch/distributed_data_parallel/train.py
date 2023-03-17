@@ -187,7 +187,8 @@ def main():
         transform=test_transform,
         download=True,
     )
-    ncpus = max(int(os.getenv('NCPUS', 1))-1, 1)
+    
+    ncpus = 15 #max(int(os.getenv('NCPUS', 1))-1, 1)
     train_loader = DataLoader(
         dataset=train_data,
         batch_size=batch_size,
