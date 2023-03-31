@@ -1,17 +1,17 @@
 ## ANSYS
 
-| **NOTE**
-| If you have any trouble with Ansys please reach out to us through our [email
-| support](https://docs.rcd.clemson.edu/support/contact/email). We are not
-| experts in Ansys and solving your problem may require a collaboration between
-| the user (you) and us (the research facilitators/system administrators).
-|
-| If you have success in using Ansys, in particular medium sized runtimes (10
-| minutes to an hour), we'd love to include your input and batch submission as a
-| benchmark. This would allow us to detect regressions, both performance and when
-| an upgrade breaks Ansys and allow us to solves these issues faster.
-| If you'd like to help us in this regard, please reach out to us through our
-| [email support](https://docs.rcd.clemson.edu/support/contact/email)
+> **NOTE**
+> If you have any trouble with Ansys please reach out to us through our [email
+> support](https://docs.rcd.clemson.edu/support/contact/email). We are not
+> experts in Ansys and solving your problem may require a collaboration between
+> the user (you) and us (the research facilitators/system administrators).
+>
+> If you have success in using Ansys, in particular medium sized runtimes (10
+> minutes to an hour), we'd love to include your input and batch submission as a
+> benchmark. This would allow us to detect regressions, both performance and when
+> an upgrade breaks Ansys and allow us to solves these issues faster.
+> If you'd like to help us in this regard, please reach out to us through our
+> [email support](https://docs.rcd.clemson.edu/support/contact/email)
 
 ### Graphical Interfaces
 
