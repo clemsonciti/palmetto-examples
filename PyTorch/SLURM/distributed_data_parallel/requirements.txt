@@ -1,0 +1,5 @@
+torchmetrics
+tqdm
+pyyaml
+filelock
+transformers

@@ -1,0 +1,12 @@
+name: pytorch
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pytorch=1.12.1
+  - torchvision=0.13.1
+  - pip:
+    - pyyaml==6.0
