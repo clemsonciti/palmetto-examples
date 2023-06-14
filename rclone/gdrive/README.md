@@ -1,4 +1,4 @@
-## `rclone` Google Drive
+# `rclone` Google Drive
 
 `rclone` is a command-line program that can be used to sync files and folders to
 and from cloud services such as Google Drive, Amazon S3, Dropbox, and
@@ -8,9 +8,7 @@ In this example, we will show how to use `rclone` to sync files to a Google
 Drive account, but the official documentation has specific instructions for
 other services.
 
-We also have an
-
-### Setting up rclone for use with Google Drive on Palmetto
+## Setting up rclone for use with Google Drive on Palmetto
 
 To use `rclone` with any of the above cloud storage services, you must perform a
 one-time configuration. You can configure `rclone` to work with as many services

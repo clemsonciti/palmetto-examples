@@ -9,6 +9,7 @@ To get started, you will need to configure and authorize `rclone` with your
 storage provider. We provide examples for the following providers:
 
 1. [Google Drive](./gdrive/README.md)
+1. [Microsoft OneDrive](./onedrive/README.md)
 1. [Box](./box/README.md)
 
 ### Using rclone
