@@ -26,7 +26,7 @@ Log with your Palmetto password and DUO; once logged-in, load the `rclone`
 module:
 
 ```
-module load rclone/1.51.0-gcc/9.5.0
+module load rclone/1.62.2-gcc/9.5.0
 ```
 
 You can list the available storage providers that you have configured:

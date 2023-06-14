@@ -21,7 +21,7 @@ before continuing.
 After you get on a compute node, load the `rclone` module:
 
 ```
-module load rclone/1.51.0-gcc/9.5.0
+module load rclone/1.62.2-gcc/9.5.0
 ```
 
 After `rclone` is loaded, you must set up a "remote". In this case, we will
