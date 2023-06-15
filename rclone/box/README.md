@@ -1,12 +1,12 @@
 ## Setting up rclone for use with Box on Palmetto
 
-Prior to connection `rclone` to `Box` on Palmetto, you will need to 
-setup a Box app for authentication purposes. 
+Prior to connection `rclone` to `Box` on Palmetto, you will need to
+setup a Box app for authentication purposes.
 
 ### Setting up a new Box app
 
 - Visit `https://clemson.app.box.com/developers/console` and sign in using
-Clemson's login name and password
+  Clemson's login name and password
 - Click `Create New App`
 
 <img src="fig/01.png" style="width:800px">
@@ -15,14 +15,16 @@ Clemson's login name and password
 
 <img src="fig/02.png" style="width:800px">
 
+- Enter App Name, you can call the app `palmetto`.
+- Select Automation for Purpose
+- Click Next
 - Select `User Authentication (OAuth 2.0)`
-  - Enter App Name, you can call the app `palmetto`.
-  - Click `Create App`
+- Click `Create App`
 
 <img src="fig/03.png" style="width:1000px">
 
 - In the next Configuration windows, there are three items in the app the you need to use to enter
-in the `rclone` configuration section later on:
+  in the `rclone` configuration section later on:
   - Developer Token
   - Client ID
   - Client Secret
@@ -30,31 +32,33 @@ in the `rclone` configuration section later on:
 <img src="fig/04.png" style="width:800px">
 
 - Scroll down the Configuration windows and check the box on `Write all files and folders 
-stored in Box`. 
-  - Click `Save Changes`. 
+stored in Box`.
 
-- At this point, use your favorite terminal (or OpenOD02 browser terminal), 
-log onto Palmetto, and get a compute node. 
+  - Click `Save Changes`.
+
+- At this point, use your favorite terminal (or OpenOD02 browser terminal),
+  log onto Palmetto, and get a compute node.
 
 ### Setting up rclone for Box
 
 - After you get on a compute node, load the `rclone` module:
 
-~~~
-module add rclone/1.58.1-gcc/8.3.1
-~~~
+```
+module add rclone/1.62.2-gcc/9.5.0
+```
 
 - After `rclone` is loaded, you must set up a "remote". In this case,
-we will configure a remote for Google Drive. You can create and manage a separate
-remote for each cloud storage service you want to use.
-Start by entering the following command:
+  we will configure a remote for Google Drive. You can create and manage a separate
+  remote for each cloud storage service you want to use.
+  Start by entering the following command:
 
-~~~
+```
 rclone config
-~~~
+```
 
 This will bring the lost of options:
-~~~
+
+```
 e) Edit existing remote
 n) New remote
 d) Delete remote
@@ -62,8 +66,8 @@ r) Rename remote
 c) Copy remote
 s) Set configuration password
 q) Quit config
-e/n/d/r/c/s/q> 
-~~~
+e/n/d/r/c/s/q>
+```
 
 - Press `n` then `Enter` to create a new remote host.
 
@@ -71,9 +75,9 @@ e/n/d/r/c/s/q>
 name>
 ```
 
-- Provide any name for this remote host. Let's call this one **box**, then press `Enter`. 
-- Next, `rclone` is going to give you a lengthy list of different possible storage connector. 
-We are going to choose `8` for `Box`, then press `Enter`. 
+- Provide any name for this remote host. Let's call this one **box**, then press `Enter`.
+- Next, `rclone` is going to give you a lengthy list of different possible storage connector.
+  We are going to choose `8` for `Box`, then press `Enter`.
 
 ```
 Choose a number from below, or type in your own value
@@ -172,19 +176,21 @@ Choose a number from below, or type in your own value
 Storage>
 ```
 
-- The next question for configuraiton asks for `client_id`. 
-This is where you copy the string from the `Client ID` box in your Box App
-configuration section earlier and paste it to the terminal.
-- Similarly, `rclone` will continue to ask for `client_secret`, which is 
-the string from the `Client Secret` box in your Box App configuration section. 
-- Press `Enter` to leave empty when asked about `box_config_file`. 
+- The next question for configuraiton asks for `client_id`.
+  This is where you copy the string from the `Client ID` box in your Box App
+  configuration section earlier and paste it to the terminal.
+- Similarly, `rclone` will continue to ask for `client_secret`, which is
+  the string from the `Client Secret` box in your Box App configuration section.
+- Press `Enter` to leave empty when asked about `box_config_file`.
 - Provide the string from the `Developer Token` box in your Box App configuration
-section when asked for `access_token`. 
+  section when asked for `access_token`.
   - **This access token is only valid for 60 minutes. This is for security purpose**.
-  - After 60 minutes, you will need to visit your Box App config and generate a new 
-  token. To switch out this token, first run `rclone config file` to get the location 
-  of the `rclone.conf` file. Open and edit the `access_token` string of `[box]` in this 
-  file.
+  - After 60 minutes, you will need to visit your Box App config and generate a new
+    token. To switch out this token, first run `rclone config file` to get the location
+    of the `rclone.conf` file. Open and edit the `access_token` string of `[box]` in this
+    file.
+- When asked to fill in the option box_sub_type, select Rclone should act on
+  behalf of a service account (enterprise).
 
 <img src="fig/05.png" style="width:800px">
 
@@ -196,7 +202,6 @@ $ rclone lsd box:
 
 <img src="fig/06.png" style="width:800px">
 
-
 To view `rclone` commands to access your files and directories on box, run
 
 ```
@@ -206,7 +211,6 @@ $ rclone --help
 <img src="fig/07.png" style="width:800px">
 
 Run the following sequence of commands to validate box operations:
-
 
 ```
 $ rclone lsf box:
