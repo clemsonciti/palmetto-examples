@@ -9,6 +9,7 @@ To get started, you will need to configure and authorize `rclone` with your
 storage provider. We provide examples for the following providers:
 
 1. [Google Drive](./gdrive/README.md)
+1. [Microsoft OneDrive](./onedrive/README.md)
 1. [Box](./box/README.md)
 
 ### Using rclone
@@ -25,7 +26,7 @@ Log with your Palmetto password and DUO; once logged-in, load the `rclone`
 module:
 
 ```
-module load rclone/1.51.0-gcc/9.5.0
+module load rclone/1.62.2-gcc/9.5.0
 ```
 
 You can list the available storage providers that you have configured:

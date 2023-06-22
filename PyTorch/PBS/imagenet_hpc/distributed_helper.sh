@@ -26,7 +26,7 @@ torchrun \
     --rdzv_endpoint=$MASTER_HOSTNAME:3000 \
     train.py \
         --model resnet50d \
-        --epochs 1 \
+        --epochs 200 \
         --warmup-epochs 0 \
         --lr 0.4 \
         --batch-size 256 \
