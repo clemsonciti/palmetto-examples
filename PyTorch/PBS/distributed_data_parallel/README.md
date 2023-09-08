@@ -9,7 +9,7 @@ This file explains each step in detail and provides code snippets with explanati
 ## Palmetto Cluster Setup
 Copy the contents of this project folder into a new directory on Palmetto. We will refer to the location of this directory as `<project_dir>` for the remainder of the tutorial. Wherever you see `<project_dir>`, replace it with the actual path to your project directory.
 
-Follow [these instructions](https://github.com/clemsonciti/palmetto-examples/tree/master/PyTorch#pytorch-installation-for-p100v100a100) from the Palmetto Examples github repository to create a conda environment named `pytorch` with the pytorch library installed. If you already have a suitable environment, you can use that instead. For this demo, you will also need the additional libraries in the `requirements.txt` file included with this example project.
+Follow [these instructions](https://github.com/clemsonciti/palmetto-examples/tree/master/PyTorch/PBS#pytorch-installation-for-p100v100a100) from the Palmetto Examples github repository to create a conda environment named `pytorch` with the pytorch library installed. If you already have a suitable environment, you can use that instead. For this demo, you will also need the additional libraries in the `requirements.txt` file included with this example project.
 
 Request an interactive job then perform the installation
 ```bash
