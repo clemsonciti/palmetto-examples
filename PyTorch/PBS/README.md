@@ -15,33 +15,33 @@ Server with PyTorch environment on
 1) Request an interactive session on a GPU node.
 
 ~~~
-$ qsub -I -l select=1:ncpus=16:mem=20gb:ngpus=1:gpu_model=p100:interconnect=10ge,walltime=3:00:00
+qsub -I -l select=1:ncpus=16:mem=20gb:ngpus=1:gpu_model=p100:interconnect=10ge,walltime=3:00:00
 ~~~
 
 2) Load the Anaconda module:
 
 ~~~
-$ module load anaconda3/2022.05-gcc/9.5.0
+module load anaconda3/2022.05-gcc/9.5.0
 ~~~
 
 
 3) Create a conda environment called pytorch_env (or any name you like):
 
 ~~~
-$ conda create -n pytorch python=3.10
+conda create -n pytorch python=3.10
 ~~~
 
 4) Activate the conda environment:
 
 ~~~
-$ source activate pytorch
+source activate pytorch
 ~~~
 
 5) Install Pytorch with GPU support from the pytorch channel:
 
 ~~~
-$ conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
-$ conda install jupyterlab requests
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install jupyterlab requests
 ~~~
 
 
@@ -62,8 +62,8 @@ True
 Each time you login, you will first need to load the required anaconda module and also activate the `pytorch` conda environment before running Python:
 
 ~~~
-$ module load anaconda3/2022.05-gcc/9.5.0
-$ source activate pytorch
+module load anaconda3/2022.05-gcc/9.5.0
+source activate pytorch
 ~~~
 
 ### PyTorch installation for K20/K40
@@ -72,45 +72,45 @@ $ source activate pytorch
 1) Request an interactive session on a GPU node.
 
 ~~~
-$ qsub -I -l select=1:ncpus=15:mem=62gb:ngpus=2:gpu_model=k20,walltime=24:00:00
+qsub -I -l select=1:ncpus=15:mem=62gb:ngpus=2:gpu_model=k20,walltime=24:00:00
 ~~~
 
 2) Load the Anaconda module:
 
 ~~~
-$ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1 openmpi/4.1.3-gcc/9.5.0-ucx gcc/9.5.0 mpfr/4.1.0-gcc/9.5.0
+module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1 openmpi/4.1.3-gcc/9.5.0-ucx gcc/9.5.0 mpfr/4.1.0-gcc/9.5.0
 ~~~
 
 
 3) Create a conda environment called pytorch_k20 (or any name you like):
 
 ~~~
-$ conda create -n pytorch-k20 python=3.8
+conda create -n pytorch-k20 python=3.8
 ~~~
 
 4) Activate the conda environment:
 
 ~~~
-$ source activate pytorch-k20
+source activate pytorch-k20
 ~~~
 
 5) Install Pytorch with GPU support from the pytorch channel:
 
 ~~~
-$ pip install /zfs/citi/software/pytorch/wheel/torch-1.10.1-cp38-cp38-linux_x86_64.whl 
-$ pip install torchvision=0.11.2 torchaudio=0.10.1
+pip install /zfs/citi/software/pytorch/wheel/torch-1.10.1-cp38-cp38-linux_x86_64.whl 
+pip install torchvision=0.11.2 torchaudio=0.10.1
 ~~~
 
 6) Install additional packages (for example, Pandas and JupyterLab)
 
 ~~~
-$ conda install pandas jupyterlab requests numpy
+conda install pandas jupyterlab requests numpy
 ~~~
 
 7) You can now run Python and test the install:
 
 ~~~~
-$ python
+python
 >>> import torch
 >>> print (torch.cuda.is_available())
 True
