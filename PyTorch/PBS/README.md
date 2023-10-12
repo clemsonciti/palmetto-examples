@@ -15,7 +15,7 @@ Server with PyTorch environment on
 1) Request an interactive session on a GPU node.
 
 ~~~
-qsub -I -l select=1:ncpus=16:mem=20gb:ngpus=1:gpu_model=p100:interconnect=10ge,walltime=3:00:00
+qsub -I -l select=1:ncpus=4:mem=20gb:ngpus=1:gpu_model=p100:interconnect=10ge,walltime=3:00:00
 ~~~
 
 2) Load the Anaconda module:
@@ -40,7 +40,7 @@ source activate pytorch
 5) Install Pytorch with GPU support from the pytorch channel:
 
 ~~~
-conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 conda install jupyterlab requests
 ~~~
 
