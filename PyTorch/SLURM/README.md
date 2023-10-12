@@ -41,7 +41,7 @@ $ source activate pytorch
 5) Install Pytorch with GPU support from the pytorch channel:
 
 ~~~
-$ conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+$ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 $ conda install jupyterlab requests
 ~~~
 
