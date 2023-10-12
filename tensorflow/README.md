@@ -23,34 +23,34 @@ You can use `whatsfree` and `freeres` to identify an appropriate `chip_type` set
 
 
 ```
-$ qsub -I -l select=1:ncpus=8:mem=15gb:chip_type=e5-2680v4,walltime=2:00:00
+qsub -I -l select=1:ncpus=8:mem=15gb:chip_type=e5-2680v4,walltime=2:00:00
 ```
 
 
 2. Load the Anaconda module:
 
 ```
-$ module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
+module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
 ```
 
 3. Create a conda virtual environment:
 
 ```
-$ conda create -n tf_2.5 python=3.8
+conda create -n tf_2 python=3.8
 ```
 
 4. Activate the virtual environment:
 
 ```
-$ source activate tf_2.5
+source activate tf_2
 ```
 
 5. Install TensorFlow and supporting libraries
 
 ```
-$ export PYTHONNOUSERSITE=1
-$ pip install tensorflow==2.5 pandas jupyterlab
+pip install tensorflow pandas jupyterlab
 ```
+
 
 ### Install TensorFlow 1.x
 
@@ -103,10 +103,10 @@ $ pip install jupyterlab
 - Make the following selections:
   - `Anaconda Version`: `anaconda3/2022.05-gcc/9.5.0`
   - `List of modules to be loaded, separate by an empty space`: `cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1`
-  - `Path to Python virtual/conda environment`: `source activate tf_cpu_2.5`
+  - `Path to Python virtual/conda environment`: `source activate tf_2`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
-  - Make sure to use a node in phase 12 or above if using tensorflow 2.
+  - Make sure to use a node in phase 12 or above if using tensorflow 2 (either by adding HDR to your interconnect specifications, add `:chip_type=e5-2680v3` (or better, see above) to your "Extra PBS resource allocation request", or select a GPU model if you plan to make use of GPUs).
   - Select the `Tensorflow Notebook` from the `Notebook Workflow`.
 - Click `Launch` when done.
 
