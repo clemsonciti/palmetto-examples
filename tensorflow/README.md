@@ -30,7 +30,7 @@ qsub -I -l select=1:ncpus=8:mem=15gb:chip_type=e5-2680v4,walltime=2:00:00
 2. Load the Anaconda module:
 
 ```
-module load anaconda3/2022.05-gcc/9.5.0 cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1
+module load anaconda3/2022.05-gcc/9.5.0 cudnn/8.7.0.84-11.8-gcc/9.5.0 cuda/11.8.0-gcc/9.5.0
 ```
 
 3. Create a conda virtual environment:
@@ -102,7 +102,7 @@ $ pip install jupyterlab
 - Under `Interactive Apps` tab, select `Jupyter Notebook`.
 - Make the following selections:
   - `Anaconda Version`: `anaconda3/2022.05-gcc/9.5.0`
-  - `List of modules to be loaded, separate by an empty space`: `cuda/11.1.1-gcc/9.5.0 cudnn/8.0.5.39-11.1-gcc/9.5.0-cu11_1`
+  - `List of modules to be loaded, separate by an empty space`: `cudnn/8.7.0.84-11.8-gcc/9.5.0 cuda/11.8.0-gcc/9.5.0`
   - `Path to Python virtual/conda environment`: `source activate tf_2`
 - Make the remaining selections according to how much resources you would need.
   - The screenshot below uses the same set of resources used for the non-GPU option of tensorflow.
