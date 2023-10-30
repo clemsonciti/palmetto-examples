@@ -1,12 +1,8 @@
 #PBS -N lammps_example
-#PBS -l select=1:ncpus=10:mpiprocs=10:ngpus=1:mem=32gb,walltime=1:00:00
+#PBS -l select=1:ncpus=8:mpiprocs=8:mem=32gb,walltime=1:00:00
 #PBS -j oe
 
 module purge
+module load lammps/20220107-gcc/9.5.0-mpi-openmp-cu11_1-nvP-nvV-nvA-kokkos-u-omp
 
-module load gcc/4.8.1
-module load openmpi/1.8.1
-module load fftw/3.3.4-g481
-module load cuda-toolkit/7.5.18
-
-mpirun -n 8 lmp_palmetto_kokkos_cuda_openmpi -k on t 10 g 1 -sf kk < in.lj
+mpirun -n 8 lmp -sf omp -pk omp 1 -in in.lj
