@@ -25,18 +25,16 @@ $ cd ~/software
 - Download the **preferred**/**required** version of lammps and untar. 
   - https://www.lammps.org/download.html
   - LAMMPS simulations/checkpoints require LAMMPS version to be consistent throughout. 
-- In this example, we use the latest stable version of lammps.
+- In this example, we use the `23Jun2022` version of lammps. Note: later version will raise an error at the end of compiling. 
 
 ~~~
 $ mkdir lammps
 $ cd lammps
-$ wget https://download.lammps.org/tars/lammps-stable.tar.gz
+$ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
 $ tar -xzf lammps-stable.tar.gz 
 ~~~
 
-- This current `stable` version of lammps after untar will create version 
-`23Jun2022`. If you follow this guide in the future, the version might/will 
-differ. 
+- According to our test, the version `23Jun2022` can be installed successfully. Later versions, such as `2Aug2023` will raise an error at the end of the compilation. You are encouraged to try newer versions, but if you found any error, please fall back to the `23June2022` version.
 
 In the recent versions, lammps use `cmake` as their build system. As a result, we will be 
 able to build multiple lammps executables within a single source download. 
@@ -68,11 +66,11 @@ two already prepared cmake templates available inside `../cmake/presets` directo
 (this is a relative path assuming you are inside the previously created 
 `build-kokkos-gpu-omp`). 
 - We will use `../cmake/presets/basic.cmake` and `../cmake/presets/kokkos-cuda.cmake` 
-our templates. 
+as our templates. 
   - `basic.cmake` contains four basic simulation packages: KSPACE, MANYBODY, MOLECULE, 
   and RIGID
   - `kokkos-cuda.cmake` contains the architectural configuration for the type of 
-  GPU card. The default value is `VOLTA70`. 
+  GPU card. The default value is `PASCAL60`. 
   - The example default contents of `basic.cmake` and `kokkos-cuda.cmake` are shown
   below. 
 
@@ -94,7 +92,7 @@ $ more ../cmake/presets/kokkos-cuda.cmake
 set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
 set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
 set(Kokkos_ENABLE_CUDA   ON CACHE BOOL "" FORCE)
-set(Kokkos_ARCH_VOLTA70 ON CACHE BOOL "" FORCE)
+set(Kokkos_ARCH_PASCAL60 ON CACHE BOOL "" FORCE)
 set(BUILD_OMP ON CACHE BOOL "" FORCE)
 
 # hide deprecation warnings temporarily for stable release
@@ -112,13 +110,10 @@ $ cp ../cmake/presets/kokkos-cuda.cmake ../cmake/presets/kokkos-p100.cmake
 
 - The newly created `basic_gpu_omp.cmake` needs to be edited to include 
 the three packages, `GPU`, `OPENMP`, and `USER-OMP` to the list of packages in the 
-`set(ALL_PACKAGES ...)` line.
-- The newly created `kokkos-p100.cmake` needs to be edited to 
-change `VOLTA70` to `PASCAL60`. 
+`set(ALL_PACKAGES ...)` line. You can use your favorite text editor to do the editting, 
+and the edited version can be found below.
 
 ~~~
-$ nano ../cmake/presets/basic-gpu-omp.cmake
-$ nano ../cmake/presets/kokkos-p100.cmake
 $ cat ../cmake/presets/basic-gpu-omp.cmake
 # preset that turns on just a few, frequently used packages
 # this will be compiled quickly and handle a lot of common inputs.
@@ -171,8 +166,8 @@ cmake --build . --parallel 24
   - **Do not user the numbers here for your production environment.**
 
 ~~~
-$ mkdir /scratch1/$USER/lammps
-$ cd /scratch1/$USER/lammps
+$ mkdir /scratch/$USER/lammps
+$ cd /scratch/$USER/lammps
 $ wget https://lammps.sandia.gov/inputs/in.lj.txt
 $ export PATH="$HOME/software/lammps/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
 $ mpirun -np 2 lmp -k on g 2 -sf kk -in in.lj.txt > out.1
@@ -203,7 +198,7 @@ has 24 CPUs, 100gb of memory, and 2 P100 GPUs.
 - Let set up our LAMMPS environment:
 
 ~~~
-$ cd /scratch1/$USER/lammps
+$ cd /scratch/$USER/lammps
 $ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
 $  export PATH="$HOME/software/lammps/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
 ~~~
