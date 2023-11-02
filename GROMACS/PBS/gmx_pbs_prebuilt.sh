@@ -15,4 +15,7 @@ export OMP_NUM_THREADS=6
 N_MPI_PROCESSES=`cat $PBS_NODEFILE | wc -l`
 echo number of MPI processes is $N_MPI_PROCESSES
 
+# generate binary input file
+gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
+
 mpirun -np $N_MPI_PROCESSES -npernode 2 gmx_mpi mdrun -s em.tpr -deffnm job-output
