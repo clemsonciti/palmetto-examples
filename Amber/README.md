@@ -23,7 +23,7 @@ $ git clone
 
 There are four versions of the submission script for different versions of amber (mpi, gpu) and different job schedulers (pbs, slurm).
 
-#### ambser_mpi.pbs
+#### ambser_mpi.pbs (pbs-mpi)
 
 ~~~
 #PBS -N amber_test
@@ -47,6 +47,11 @@ mpirun -np $N_MPI_PROCESSES sander.MPI -O -i 02_Heat.in -o 02_Heat.out -p parm7 
 
 # production
 mpirun -np $N_MPI_PROCESSES pmemd.MPI -O -i 03_Prod.in -o 03_Prod.out -p parm7 -c 02_Heat.ncrst -r 03_Prod.ncrst -x 03_Prod.nc -inf 03_Prod.info
+~~~
+
+To submit this pbs script, use the following command:
+~~~
+qsub ambser_mpi.pbs
 ~~~
 
 #### amber_gpu.pbs (pbs-gpu)
@@ -75,6 +80,11 @@ mpirun -np $N_MPI_PROCESSES sander.quick.cuda.MPI -O -i 02_Heat.in -o 02_Heat.ou
 # production
 mpirun -np $N_MPI_PROCESSES pmemd.cuda_SPFP.MPI -O -i 03_Prod.in -o 03_Prod.out -p parm7 -c 02_Heat.ncrst -r 03_Prod.ncrst -x 03_Prod.nc -inf 03_Prod.info -AllowSmallBox
 ~~~
+
+To submit this pbs script, use the following command:
+~~
+qsub ambser_gpu.pbs
+~~
 
 Notice: 1. the last line in the production step includs `-AllowSmallBox`, which is because the cell in the tutorial is too small and not suitable for GPU calculations, we can use specify `-AllowSmallBox` to enforce the code to run. But in the end, the job might still complain and throw an error. 2. ONLY select one gpu card, according to our test, other gpu cards would sit idle if more than one are requested. (RCDE team is still working on this issue)
 
@@ -107,6 +117,11 @@ srun sander.MPI -O -i 02_Heat.in -o 02_Heat.out -p parm7 -c 01_Min.ncrst -r 02_H
 srun pmemd.MPI -O -i 03_Prod.in -o 03_Prod.out -p parm7 -c 02_Heat.ncrst -r 03_Prod.ncrst -x 03_Prod.nc -inf 03_Prod.info
 ~~~
 
+To submit this pbs script, use the following command:
+~~
+sbatch ambser_mpi.slurm
+~~
+
 #### amber_gpu.slurm (gpu-slurm) (WIP: place holder)
 
 ~~~
@@ -136,4 +151,7 @@ srun sander.MPI -O -i 02_Heat.in -o 02_Heat.out -p parm7 -c 01_Min.ncrst -r 02_H
 srun pmemd.MPI -O -i 03_Prod.in -o 03_Prod.out -p parm7 -c 02_Heat.ncrst -r 03_Prod.ncrst -x 03_Prod.nc -inf 03_Prod.info
 ~~~
 
-
+To submit this pbs script, use the following command:
+~
+sbatch ambser_gpu.slurm
+~
