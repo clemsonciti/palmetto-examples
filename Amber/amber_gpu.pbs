@@ -1,0 +1,24 @@
+#PBS -N amber_test
+#PBS -l select=1:ncpus=16:mpiprocs=16:ngpus=1:gpu_model=a100:interconnect=hdr:mem=2gb
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+module load amber/22.gpu_mpi
+
+cd $PBS_O_WORKDIR
+
+
+# get the total number of MPI processes
+N_MPI_PROCESSES=`cat $PBS_NODEFILE | wc -l`
+echo number of MPI processes is $N_MPI_PROCESSES
+
+# minimization
+mpirun -np $N_MPI_PROCESSES sander.quick.cuda.MPI -O -i 01_Min.in -o 01_Min.out -p parm7 -c rst7 -r 01_Min.ncrst -inf 01_Min.mdinfo
+
+# heating process
+mpirun -np $N_MPI_PROCESSES sander.quick.cuda.MPI -O -i 02_Heat.in -o 02_Heat.out -p parm7 -c 01_Min.ncrst -r 02_Heat.ncrst -x 02_Heat.nc -inf 02_Heat.mdinfo
+
+# production
+mpirun -np $N_MPI_PROCESSES pmemd.cuda_SPFP.MPI -O -i 03_Prod.in -o 03_Prod.out -p parm7 -c 02_Heat.ncrst -r 03_Prod.ncrst -x 03_Prod.nc -inf 03_Prod.info -AllowSmallBox
+
+
