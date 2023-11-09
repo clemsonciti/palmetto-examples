@@ -1,7 +1,7 @@
 ## NAMD
 
 NAMD is a molecular dynamics simulation software written in charm++. Currently namd/2.14 is available on the palmetto cluster.
-The user guide for NAMD/2.14 can be found here: https://www.ks.uiuc.edu/Research/namd/2.14/ug/
+The user guide for NAMD/2.14 can be found here: https://www.ks.uiuc.edu/Research/namd/2.14/ug/. We noticed some newer versions for NAMD is available. If you need help installation of the latest version, please contact the RCDE team.
 
 ~~~
 $ module avail namd
@@ -9,12 +9,23 @@ $ module avail namd
 namd/2.14
 ~~~
 
-### Running NAMD in Batch mode
+Note this is currently only available for PBS queues. Installation of NAMD is to be conducted. The current SLURM script is based on the NAMD installed in a local home directory.
+
+The example input files are located in this repo and also /project/rcde/fanchem/NAMD on Palmetto cluster. You can get the input files first.
+~~~
+$ mkdir /scratch/$USER/namd_tutorial
+$ cd /scratch/$USER/namd_tutorial
+$ cp /project/rcde/fanchem/NAMD/al* .
+~~~
+
+### Running NAMD in Batch mode (PBS-GPU)
 
 To run NAMD in batch mode on Palmetto cluster,
 you can use the job script in the following example as a template.
-This example shows how to run NAMD in parallel.
-More examples and tutorials for NAMD simulation can be found at: https://www.ks.uiuc.edu/Research/namd/
+This example shows how to run NAMD in parallel with GPU accelerators.
+More examples and tutorials for NAMD simulation can be found at [NAMD official website]( https://www.ks.uiuc.edu/Research/namd/)
+
+The example input files are l
 
 You can obtain the files required to run this example
 using the following commands:
