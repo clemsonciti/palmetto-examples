@@ -115,22 +115,22 @@ To run the interactive viewer,
 you must [log in with X11 tunneling enabled](https://docs.rcd.clemson.edu/palmetto/connect/x11_tunneling/?utm_source=old-site-redirect),
 and then ask for an interactive session:
 
-~~
+~~~
 $ qsub -I -X -l select=1:ncpus=8:mpiprocs=8:mem=6gb:interconnect=1g,walltime=00:15:00
-~~
+~~~
 
 Once logged-in to an interactive compute node,
 to launch the interactive viewer,
 load the `abaqus` module, and run the `abaqus` executable with the `viewer` and `-mesa` options:
 
-~~
+~~~
 $ module add abaqus/2023
 $ abaqus viewer -mesa
-~~
+~~~
 
 Similarly,
 to launch the ABAQUS CAE graphical interface:
 
-~~
+~~~
 $ abaqus cae -mesa
-~~
+~~~
