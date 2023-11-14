@@ -109,7 +109,7 @@ using the ABAQUS viewer:
 
 <img src="abaqus-screenshot-results.png" style="width:650px">
 
-### Running ABAQUS interactive viewer
+### Running ABAQUS interactive viewer (This method is NOT recommended, the recommended way is to use the Virtual Desktop on [OpenOnDemand](https://openod.palmetto.clemson.edu/).)
 
 To run the interactive viewer,
 you must [log in with X11 tunneling enabled](https://docs.rcd.clemson.edu/palmetto/connect/x11_tunneling/?utm_source=old-site-redirect),
