@@ -5,6 +5,7 @@ for engineering simulations.
 Currently, ABAQUS versions 6.14, 2021, 2022 and 2023 are available on Palmetto cluster
 as modules.
 
+NOTICE: Abaqus cannot run on multiple nodes on Palmetto. The RCDE team is still work on this issue.
 ~~~
 $ module avail abaqus
 
