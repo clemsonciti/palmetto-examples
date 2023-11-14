@@ -1,0 +1,12 @@
+#PBS -N abaqus_test
+#PBS -l select=1:ncpus=10:mpiprocs=10:mem=12gb:ngpus=1:gpu_model=any:interconnect=hdr
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+module load abaqus/2023
+
+NCORES=`wc -l $PBS_NODEFILE | gawk '{print $1}'`
+
+cd $PBS_O_WORKDIR
+
+abaqus job=abaqus_test input=boltpipeflange_axi_solidgask.inp scratch=$SCRATCH cpus=$NCORES mp_mode=mpi gpus=1 interactive
