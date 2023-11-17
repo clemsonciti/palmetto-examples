@@ -1,0 +1,10 @@
+#PBS -N lammps_test
+#PBS -l select=2:ncpus=8:mpiprocs=2:mem=12gb:interconnect=hdr,walltime=1:00:00
+#PBS -j oe
+
+module load fftw/3.3.10-gcc/9.5.0-openmpi
+export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-openmpi-omp:$PATH
+
+cd $PBS_O_WORKDIR
+
+mpirun -n 4 -npernode 2 lmp -sf omp -pk omp 6 -in in.lj.txt

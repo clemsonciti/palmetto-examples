@@ -1,0 +1,10 @@
+#PBS -N lammps_test
+#PBS -l select=2:ncpus=2:mpiprocs=2:ngpus=2:gpu_model=p100:mem=12gb:interconnect=fdr,walltime=1:00:00
+#PBS -j oe
+
+module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1
+export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
+
+cd $PBS_O_WORKDIR
+
+mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 1 -in in.lj.txt

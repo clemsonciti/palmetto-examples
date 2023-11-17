@@ -155,10 +155,8 @@ A100                | AMPERE80
 - We will need to load the following supporting modules from Palmetto.  
 
 ~~~
-$ module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 anaconda3/2022.05-gcc/9.5.0
+$ module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 libssh/0.8.5-gcc/9.5.0 krb5/1.19.3-gcc/9.5.0
 ~~~ 
-!!!$ module load cmake/3.23.1-gcc/9.5.0 fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 cuda/11.1.1-gcc/9.5.0 openmpi/4.1.3-gcc/9.5.0-cu11_1-nvK40-nvP-nvV-nvA-ucx gcc/9.5.0
-~~~
 
 - Build and install
 
@@ -171,15 +169,31 @@ Once the building process is finished, the executable `lmp` can be found in the 
 
 - Test on LAMMPS's LJ data
   - **This is only to test installation correctness and not for optimization.**
-  - **Do not user the numbers here for your production environment.**
-
-~~
+  - **Do not use the numbers here for your production environment.**
+  - The input files can be downloaded from https://lammps.sandia.gov/inputs/in.lj.txt or from this repo.
+~~~
 $ mkdir /scratch/$USER/lammps
 $ cd /scratch/$USER/lammps
 $ wget https://lammps.sandia.gov/inputs/in.lj.txt
 $ export PATH="$HOME/software/lammps/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
-$ mpirun -np 2 lmp -k on g 2 -sf kk -in in.lj.txt > out.1
-$ cat out.1
+$ mpirun -np 2 lmp -sf gpu 1 -pk gpu 1 -in in.lj.txt > out.gpu
+$ cat out.gpu
+~~~
+
+-  Example Batch Script for PBS job
+    - This script can also be found in this repo.
+    - Note this batch script uses p100 GPU card. Since we compiled with a100 setting, it should be fine to run on GPU cards with lower CC. 
+~~
+#PBS -N lammps_test
+#PBS -l select=2:ncpus=2:mpiprocs=2:ngpus=2:gpu_model=p100:mem=12gb:interconnect=fdr,walltime=1:00:00
+#PBS -j oe
+
+module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1
+export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
+
+cd $PBS_O_WORKDIR
+
+mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 1 -in in.lj.txt
 ~~
 
 ** NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below.**
@@ -188,9 +202,9 @@ $ cat out.1
 
 Reserve a compute node.
 
-~~
+~~~
 $ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=12gb:interconnect=hdr,walltime=2:00:00
-~~
+~~~
 
 Create a directory named `software_pbs` (if you don't already have it) in your
 home directory, and change to that directory.
@@ -232,19 +246,19 @@ combination of hardware.
 ##### USER-INTEL/OPENMP/USER-OMP/
 
 - Change into the previously untarred LAMMPS directory (`lammps-23Jun2022`).
-- Create a directory called `build-intel-omp`
+- Create a directory called `build-openmpi-omp`
 - Change into this directory.
 
 ~~~
 $ cd lammps-23Jun2022
-$ mkdir build-intel-omp
-$ cd build-intel-omp
+$ mkdir build-openmpi-omp
+$ cd build-openmpi-omp
 ~~~
 
 - In this build, you will need to create one`cmake` file based on
 one of the already prepared cmake templates available inside `../cmake/presets` directory
 (this is a relative path assuming you are inside the previously created
-`build-intel-omp`).
+`build-openmpi-omp`).
 - We will use `../cmake/presets/basic.cmake` as our template.
   - `basic.cmake` contains four basic simulation packages: KSPACE, MANYBODY, MOLECULE,
   and RIGID
@@ -264,23 +278,23 @@ endforeach()
 
 - We will need to make a copy of `basic.cmake`.
 - The names of the newly created files should reflect the nature of this
-current build: a INTEL/OMP build.
+current build: a OPENMPI/OMP build.
 
 ~~~
-$ cp ../cmake/presets/basic.cmake ../cmake/presets/basic-intel-omp.cmake
+$ cp ../cmake/presets/basic.cmake ../cmake/presets/basic-openmpi-omp.cmake
 ~~~
 
-- The newly created `basic_intel_omp.cmake` needs to be edited to include
-the three packages, `USER-INTEL`, `OPENMP`, and `USER-OMP` to the list of packages in the
+- The newly created `basic_openmpi_omp.cmake` needs to be edited to include
+the two packages, `OPENMP`, and `USER-OMP` to the list of packages in the
 `set(ALL_PACKAGES ...)` line. You can use your favorite text editor to do the editting,
 and the edited version can be found below.
 
 ~~~
-$ cat ../cmake/presets/basic-intel-omp.cmake
+$ cat ../cmake/presets/basic-openmpi-omp.cmake
 # preset that turns on just a few, frequently used packages
 # this will be compiled quickly and handle a lot of common inputs.
 
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID USER-INTEL OPENMP USER-OMP)
+set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID OPENMP USER-OMP)
 
 foreach(PKG ${ALL_PACKAGES})
   set(PKG_${PKG} ON CACHE BOOL "" FORCE)
@@ -293,14 +307,42 @@ at `../cmake/presets/all_on.cmake`.
 - We will need to load the following supporting modules from Palmetto.
 
 ~~~
-$ module load intel-oneapi-compilers/2022.1.0-gcc/9.5.0 intel-oneapi-mkl/2022.1.0-oneapi/2022.1.0 intel-oneapi-mpi/2021.6.0-oneapi/2022.1.0 
+$ module load fftw/3.3.10-gcc/9.5.0-openmpi/4.1.3-mpi libssh/0.8.5-gcc/9.5.0 krb5/1.19.3-gcc/9.5.0
 ~~~
 
 - Build and install
 
 ~~~
-cmake -C ../cmake/presets/basic-intel-omp.cmake -C ../cmake/presets/intel.cmake ../cmake
+cmake -C ../cmake/presets/basic-openmpi-omp.cmake -C ../cmake/presets/gcc.cmake ../cmake
 cmake --build . --parallel 24
 ~~~
 
-Once the building process is finished, the executable `lmp` can be found in the direcotry `build-intel-omp`. You can test your built `lmp` on the example given.
+Once the building process is finished, the executable `lmp` can be found in the direcotry `build-openmpi-omp`. You can test your built `lmp` on the example given.
+
+- Test on LAMMPS's LJ data
+  - **This is only to test installation correctness and not for optimization.**
+  - **Do not user the numbers here for your production environment.**
+  - The input files can be downloaded from https://lammps.sandia.gov/inputs/in.lj.txt or from this repo.
+~~~
+$ mkdir /scratch/$USER/lammps_test
+$ cd /scratch/$USER/lammps_test
+$ wget https://www.lammps.org/inputs/in.lj.txt
+$ export PATH="$HOME/software_pbs/lammps/lammps-23Jun2022/build-openmpi-omp/":$PATH
+$ mpirun -np 2 lmp -sf omp -pk omp 2 -in in.lj.txt > out.cpu
+$ cat out.cpu
+~~~
+
+- Example Batch Script for PBS job
+    - This script can also be found in this repo.
+~~~
+#PBS -N lammps_test
+#PBS -l select=2:ncpus=8:mpiprocs=2:mem=12gb:interconnect=hdr,walltime=1:00:00
+#PBS -j oe
+
+module load fftw/3.3.10-gcc/9.5.0-openmpi
+export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-openmpi-omp:$PATH
+
+cd $PBS_O_WORKDIR
+
+mpirun -n 4 -npernode 2 lmp -sf omp -pk omp 6 -in in.lj.txt
+~~~
