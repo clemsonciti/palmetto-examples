@@ -7,4 +7,4 @@ export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-openmpi-omp:$PATH
 
 cd $PBS_O_WORKDIR
 
-mpirun -n 4 -npernode 2 lmp -sf omp -pk omp 6 -in in.lj.txt
+mpirun -n 4 -npernode 2 lmp -sf omp -pk omp 8 -in in.lj.txt

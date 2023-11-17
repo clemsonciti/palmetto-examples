@@ -10,15 +10,15 @@ Please read the installation and benchmarking instructions below carefully.
 Reserve a node, and pay attention to its GPU model.
 
 ~~~
-$ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=100gb:ngpus=1:gpu_model=a100:interconnect=hdr,walltime=2:00:00
+$ salloc --nodes=1 --tasks-per-node=24 --mem=12G --gpus-per-node=a100:1 --time=2:00:00
 ~~~
 
-Create a directory named `software_pbs` (if you don't already have it) in your 
+Create a directory named `software_slurm` (if you don't already have it) in your 
 home directory, and change to that directory. 
 
 ~~~
-$ mkdir ~/software_pbs
-$ cd ~/software_pbs
+$ mkdir ~/software_slurm
+$ cd ~/software_slurm
 ~~~
 
 - Download the **preferred**/**required** version of lammps and untar. 
@@ -154,7 +154,7 @@ A100                | AMPERE80
 - We will need to load the following supporting modules from Palmetto.  
 
 ~~~
-$ module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1 libssh/0.8.5-gcc/9.5.0 krb5/1.19.3-gcc/9.5.0
+$ module load openmpi/4.1.6
 ~~~ 
 
 - Build and install
@@ -174,8 +174,8 @@ Once the building process is finished, the executable `lmp` can be found in the 
 $ mkdir /scratch/$USER/lammps_test
 $ cd /scratch/$USER/lammps_test
 $ wget https://www.lammps.org/inputs/in.lj.txt
-$ export PATH="$HOME/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
-$ mpirun -np 2 lmp -sf gpu 1 -pk gpu 1 -in in.lj.txt > out.gpu
+$ export PATH="$HOME/software_slurm/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
+$ srun lmp -sf gpu -pk gpu 1 -in in.lj.txt > out.gpu
 $ cat out.gpu
 ~~~
 
@@ -183,16 +183,21 @@ $ cat out.gpu
     - This script can also be found in this repo.
     - Note this batch script uses p100 GPU card. Since we compiled with a100 setting, it should be fine to run on GPU cards with lower CC. 
 ~~~
-#PBS -N lammps_test
-#PBS -l select=2:ncpus=2:mpiprocs=2:ngpus=2:gpu_model=p100:mem=12gb:interconnect=fdr,walltime=1:00:00
-#PBS -j oe
+#!/bin/bash
+#SBATCH --job-name=lammps_test
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=2
+#SBATCH --gpus-per-node=a100:2
+#SBATCH --mem=12GB
+#SBATCH --time=1:00:00
 
-module load fftw/3.3.10-gcc/9.5.0-mpi-openmp-cu11_1
-export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
+module load openmpi/4.1.5
 
-cd $PBS_O_WORKDIR
+export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
 
-mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 2 -in in.lj.txt
+cd $SLURM_SUBMIT_DIR
+
+srun lmp -sf gpu -pk gpu 2 -in in.lj.txt
 ~~~
 
 **NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below.**
@@ -202,15 +207,15 @@ mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 2 -in in.lj.txt
 Reserve a compute node.
 
 ~~~
-$ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=12gb:interconnect=hdr,walltime=2:00:00
+$ salloc --nodes=1 --tasks-per-node=24 --mem=12G --time=2:00:00
 ~~~
 
-Create a directory named `software_pbs` (if you don't already have it) in your
+Create a directory named `software_slurm` (if you don't already have it) in your
 home directory, and change to that directory.
 
 ~~~
-$ mkdir ~/software_pbs
-$ cd ~/software_pbs
+$ mkdir ~/software_slurm
+$ cd ~/software_slurm
 ~~~
 
 - Download the **preferred**/**required** version of lammps and untar.
@@ -301,7 +306,7 @@ at `../cmake/presets/all_on.cmake`.
 - We will need to load the following supporting modules from Palmetto.
 
 ~~~
-$ module load fftw/3.3.10-gcc/9.5.0-openmpi/4.1.3-mpi libssh/0.8.5-gcc/9.5.0 krb5/1.19.3-gcc/9.5.0
+$ module load module load openmpi/4.1.5 
 ~~~
 
 - Build and install
@@ -321,22 +326,28 @@ Once the building process is finished, the executable `lmp` can be found in the 
 $ mkdir /scratch/$USER/lammps_test
 $ cd /scratch/$USER/lammps_test
 $ wget https://www.lammps.org/inputs/in.lj.txt
-$ export PATH="$HOME/software_pbs/lammps-23Jun2022/build-openmpi-omp/":$PATH
-$ mpirun -np 2 lmp -sf omp -pk omp 2 -in in.lj.txt > out.cpu
+$ export PATH="$HOME/software_slurm/lammps-23Jun2022/build-openmpi-omp/":$PATH
+$ export OMP_NUM_THREADS=1
+$ srun lmp -sf omp -pk omp 1 -in in.lj.txt > out.cpu
 $ cat out.cpu
 ~~~
 
 - Example Batch Script for PBS job
     - This script can also be found in this repo.
 ~~~
-#PBS -N lammps_test
-#PBS -l select=2:ncpus=8:mpiprocs=2:mem=12gb:interconnect=hdr,walltime=1:00:00
-#PBS -j oe
+#!/bin/bash
+#SBATCH --job-name=lammps_test
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=2
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=12GB
+#SBATCH --time=1:00:00
 
-module load fftw/3.3.10-gcc/9.5.0-openmpi
-export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-openmpi-omp:$PATH
+module load openmpi/4.1.5
 
-cd $PBS_O_WORKDIR
+export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-openmpi-omp:$PATH
 
-mpirun -n 4 -npernode 2 lmp -sf omp -pk omp 8 -in in.lj.txt
+cd $SLURM_SUBMIT_DIR
+
+srun lmp -sf omp -pk omp 8 -in in.lj.txt
 ~~~

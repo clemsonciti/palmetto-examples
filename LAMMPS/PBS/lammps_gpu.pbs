@@ -7,4 +7,4 @@ export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
 
 cd $PBS_O_WORKDIR
 
-mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 1 -in in.lj.txt
+mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 2 -in in.lj.txt
