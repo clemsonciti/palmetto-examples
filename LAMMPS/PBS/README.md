@@ -227,7 +227,7 @@ $ tar xzf lammps-stable.tar.gz
 ~~~
 $ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
 $ tar xzf lammps-stable.tar.gz
-~~
+~~~
 
 - According to our test, the version `23Jun2022` can be installed successfully. Later versions, such as `2Aug2023` will raise an error at the end of the compilation. You are encouraged to try newer versions, but if you found any error, please fall back to the `23June2022` version.
 
