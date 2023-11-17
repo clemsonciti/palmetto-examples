@@ -196,7 +196,7 @@ cd $PBS_O_WORKDIR
 mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 1 -in in.lj.txt
 ~~~
 
-** NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below. **
+**NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below.**
 
 ### Installing custom LAMMPS on Palmetto with CPU only 
 
