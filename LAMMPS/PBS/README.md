@@ -183,7 +183,7 @@ $ cat out.gpu
 -  Example Batch Script for PBS job
     - This script can also be found in this repo.
     - Note this batch script uses p100 GPU card. Since we compiled with a100 setting, it should be fine to run on GPU cards with lower CC. 
-~~
+~~~
 #PBS -N lammps_test
 #PBS -l select=2:ncpus=2:mpiprocs=2:ngpus=2:gpu_model=p100:mem=12gb:interconnect=fdr,walltime=1:00:00
 #PBS -j oe
@@ -194,9 +194,9 @@ export PATH=/home/$USER/software_pbs/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
 cd $PBS_O_WORKDIR
 
 mpirun -n 4 -npernode 2 lmp -sf gpu -pk gpu 1 -in in.lj.txt
-~~
+~~~
 
-** NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below.**
+** NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below. **
 
 ### Installing custom LAMMPS on Palmetto with CPU only 
 
@@ -209,20 +209,20 @@ $ qsub -I -l select=1:ncpus=24:mpiprocs=24:mem=12gb:interconnect=hdr,walltime=2:
 Create a directory named `software_pbs` (if you don't already have it) in your
 home directory, and change to that directory.
 
-~~
+~~~
 $ mkdir ~/software_pbs
 $ cd ~/software_pbs
-~~
+~~~
 
 - Download the **preferred**/**required** version of lammps and untar.
   - https://www.lammps.org/download.html
   - LAMMPS simulations/checkpoints require LAMMPS version to be consistent throughout.
 - In this example, we use the `23Jun2022` version of lammps. Note: later version will raise an error at the end of compiling.
 
-~~
+~~~
 $ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
 $ tar xzf lammps-stable.tar.gz
-~~
+~~~
 
 ~~~
 $ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
