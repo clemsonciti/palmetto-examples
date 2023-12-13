@@ -14,8 +14,9 @@ storage provider. We provide examples for the following providers:
 
 ### Using rclone
 
-Data transfer (including `rclone`) should be done on a data transfer node (DTN). Follow
-the [Official RCD Instructions](https://docs.rcd.clemson.edu/palmetto/transfer/#sftp) to connect to a DTN.
+Data transfer (including `rclone`) should be done on a data transfer node (DTN). `ssh` into one of the 
+DTN nodes listed on
+the [Official RCD Instructions](https://docs.rcd.clemson.edu/palmetto/transfer/#sftp).
 
 Load the `rclone` module:
 
