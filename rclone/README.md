@@ -14,16 +14,10 @@ storage provider. We provide examples for the following providers:
 
 ### Using rclone
 
-Data transfer (including `rclone`) should be done on the data transfer node
-(currently, it is `xfer02`). Log into Palmetto as usual, and then connect to the
-data transfer node:
+Data transfer (including `rclone`) should be done on a data transfer node (DTN). Follow
+the [Official RCD Instructions](https://docs.rcd.clemson.edu/palmetto/transfer/#sftp) to connect to a DTN.
 
-```
-ssh xfer02
-```
-
-Log with your Palmetto password and DUO; once logged-in, load the `rclone`
-module:
+Load the `rclone` module:
 
 ```
 module load rclone/1.62.2-gcc/9.5.0
