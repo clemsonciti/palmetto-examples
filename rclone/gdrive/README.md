@@ -134,7 +134,7 @@ Storage>
 ```
 
 Provide any number for the remote source. For example choose number **13** for
-Google drive. In the following questions, always accept the default value:
+Google drive in the above list (your value may differ). In the following questions, always accept the default value:
 
 ```
 Google Application Client Id - leave blank normally.
