@@ -37,7 +37,7 @@ Create a file `$HOME/jupyter_test/submit.pbs` with the following content:
 
 set -e
 
-module load anaconda3/2022.10-gcc/9.5.0`
+module load anaconda3/2022.10-gcc/9.5.0
 source activate jupyter_test
 
 cd $HOME/jupyter_test
