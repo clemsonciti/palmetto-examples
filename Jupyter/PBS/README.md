@@ -48,7 +48,7 @@ If you want it to output the completed notebook as a new notebook, you could
 remove the `--inplace` argument and add `--output`. For example:
 
 ```
-jupyter nbconvert --to notebook --execute --inplace test.ipynb
+jupyter nbconvert --to notebook --execute test.ipynb --output out.ipynb
 ```
 
 Once your script is created, you can submit it by connecting to the [login
