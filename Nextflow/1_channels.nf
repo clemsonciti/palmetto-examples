@@ -1,3 +1,4 @@
+// Copy each chunk to a separate file to run otherwise it will be a garbled mess of output
 //Example of branching and setting operators
 
 Channel.of(500,700,"tigers","this",1001,1235)
