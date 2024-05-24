@@ -10,7 +10,7 @@ Please read the installation and benchmarking instructions below carefully.
 Reserve a node, and pay attention to its GPU model.
 
 ~~~
-$ salloc --nodes=1 --tasks-per-node=24 --mem=12G --gpus-per-node=a100:1 --time=2:00:00
+$ salloc --nodes=1 --tasks-per-node=12 --mem=12G --gpus-per-node=a100:1 --time=2:00:00
 ~~~
 
 Create a directory named `software_slurm` (if you don't already have it) in your 
@@ -24,14 +24,14 @@ $ cd ~/software_slurm
 - Download the **preferred**/**required** version of lammps and untar. 
   - https://www.lammps.org/download.html
   - LAMMPS simulations/checkpoints require LAMMPS version to be consistent throughout. 
-- In this example, we use the `23Jun2022` version of lammps. Note: later version will raise an error at the end of compiling. 
+- In this example, we use the `2 Aug 2023` version of lammps, which is the lastest stable version as of 05/24/2024. 
 
 ~~~
-$ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
-$ tar xzf lammps-23Jun2022.tar.gz
+$ wget https://download.lammps.org/tars/lammps-stable.tar.gz
+$ tar xzf lammps-stable.tar.gz
 ~~~
 
-- According to our test, the version `23Jun2022` can be installed successfully. Later versions, such as `2Aug2023` will raise an error at the end of the compilation. You are encouraged to try newer versions, but if you found any error, please fall back to the `23June2022` version.
+- According to our test, the version `2 Aug 2023` can be installed successfully. Later versions, You are encouraged to try newer versions, but if you found any error, please fall back to the `2 Aug 2023` version.
 
 In the recent versions, lammps use `cmake` as their build system. As a result, we will be 
 able to build multiple lammps executables within a single source download. 
@@ -47,12 +47,12 @@ combination of hardware.
 
 ##### KOKKOS/GPU/USER-OMP/
 
-- Change into the previously untarred LAMMPS directory (`lammps-23Jun2022`).
+- Change into the previously untarred LAMMPS directory (`lammps-2Aug2023`).
 - Create a directory called `build-kokkos-gpu-omp`
 - Change into this directory. 
 
 ~~~
-$ cd lammps-23Jun2022
+$ cd lammps-2Aug2023
 $ mkdir build-kokkos-gpu-omp
 $ cd build-kokkos-gpu-omp
 ~~~
@@ -70,32 +70,6 @@ as our templates.
   - The example default contents of `basic.cmake` and `kokkos-cuda.cmake` are shown
   below. 
 
-~~~
-$ cat ../cmake/presets/basic.cmake
-# preset that turns on just a few, frequently used packages
-# this will be compiled quickly and handle a lot of common inputs.
-
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)
-
-foreach(PKG ${ALL_PACKAGES})
-  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
-endforeach()
-~~~
-~~~
-$ cat ../cmake/presets/kokkos-cuda.cmake
-# preset that enables KOKKOS and selects CUDA compilation with OpenMP
-# enabled as well. This preselects CC 5.0 as default GPU arch, since
-# that is compatible with all higher CC, but not the default CC 3.5
-set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
-set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
-set(Kokkos_ENABLE_CUDA   ON CACHE BOOL "" FORCE)
-set(Kokkos_ARCH_PASCAL60 ON CACHE BOOL "" FORCE)
-set(BUILD_OMP ON CACHE BOOL "" FORCE)
-
-# hide deprecation warnings temporarily for stable release
-set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
-~~~
-
 - We will need to make copies of `basic.cmake` and `kokko-cuda.cmake`. 
 - The names of the newly created files should reflect the nature of this 
 current build: a GPU/OMP build for nodes with A100 NVidia cards (which should be able to 
@@ -110,34 +84,11 @@ $ cp ../cmake/presets/kokkos-cuda.cmake ../cmake/presets/kokkos-a100.cmake
 the three packages, `GPU`, `OPENMP`, and `USER-OMP` to the list of packages in the 
 `set(ALL_PACKAGES ...)` line. You can use your favorite text editor to do the editting, 
 and the edited version can be found below.
-- The newly generated `kokkos-a100.cmake` needs to be editted to change the GPU type to be 
-consistent as we requested in the `qsub` command. In this case, we need to change `PASCAL_60` to 
-`AMPERE80`.
+- The newly generated `kokkos-a100.cmake` needs to be editted to change the GPU type to `AMPERE80`.
 
 ~~~
-$ cat ../cmake/presets/basic-gpu-omp.cmake
-# preset that turns on just a few, frequently used packages
-# this will be compiled quickly and handle a lot of common inputs.
-
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU OPENMP USER-OMP)
-
-foreach(PKG ${ALL_PACKAGES})
-  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
-endforeach()
-~~~
-~~~
-$ cat ../cmake/presets/kokkos-a100.cmake
-# preset that enables KOKKOS and selects CUDA compilation with OpenMP
-# enabled as well. This preselects CC 5.0 as default GPU arch, since
-# that is compatible with all higher CC, but not the default CC 3.5
-set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
-set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
-set(Kokkos_ENABLE_CUDA   ON CACHE BOOL "" FORCE)
-set(Kokkos_ARCH_AMPERE80 ON CACHE BOOL "" FORCE)
-set(BUILD_OMP ON CACHE BOOL "" FORCE)
-
-# hide deprecation warnings temporarily for stable release
-set(Kokkos_ENABLE_DEPRECATION_WARNINGS OFF CACHE BOOL "" FORCE)
+$ sed -i "s/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU OPENMP USER-OMP)/g" ../cmake/presets/basic-gpu-omp.cmake
+$ sed -i "s/PASCAL60/AMPERE80/g" ../cmake/presets/kokkos-a100.cmake
 ~~~
 
 - For a template with all simulation packages, take a look 
@@ -154,14 +105,14 @@ A100                | AMPERE80
 - We will need to load the following supporting modules from Palmetto.  
 
 ~~~
-$ module load openmpi/4.1.6
+$ module load cuda/11.8.0 openmpi/5.0.1 
 ~~~ 
 
 - Build and install
 
 ~~~
-cmake -C ../cmake/presets/basic-gpu-omp.cmake -C ../cmake/presets/kokkos-a100.cmake ../cmake
-cmake --build . --parallel 24
+$ cmake -C ../cmake/presets/basic-gpu-omp.cmake -C ../cmake/presets/kokkos-a100.cmake ../cmake
+$ cmake --build . --parallel 12
 ~~~
 
 Once the building process is finished, the executable `lmp` can be found in the direcotry `build-kokkos-gpu-omp`. You can test your built `lmp` on the example given.
@@ -174,26 +125,26 @@ Once the building process is finished, the executable `lmp` can be found in the 
 $ mkdir /scratch/$USER/lammps_test
 $ cd /scratch/$USER/lammps_test
 $ wget https://www.lammps.org/inputs/in.lj.txt
-$ export PATH="$HOME/software_slurm/lammps-23Jun2022/build-kokkos-gpu-omp/":$PATH
+$ export PATH="$HOME/software_slurm/lammps-2Aug2023/build-kokkos-gpu-omp/":$PATH
 $ srun lmp -sf gpu -pk gpu 1 -in in.lj.txt > out.gpu
 $ cat out.gpu
 ~~~
 
--  Example Batch Script for PBS job
+-  Example Batch Script for Slurm job
     - This script can also be found in this repo.
-    - Note this batch script uses p100 GPU card. Since we compiled with a100 setting, it should be fine to run on GPU cards with lower CC. 
+    - Note this batch script uses v100 GPU card. Since we compiled with a100 setting, it should be fine to run on GPU cards with lower CC. 
 ~~~
 #!/bin/bash
 #SBATCH --job-name=lammps_test
-#SBATCH --nodes=2
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
-#SBATCH --gpus-per-node=a100:2
+#SBATCH --gpus-per-node=v100:2
 #SBATCH --mem=12GB
 #SBATCH --time=1:00:00
 
-module load openmpi/4.1.5
+module load cuda/11.8.0 openmpi/5.0.1
 
-export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
+export PATH=/home/$USER/software_slurm/lammps-2Aug2023/build-kokkos-gpu-omp:$PATH
 
 cd $SLURM_SUBMIT_DIR
 
@@ -202,12 +153,18 @@ srun lmp -sf gpu -pk gpu 2 -in in.lj.txt
 
 **NOTE: when running on CPUs wtihout GPU support with `lmp` built with this method, the job needs to land on a node with CUDA driver. On Palmetto, CUDA driver is only installed on node where GPUs are equipped. If you only need CPU only version of lammps, we would recommend building the CPU only version using the method below.**
 
+### Using the precompiled LAMMPS on Palmetto2 for AMD node
+~~~
+$ module load aocc lammps
+$ lmp
+~~~
+
 ### Installing custom LAMMPS on Palmetto with CPU only 
 
 Reserve a compute node.
 
 ~~~
-$ salloc --nodes=1 --tasks-per-node=24 --mem=12G --time=2:00:00
+$ salloc --nodes=1 --tasks-per-node=12 --mem=12G --time=2:00:00
 ~~~
 
 Create a directory named `software_slurm` (if you don't already have it) in your
@@ -221,14 +178,14 @@ $ cd ~/software_slurm
 - Download the **preferred**/**required** version of lammps and untar.
   - https://www.lammps.org/download.html
   - LAMMPS simulations/checkpoints require LAMMPS version to be consistent throughout.
-- In this example, we use the `23Jun2022` version of lammps. Note: later version will raise an error at the end of compiling.
+- In this example, we use the `2 Aug 2023` version of lammps. 
 
 ~~~
-$ wget https://download.lammps.org/tars/lammps-23Jun2022.tar.gz
-$ tar xzf lammps-23Jun2022.tar.gz
+$ wget https://download.lammps.org/tars/lammps-stable.tar.gz
+$ tar xzf lammps-2Aug2023.tar.gz
 ~~~
 
-- According to our test, the version `23Jun2022` can be installed successfully. Later versions, such as `2Aug2023` will raise an error at the end of the compilation. You are encouraged to try newer versions, but if you found any error, please fall back to the `23June2022` version.
+- According to our test, the version `2Aug2023` can be installed successfully. You are encouraged to try newer versions, but if you found any error, please fall back to the `2Aug2023` version.
 
 In the recent versions, lammps use `cmake` as their build system. As a result, we will be
 able to build multiple lammps executables within a single source download.
@@ -244,12 +201,12 @@ combination of hardware.
 
 ##### OPENMPI/OPENMP/USER-OMP/
 
-- Change into the previously untarred LAMMPS directory (`lammps-23Jun2022`).
+- Change into the previously untarred LAMMPS directory (`lammps-2Aug2023`).
 - Create a directory called `build-openmpi-omp`
 - Change into this directory.
 
 ~~~
-$ cd lammps-23Jun2022
+$ cd lammps-2Aug2023
 $ mkdir build-openmpi-omp
 $ cd build-openmpi-omp
 ~~~
@@ -263,18 +220,6 @@ one of the already prepared cmake templates available inside `../cmake/presets` 
   and RIGID
   - The example default contents of `basic.cmake` is shown below.
 
-~~~
-$ cat ../cmake/presets/basic.cmake
-# preset that turns on just a few, frequently used packages
-# this will be compiled quickly and handle a lot of common inputs.
-
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)
-
-foreach(PKG ${ALL_PACKAGES})
-  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
-endforeach()
-~~~
-
 - We will need to make a copy of `basic.cmake`.
 - The names of the newly created files should reflect the nature of this
 current build: a OPENMPI/OMP build.
@@ -285,19 +230,10 @@ $ cp ../cmake/presets/basic.cmake ../cmake/presets/basic-openmpi-omp.cmake
 
 - The newly created `basic_openmpi_omp.cmake` needs to be edited to include
 the two packages, `OPENMP`, and `USER-OMP` to the list of packages in the
-`set(ALL_PACKAGES ...)` line. You can use your favorite text editor to do the editting,
-and the edited version can be found below.
+`set(ALL_PACKAGES ...)` line. 
 
 ~~~
-$ cat ../cmake/presets/basic-openmpi-omp.cmake
-# preset that turns on just a few, frequently used packages
-# this will be compiled quickly and handle a lot of common inputs.
-
-set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID OPENMP USER-OMP)
-
-foreach(PKG ${ALL_PACKAGES})
-  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
-endforeach()
+$ sed -i "s/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID OPENMP USER-OMP)/g" ../cmake/presets/basic-openmpi-omp.cmake
 ~~~
 
 - For a template with all simulation packages, take a look
@@ -306,7 +242,7 @@ at `../cmake/presets/all_on.cmake`.
 - We will need to load the following supporting modules from Palmetto.
 
 ~~~
-$ module load module load openmpi/4.1.5 
+$ module load openmpi/5.0.1
 ~~~
 
 - Build and install
@@ -326,13 +262,13 @@ Once the building process is finished, the executable `lmp` can be found in the 
 $ mkdir /scratch/$USER/lammps_test
 $ cd /scratch/$USER/lammps_test
 $ wget https://www.lammps.org/inputs/in.lj.txt
-$ export PATH="$HOME/software_slurm/lammps-23Jun2022/build-openmpi-omp/":$PATH
+$ export PATH="$HOME/software_slurm/lammps-2Aug2023/build-openmpi-omp/":$PATH
 $ export OMP_NUM_THREADS=1
 $ srun lmp -sf omp -pk omp 1 -in in.lj.txt > out.cpu
 $ cat out.cpu
 ~~~
 
-- Example Batch Script for PBS job
+- Example Batch Script for Slurm job
     - This script can also be found in this repo.
 ~~~
 #!/bin/bash
@@ -343,9 +279,9 @@ $ cat out.cpu
 #SBATCH --mem=12GB
 #SBATCH --time=1:00:00
 
-module load openmpi/4.1.5
+module load openmpi/5.0.1
 
-export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-openmpi-omp:$PATH
+export PATH=/home/$USER/software_slurm/lammps-2Aug2023/build-openmpi-omp:$PATH
 
 cd $SLURM_SUBMIT_DIR
 

@@ -6,9 +6,9 @@
 #SBATCH --mem=12GB
 #SBATCH --time=1:00:00
 
-module load openmpi/4.1.5
+module load openmpi/5.0.1
 
-export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-openmpi-omp:$PATH
+export PATH=/home/$USER/software_slurm/lammps-2Aug2023/build-openmpi-omp:$PATH
 
 cd $SLURM_SUBMIT_DIR
 
