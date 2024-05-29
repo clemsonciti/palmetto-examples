@@ -1,0 +1,117 @@
+#############################################################
+## JOB DESCRIPTION                                         ##
+#############################################################
+# HMMM DVPC/DVPS 80/20 Na+
+# 2fs t/s
+# 
+#############################################################
+## ADJUSTABLE PARAMETERS                                   ##
+#############################################################
+
+structure          hextube_MGHH_WI.psf 
+coordinates        hextube_MGHH_WI.pdb
+
+outputName         equil_min
+binaryoutput       yes
+
+# NOTE: Do not set the initial velocity temperature if you 
+# have also specified a .vel restart file!
+set temperature    300
+temperature         $temperature
+
+proc get_first_ts { xscfile } {
+  set fd [open $xscfile r]
+  gets $fd
+  gets $fd
+  gets $fd line
+  set ts [lindex $line 0]
+  close $fd
+  return $ts
+}
+#set firsttime [get_first_ts $inputName.restart.xsc]
+set firsttime      0
+firsttimestep $firsttime
+
+cellBasisVector1                124     0.0      0.0
+cellBasisVector2                0.0     114      0.0
+cellBasisVector3                0.0     0.0      323
+
+
+#############################################################
+## SIMULATION PARAMETERS                                   ##
+#############################################################
+
+# Input
+paraTypeCharmm	    on
+# use bond for water
+parameters          par_all36_na.prm
+parameters          par_water_ions_cufix.prm
+
+# Force-Field Parameters
+exclude             scaled1-4
+1-4scaling          1.0
+switching           on
+switchdist           8
+cutoff              10
+pairlistdist        12
+
+# Integrator Parameters
+timestep            2  ;# 1fs/step
+rigidBonds          all  ;# needed for 2fs steps
+nonbondedFreq       1
+fullElectFrequency  2  
+stepspercycle       12
+
+#PME (for full-system periodic electrostatics)
+if {1} {
+PME                 yes
+PMEGridSpacing      1.5
+#PMEGridSizeX         64
+#PMEGridSizeY         64
+#PMEGridSizeZ        120
+}
+
+# Constant Temperature Control
+langevin            on    ;# do langevin dynamics
+langevinDamping     5   ;# damping coefficient (gamma); let's try 0.5 /ps
+langevinTemp        $temperature
+langevinHydrogen    off    ;# don't couple langevin bath to hydrogens
+
+# perform constant pressure simulation
+if {1} {
+langevinPiston        on      ;# turn this off for constant volume sim
+langevinPistonTarget  1.01325 ;#  in bar -> 1 atm
+langevinPistonPeriod  1000.
+langevinPistonDecay   500.
+langevinPistonTemp    $temperature
+}
+
+xstFreq             1200 
+outputEnergies      1200
+dcdfreq             1200
+restartfreq         1200
+outputPressure      1200
+
+
+#############################################################
+## EXTRA PARAMETERS                                        ##
+#############################################################
+
+# Put here any custom parameters that are specific to 
+# this job (e.g., SMD, TclForces, etc...)
+
+if {1} {
+extraBonds on
+extraBondsFile hextube_MGHH_WI_k0.5.enm.extra
+extraBondsFile mghh_extrabonds
+}
+
+#############################################################
+## EXECUTION SCRIPT                                        ##
+#############################################################
+
+minimize 4800
+#run	2400000
+
+
+
