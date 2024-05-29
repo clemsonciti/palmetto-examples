@@ -1,16 +1,22 @@
-## LAMMPS
+# LAMMPS
 
 Performance of LAMMPS is sensitive to how the installation is configured relative to the running hardware 
 and how `lmp` is called with different process/thread/gpu options. Given the heterogeneous nature of 
 Palmetto, we do not maintain a baseline LAMMPS module, but encourage users to build their own LAMMPS. 
 
+## Using the pre-compiled version on the AMD nodes (CPU only)
+Please refer to the `lammps_cpu_amd.slurm` script under this repo to submit jobs on the AMD node with the pre-compiled Lammps. 
+
+> **_NOTE:_** This pre-compiled version will **only** work on the AMD noes.
+
+## Install Lammps manually with automated script
 Users can use the Slurm script `lammps_install.slurm` in this repo to install the GPU and CPU version of Lammps automatically by submitting the Slurm script:
 ~~~
 $ sbatch lammps_install.slurm
 ~~~
 
 
-If you are curious on how the lammps is being built, please read the installation and benchmarking instructions below carefully. 
+> **_NOTE:_** If you are curious on how the Lammps is being built, please read the installation and benchmarking instructions below carefully. 
 
 ### Installing custom LAMMPS on Palmetto with GPU support
 
