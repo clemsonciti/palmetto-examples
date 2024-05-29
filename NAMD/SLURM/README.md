@@ -30,5 +30,5 @@ All the necessary input file are also included in this repo.
 - `equil_min.namd`: minimization step 
 - `equil_k0.5.namd` or `equil_k0.5_gpu.namd`: molecular dynamic step
 
-> **Note** `CUDASOAintegrate on` is included in equil_k0.5_gpu.namd, which can utilize the GPU more efficiently. **BUT**, do not use this parameter in the minimization step. The details can be found at the [official website]{https://www.ks.uiuc.edu/Research/namd/alpha/3.0alpha/}.
+> **Note** `CUDASOAintegrate on` is included in equil_k0.5_gpu.namd, which can utilize the GPU more efficiently. **BUT**, do not use this parameter in the minimization step. The details can be found at the [official website](https://www.ks.uiuc.edu/Research/namd/alpha/3.0alpha/).
  
