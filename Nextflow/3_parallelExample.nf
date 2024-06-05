@@ -1,7 +1,7 @@
 //Example of implicit parallism
 process imagecompress {
 
-        module 'r/4.2.2'
+        module 'r/4.2.3'
 
         input:
         path x
