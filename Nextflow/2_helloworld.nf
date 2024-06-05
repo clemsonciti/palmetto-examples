@@ -24,7 +24,7 @@ process convertToUpper {
         """
 }
 
-//workflow definition
+//workflow definition with pipes
 workflow {
         splitLetters | flatten | convertToUpper | view { it.trim() }
 }
