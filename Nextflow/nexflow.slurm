@@ -5,6 +5,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --time=00:30:00
 
+module load nextflow
 module load openjdk/17.0.8.1_1
 
-./nextflow run 3_parallelExample.nf -c configs/slurm.config
+nextflow run 3_parallelExample.nf -c configs/slurm.config
