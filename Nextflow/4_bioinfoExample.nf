@@ -1,5 +1,5 @@
 //Example calling bash script
-params.init = "${baseDir}/scripts/test.sh"
+params.init = "${baseDir}/scripts/init.sh"
 params.path = "./moving_picture_tutorial"
 
 //include module processes
