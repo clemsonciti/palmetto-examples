@@ -11,4 +11,4 @@ module load comsol/6.2
 
 cd $SLURM_SUBMIT_DIR
 
-comsol batch -mpibootstrap slurm -tmpdir /local_scratch -inputfile free_convection.mph -outputfile free_convection_output.mph
+comsol batch -mpibootstrap slurm -tmpdir $TMPDIR -inputfile free_convection.mph -outputfile free_convection_output.mph
