@@ -7,19 +7,6 @@ specific hardware. In the following, we present how to install/compile GROMACS f
 But if you have your own input settings, we encourage you to test your input file.
 If you don't have an input file you can create one from the GROMACS benchmarks. 
 
-```
-$ wget ftp://ftp.gromacs.org/pub/benchmarks/ADH_bench_systems.tar.gz
-$ tar zxvf ADH_bench_system.tar.gz
-$ cd ADH/adh_cubic
-$ srun gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
-```
-
-You can then run your input (for example, `em.tpr`) file with `gmx_mpi`
-
-```
-$ srun gmx_mpi mdrun -s em.tpr -deffnm job_output
-```
-
 ## Automatic Installation
 The easiest way is to use the `gmx_install.slurm` script in this repo. Simply download it to your account and submit a batch job using `sbatch gmx_install.slurm`. The Gromacs will be installed at `/home/$USER/software_slurm/Gromacs`...
 
@@ -164,7 +151,7 @@ Performance:       12.705        1.889
 
 More information on GROMACS performance optimisation can be found [here.](https://manual.gromacs.org/documentation/current/user-guide/mdrun-performance.html)
 
-## Running GROMACS interactively
+## Running in interactive mode
 
 As an example, we'll consider running the GROMACS ADH benchmark as in the pre-built case above.
 
