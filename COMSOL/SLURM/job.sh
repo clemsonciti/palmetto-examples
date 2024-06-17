@@ -4,7 +4,7 @@
 #SBATCH --ntasks 8
 #SBATCH --cpus-per-task 1 
 #SBATCH --mem 32gb
-#SBATCH --walltime 01:30:00
+#SBATCH --time 01:30:00
 
 module purge
 module load comsol/6.2
