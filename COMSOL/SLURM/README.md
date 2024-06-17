@@ -48,16 +48,6 @@ The first example demonstrates running COMSOL using multiple cores
 on a single node,
 while the second demonstrates running COMSOL across multiple nodes
 using MPI.
-You can obtain the files required to run this example
-using the following commands:
-
-~~~
-$ module add examples
-$ example get COMSOL
-$ cd COMSOL && ls
-
-job.sh  job_mpi.sh
-~~~
 
 Both of these examples run the
 "Heat Transfer by Free Convection" application described
