@@ -8,7 +8,7 @@
 
 module load cuda/11.8.0 openmpi/5.0.1
 
-export PATH=/home/$USER/software_slurm/lammps-23Jun2022/build-kokkos-gpu-omp:$PATH
+export PATH=/home/$USER/software_slurm/lammps-2Aug2023/build-kokkos-gpu-omp:$PATH
 
 cd $SLURM_SUBMIT_DIR
 
