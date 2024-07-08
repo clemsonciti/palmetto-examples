@@ -2,16 +2,18 @@
 
 2. Examine the submit script and adjust the number of CPUs, memory and walltime
 
-        #PBS -N g09
-        #PBS -l select=1:ncpus=2
-        #PBS -l walltime=0:10:00
+        #SBATCH --job-name=g16
+        #SBATCH --nodes=1
+        #SBATCH --tasks-per-node=2
+        #SBATCH --time=0:10:00
+        #SBATCH --mem=4G
 
-The numbef of CPUs (`ncpus=2`) has to match the number of 
+The numbef of CPUs (`tasks-per-node=2`) has to match the number of 
 processors in the Gaussian file i.e. `%NProcShared=2`
 
 3. Submit job
 
-        qsub job.sh 
+        sbatch g16.slurm
 
 This calculation takes advantage of the `/local_scratch` on the compute
 node using variable `$TMPDIR`
