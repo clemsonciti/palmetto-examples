@@ -6,13 +6,9 @@
 #SBATCH --mem=4GB
 #SBATCH --time=00:30:00
 
-# module load amber/22.mpi ##placeholder
-source /home/fanchem/software_slurm/amber/22.mpi/amber.sh
-module load anaconda3/2022.10 intel-oneapi-mkl/2022.2.1 intel-oneapi-compilers/2022.2.1 intel-oneapi-mpi/2021.7.1
-export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
+module load amber/22.openmpi
 
 cd $SLURM_SUBMIT_DIR
-
 
 # Minimization
 srun sander.MPI -O -i 01_Min.in -o 01_Min.out -p parm7 -c rst7 -r 01_Min.ncrst -inf 01_Min.mdinfo
