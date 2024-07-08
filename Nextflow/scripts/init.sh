@@ -1,6 +1,6 @@
 #!/bin/bash
-module use /software/containers/biocontainers
-module load modules/qiime2
+module load biocontainers
+module load qiime2
 mkdir moving_picture_tutorial
 cd ./moving_picture_tutorial
 wget https://data.qiime2.org/2023.9/tutorials/moving-pictures/sample_metadata.tsv
