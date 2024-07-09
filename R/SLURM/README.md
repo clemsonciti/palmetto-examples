@@ -38,7 +38,7 @@ Create a file `$HOME/r_test/submit.sh` with the following content:
 
 set -e
 
-module load r/4.2.2
+module load r/4.4.0
 
 cd $HOME/r_test
 Rscript test.r
