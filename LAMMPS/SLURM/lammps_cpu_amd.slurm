@@ -7,6 +7,7 @@
 #SBATCH --time=1:00:00
 #SBATCH --constraint=cpu_gen_genoa
 
+module purge
 module load aocc lammps
 
 cd $SLURM_SUBMIT_DIR

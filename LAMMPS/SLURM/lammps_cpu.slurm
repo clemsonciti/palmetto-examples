@@ -6,6 +6,7 @@
 #SBATCH --mem=12GB
 #SBATCH --time=1:00:00
 
+module purge
 module load openmpi/5.0.1
 
 export PATH=/home/$USER/software_slurm/lammps-2Aug2023/build-openmpi-omp:$PATH
