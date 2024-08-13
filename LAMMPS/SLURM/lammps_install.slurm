@@ -19,7 +19,7 @@ cp ../cmake/presets/basic.cmake ../cmake/presets/basic-gpu-omp.cmake
 cp ../cmake/presets/kokkos-cuda.cmake ../cmake/presets/kokkos-a100.cmake
 sed -i "s/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID)/set(ALL_PACKAGES KSPACE MANYBODY MOLECULE RIGID GPU OPENMP USER-OMP)/g" ../cmake/presets/basic-gpu-omp.cmake
 sed -i "s/PASCAL60/AMPERE80/g" ../cmake/presets/kokkos-a100.cmake
-module load cuda/11.8.0 openmpi/5.0.1 
+module load cuda openmpi/5.0.1 
 cmake -C ../cmake/presets/basic-gpu-omp.cmake -C ../cmake/presets/kokkos-a100.cmake -DKokkos_ENABLE_OPENMP=yes ../cmake
 cmake --build . --parallel 12
 
