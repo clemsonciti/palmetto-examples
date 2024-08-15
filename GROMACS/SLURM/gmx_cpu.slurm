@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=GROMACS
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=2
-#SBATCH --gpus-per-node=2
-#SBATCH --mem=22G
+#SBATCH --ntasks-per-node=96
+#SBATCH --mem=90G
 #SBATCH --time=10:15:00
+#SBATCH --constraint=cpu_gen_genoa
 
 cd $SLURM_SUBMIT_DIR
 
