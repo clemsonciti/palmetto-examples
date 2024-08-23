@@ -1,7 +1,8 @@
+//Define input parameter
+params.pic = "$baseDir/data/Tillman_Hall.jpg"
+
 //Example of implicit parallism
 process imagecompress {
-
-        module 'r/4.2.3'
 
         input:
         path x
@@ -12,6 +13,7 @@ process imagecompress {
 
         script:
         """
+        module load r/4.2.3
         Rscript $x $y
         """
 }
@@ -30,8 +32,6 @@ process imagecompress2 {
         Rscript $x $y
         """
 }
-
-
 process pyimagecompress {
 
         input:
@@ -46,7 +46,6 @@ process pyimagecompress {
         python3 $x $y
         """
 }
-
 process pyimagecompress2 {
 
         input:
