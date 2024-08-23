@@ -13,7 +13,6 @@ process imagecompress {
 
         script:
         """
-        module load r/4.2.3
         Rscript $x $y
         """
 }
