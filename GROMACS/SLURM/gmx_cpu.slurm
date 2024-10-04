@@ -9,15 +9,14 @@
 cd $SLURM_SUBMIT_DIR
 
 module purge
-module load cuda openmpi intel-oneapi-mkl
+module load openmpi intel-oneapi-mkl
 
 #Source the Gromacs environment variable
-source /home/$USER/software_slurm/gromacs-2024.2/build_slurm/gmx/bin/GMXRC
-
+source /home/$USER/software_slurm/gromacs-2024.3/gmx_cpu/bin/GMXRC
 # get the total number of MPI processes
 echo number of MPI processes is $SLURM_NTASKS
 
 # generate binary input file
-mpirun -np $SLURM_NTASKS gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
+gmx_mpi grompp -f rf_verlet.mdp -p topol.top -c conf.gro -o em.tpr
 
 mpirun -np $SLURM_NTASKS gmx_mpi mdrun -s em.tpr -deffnm job-output
