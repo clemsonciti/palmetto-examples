@@ -1,44 +1,61 @@
-#import libraries
 import numpy as np
-import numba as numb
-import nvidia_smi
-import math
+import numba
 from numba import cuda, float32
+import math
 
-#gpu code - note not optimized will get numba warning message
-
+# GPU Kernel
 @cuda.jit
-def matrix_mult(A,B,C):
+def matrix_mult(A, B, C):
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
-    bw = cuda.gridDim.x
-    pos = tx + ty * bw
+    x, y = cuda.grid(2)
 
-    x,y = cuda.grid(2)
-
-    sA = cuda.shared.array(shape=(TPB,TPB), dtype=float32)
+    TPB = 16
+    sA = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
     sB = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
 
-    if x >= C.shape[0]:
+    if x >= C.shape[0] or y >= C.shape[1]:
         return
+
     tmp = 0
-    #Matrix multiplication
-    for i in range(bw):
-        sA[tx,ty] = A[x,ty + i *TPB]
-        sB[tx,ty] = B[tx + i * TPB, y]
+
+    for i in range(0, A.shape[1], TPB):
+        if i + tx < A.shape[1] and x < A.shape[0]:
+            sA[ty, tx] = A[x, i + tx]
+        else:
+            sA[ty, tx] = 0
+
+        if i + ty < B.shape[0] and y < B.shape[1]:
+            sB[ty, tx] = B[i + ty, y]
+        else:
+            sB[ty, tx] = 0
+
         cuda.syncthreads()
+
         for j in range(TPB):
-            tmp += sA[tx,j] * sB[i,ty]
+            tmp += sA[ty, j] * sB[j, tx]
+
         cuda.syncthreads()
-    C[x] = tmp
 
+    C[x, y] = tmp
 
-#cpu code
-TPB = 64
-A = np.random.random((1500,1500))
-B = np.random.random((1500,1500))
-C = np.zeros((1500))
+# CPU Code
+TPB = 16
+A = np.random.random((15000, 15000)).astype(np.float32)
+B = np.random.random((15000, 15000)).astype(np.float32)
+C = np.zeros((15000, 15000), dtype=np.float32)
 
-blockspergrid = math.ceil(A.shape[0]/TPB)
-matrix_mult[blockspergrid, TPB](A,B,C)
+dA = cuda.to_device(A)
+dB = cuda.to_device(B)
+dC = cuda.device_array(C.shape, dtype=C.dtype)
+
+blockspergrid_x = math.ceil(A.shape[0] / TPB)
+blockspergrid_y = math.ceil(B.shape[1] / TPB)
+blockspergrid = (blockspergrid_x, blockspergrid_y)
+threadsperblock = (TPB, TPB)
+
+matrix_mult[blockspergrid, threadsperblock](dA, dB, dC)
+dC.copy_to_host(C)
+
 print(C)
+
