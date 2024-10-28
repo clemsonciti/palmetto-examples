@@ -19,4 +19,4 @@ As an example you can run 1_helloworld.nf which prints hello world to the screen
 $ nextflow run 1_helloworld.nf
 ~~~
 
-For a more thorough documentation and explanation of nextflow see our workshop in TBA.
+For a more thorough documentation and explanation of nextflow see our workshop at https://docs.rcd.clemson.edu/training/workshop_catalog/nextflow/online_material_part1/.
