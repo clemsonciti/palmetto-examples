@@ -1,0 +1,68 @@
+/BATCH  
+/BATCH  
+/BATCH  
+/COM,ANSYS RELEASE Release 17.2      BUILD 17.2      UP20160718       08:26:32
+/input,start,ans,/software/ansys_inc/v172/ansys/apdl/   
+/BATCH  
+/COM,ANSYS RELEASE Release 17.2      BUILD 17.2      UP20160718       08:27:21
+/input,menust,tmp,  
+/GRA,POWER
+/GST,ON
+/PLO,INFO,3
+/GRO,CURL,ON
+/CPLANE,1   
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/PREP7  
+RECTNG,0,200,0,100, 
+CYL4,100,50,10  
+ASBA,       1,       2  
+!*  
+VOFFST,3,10, ,  
+/ANG,1,-30,ZS,1 
+/REP,FAST   
+/ANG,1,-30,YS,1 
+/REP,FAST   
+/ANG,1,-30,YS,1 
+/REP,FAST   
+!*  
+ET,1,SOLID186   
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,120000 
+MPDATA,PRXY,1,,0.3  
+MSHKEY,0
+MSHAPE,1,3d 
+CM,_Y,VOLU  
+VSEL, , , ,       1 
+CM,_Y1,VOLU 
+CHKMSH,'VOLU'   
+CMSEL,S,_Y  
+!*  
+VMESH,_Y1   
+!*  
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+!*  
+FINISH  
+/SOL
+FLST,2,1,5,ORDE,1   
+FITEM,2,6   
+!*  
+/GO 
+DA,P51X,ALL,0   
+FLST,2,1,5,ORDE,1   
+FITEM,2,4   
+/GO 
+!*  
+SFA,P51X,1,PRES,-200
+!*  
+!*  
+!*  
+! LGWRITE,'','','',COMMENT  
+/STATUS,SOLU
+SOLVE   
+! LGWRITE,'','','',COMMENT  
