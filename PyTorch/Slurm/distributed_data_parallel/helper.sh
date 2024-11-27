@@ -7,8 +7,8 @@ EPOCHS=$5
 
 cd $PROJECT_DIR
 source /etc/profile.d/modules.sh
-module load anaconda3/2022.05-gcc/9.5.0
-source activate pytorch
+module load anaconda3
+source activate PytorchDDPExample
 torchrun \
     --nnodes=$NNODES \
     --nproc_per_node=$NGPUS_PER_NODE \
