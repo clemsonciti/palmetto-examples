@@ -35,7 +35,7 @@ There are four versions of the submission script for different versions of amber
 #SBATCH --mem=4GB
 #SBATCH --time=00:30:00
 
-module load amber/22.openmpi
+module load amber/24.openmpi
 
 cd $SLURM_SUBMIT_DIR
 
@@ -61,12 +61,13 @@ sbatch ambser_mpi.slurm
 #!/bin/bash
 #SBATCH --job-name=amber_test
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=16
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-noed=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=4GB
 #SBATCH --time=00:30:00
 
-module load amber/22.gpu_mpi
+module load amber/24.gpu_mpi
 cd $SLURM_SUBMIT_DIR
 
 # Minimization

@@ -6,7 +6,7 @@
 #SBATCH --mem=4GB
 #SBATCH --time=00:30:00
 
-module load amber/22.openmpi
+module load amber/24.openmpi
 
 cd $SLURM_SUBMIT_DIR
 
