@@ -62,7 +62,7 @@ sbatch ambser_mpi.slurm
 #SBATCH --job-name=amber_test
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gpus-per-noed=1
+#SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=4GB
 #SBATCH --time=00:30:00
