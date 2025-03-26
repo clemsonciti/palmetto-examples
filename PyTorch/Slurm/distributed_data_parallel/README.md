@@ -94,7 +94,7 @@ cd <project_dir>
 
 # use the following in place of $HOSTNAME: node(NODE_NUM).palmetto.clemson.edu
 # Must replace (NODE_NUM) with the node number of an allocated node from salloc
-time srun -N2 --cpus-per-task=16 --mem=32GB --gpus=a100:4 bash helper.sh $HOSTNAME ./ 2 2 5
+time srun -N2 --cpus-per-task=16 --mem=32GB --gpus=v100:4 bash helper.sh $HOSTNAME ./ 2 2 5
 
 # terminate the job
 exit
@@ -111,7 +111,7 @@ Once you have your code working, it is usually more convenient to run long Pytor
 #SBATCH --mem=32GB
 #SBATCH --gpus=v100:4
 
-HOSTNAME = $(hostname)
+HOSTNAME=$(hostname)
 source activate PytorchDDPExample
 cd <project_dir>
 time srun -N2 --cpus-per-task=16 --mem=32GB --gpus=v100:4 bash helper.sh $HOSTNAME ./ 2 2 5
