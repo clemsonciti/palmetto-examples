@@ -3,6 +3,13 @@
 `rclone` is a tool that can be used to copy local files to many cloud storage
 providers.
 
+> [!CAUTION]
+> `rclone` is no longer available as a module on Palmetto 2. 
+
+
+> [!TIP]
+> We recommend using one of our other [officially supported data transfer options](https://docs.rcd.clemson.edu/palmetto/transfer/overview/) instead.
+
 ## Getting Started
 
 To get started, you will need to configure and authorize `rclone` with your
