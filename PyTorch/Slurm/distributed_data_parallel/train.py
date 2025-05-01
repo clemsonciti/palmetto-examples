@@ -175,11 +175,12 @@ def main():
     ])
 
     # Datasets
+    is_main = global_rank == 0
     train_data = datasets.CIFAR10(
         root='data',
         train=True,
         transform=train_transform,
-        download=True,
+        download=is_main,
     )
 
     test_data = datasets.CIFAR10(
@@ -189,17 +190,24 @@ def main():
     )
     
     ncpus = 15 #max(int(os.getenv('NCPUS', 1))-1, 1)
+    if args.ddp:
+        train_sampler = DistributedSampler(train_data, num_replicas=dist.get_world_size(), rank=global_rank, drop_last=True)
+        test_sampler = DistributedSampler(test_data, num_replicas=dist.get_world_size(), rank=global_rank, drop_last=True)
+    else:
+        train_sampler = None
+        test_sampler = None
+
     train_loader = DataLoader(
         dataset=train_data,
         batch_size=batch_size,
-        sampler=DistributedSampler(train_data) if args.ddp else None,
+        sampler=train_sampler,
         num_workers=ncpus
     )
 
     test_loader = DataLoader(
         dataset=test_data,
         batch_size=batch_size,
-        sampler=DistributedSampler(test_data) if args.ddp else None,
+        sampler=test_sampler,
         num_workers=ncpus
     )
 

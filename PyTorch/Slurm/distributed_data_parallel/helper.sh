@@ -6,7 +6,6 @@ NGPUS_PER_NODE=$4
 EPOCHS=$5
 
 cd $PROJECT_DIR
-source /etc/profile.d/modules.sh
 module load anaconda3
 source activate PytorchDDPExample
 torchrun \
