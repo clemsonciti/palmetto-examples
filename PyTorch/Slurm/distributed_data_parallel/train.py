@@ -141,6 +141,10 @@ class Trainer:
             if self.global_rank == 0:
                 print(f'GPU {self.global_rank} | saving model')
                 self._save()
+            
+            # synchronize processes
+            if self.ddp:
+                dist.barrier()
 
 
 def main():
