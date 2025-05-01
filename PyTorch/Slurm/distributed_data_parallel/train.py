@@ -239,9 +239,12 @@ def main():
     )
 
     trainer.fit(args.epochs if args.epochs else 1)
-    
+
     if args.ddp:
+        # Synchronize all processes before shutting down
+        dist.barrier()
         dist.destroy_process_group()
+
 
 
 if __name__ == '__main__':
