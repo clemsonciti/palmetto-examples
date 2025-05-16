@@ -73,7 +73,7 @@ If you are curious about the installation, you can read the next setion.
 - Compiling Gromacs
 
  ~~~
- $ cmake .. -DGMX_MPI=on -DGMX_GPU=CUDA -DGMX_FFT_LIBRARY=mkl -DGMX_SIMD=AVX_512 -DCMAKE_INSTALL_PREFIX=/home/$USER/software/gromacs-2024.2/build_slurm/gmx
+ $ cmake .. -DGMX_MPI=on -DGMX_GPU=CUDA -DGMX_FFT_LIBRARY=mkl -DGMX_SIMD=AVX_512 -DCMAKE_INSTALL_PREFIX=/home/$USER/software_slurm/gromacs-2024.2/build_slurm/gmx
  $ make -j 12
  $ make install -j 12
  ~~~
