@@ -67,8 +67,8 @@ a batch script as follows:
 
 #SBATCH --job-name=test_matlab
 #SBATCH --nodes=1
-#SABTCH --tasks-per-node=4
-#SABTCH --mem=10G
+#SBATCH --tasks-per-node=4
+#SBATCH --mem=10G
 #SBATCH --time=1:00:00
 
 module add matlab/2023b
